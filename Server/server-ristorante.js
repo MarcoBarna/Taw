@@ -1,4 +1,13 @@
-"use scrict"
+"use strict"
+const http = require('http');
+const app = require('./app')
+const port = process.env.PORT || 3000;
+const server = http.createServer(app);
+
+server.listen(port);
+
+/*
+
 const mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 
@@ -75,3 +84,8 @@ var Baristi = mongoose.model('Baristi',baristiSchema);
 var Cameriere = mongoose.model('Cameriere',camerieriSchema);
 
 
+
+
+
+
+*/
