@@ -3,30 +3,29 @@
 const mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 
+// ! STRANAMENTE CON required : true solo su questo file, CRASHA BOH????
 let orderSchema = new Schema({
     orderNumber: {
         type: mongoose.SchemaTypes.Number,
-        require: true
+        // required: true
     },
     item1List: { // 1 = Bevanda
         name: [mongoose.SchemaTypes.String],
-        require: true
     },
     item2List: { // 2 = Piatto
         name: [mongoose.SchemaTypes.String],
-        require: true
     },
     numberPeople: {
         number: mongoose.SchemaTypes.Number,
-        require: true // non può essere 0
+        // required: true
     },
     tableNumber: {
         table: mongoose.SchemaTypes.Number,
-        require: true
+        // required: true
     },
     userNameWaiter: {
         username: mongoose.SchemaTypes.String,
-        require: true
+        // required: true
     }
 });
 

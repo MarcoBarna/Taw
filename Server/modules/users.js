@@ -6,15 +6,17 @@ var Schema = mongoose.Schema;
 let userSchema = new Schema({
     username: {
         type: mongoose.SchemaTypes.String,
-        require: true
+        trim: true,
+        required: true
     },
     password: {
         type: mongoose.SchemaTypes.String,
-        require: true
+        trim: true,
+        required: true
     },
     role: { // 1 - Cassiere, 2 - Cameriere, 3 - Cuoco, 4 - Barista
         type: mongoose.SchemaTypes.Number,
-        require: true
+        required: true
     }
 });
 

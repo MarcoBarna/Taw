@@ -6,15 +6,16 @@ var Schema = mongoose.Schema;
 let tableSchema = new Schema({
     tableNumber: {
         type: mongoose.SchemaTypes.Number,
-        require: true
+        required: true
     },
     seats: {
         type: mongoose.SchemaTypes.Number,
-        require: true
+        required: true
     },
     occupied: { // 1 - Cassiere, 2 - Cameriere, 3 - Cuoco, 4 - Barista
         type: mongoose.SchemaTypes.Boolean,
-        require: true
+        required: true,
+        default: false
     }
 });
 

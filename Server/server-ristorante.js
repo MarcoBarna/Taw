@@ -1,10 +1,20 @@
 "use strict"
 Object.defineProperty(exports, "__esModule", { value: true });
+var ObjectID = require('mongodb').ObjectID;
 const result = require('dotenv').config({ path: __dirname + '/.env' }); // carica tutte le variabili presenti nel file .env
 const http = require('http');
+const https = require('https');
 const express = require('express');
 const app = express();
 const port = process.env.PORT;
+const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
+const items = require("./modules/items");
+const orders = require("./modules/orders");
+const tables = require("./modules/tables");
+const users = require("./modules/users");
+
+// Connessione al database
 
 /*
  Leggenda better comments
@@ -53,18 +63,36 @@ app.use((req, res, next) => {
     next()
 });
 
+
+// *  API ROUTES
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
+
 // app.use((req,res,next) => {
 //     res.status(404).send("The resource you are looking for is not here sorry :( ")
 // });
 
-app.get('/api/v1/users', (req, res) =>{
+// !  NON FUNZIONA PER IL MOMENTO, È PER TEST INSERIMENTO AL DATABASE
+app.post('/api/users', async (req, res, next) =>{
+    try{
+        var user = new users(req.body);
+        var resultUser = await user.save();
+        res.send(resultUser);
+    }catch (error){
+        res.status(500).send(error);
+    };
+});
+
+app.get('/api/users', (req, res) =>{
     res.send("You have requested a user")
 });
 
-app.get('/api/v1/users/:username', (req, res) =>{
+app.get('/api/users/:username', (req, res) =>{
     res.send(`You have requested a user ${req.params.username}`)
 });
-
+mongoose.connect('mongodb://localhost/ristdb').then(function onconnected() {
+    console.log("Connected to MongoDB");
+});
 module.exports = app;
 const server = http.createServer(app);
 server.listen(port, () => console.info(`Server has started on ${port}`));
