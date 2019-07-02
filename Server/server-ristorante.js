@@ -6,7 +6,7 @@ const http = require('http');
 const https = require('https');
 const express = require('express');
 const cors = require('cors');
-var app = express();
+const app = express();
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const port = process.env.PORT;
@@ -34,22 +34,22 @@ const users = require("./modules/users");
 
 !1 - 
 crea nuovo utente 
-post /api/v1/users
+post /api//users
 
 cancella utente
-delete /api/v1/users/:id
+delete /api/users/:id
 ? login utente
 
 !2 - 
 
 modifica stato tavolo
-put /api/v1/tables/:id
+put /api/tables/:id
 
 aggiungi ordinazione piatti
-post /api/v1/orders/:id
+post /api/orders/:id
 
 aggiungi ordinazione bevande
-post /api/v1/orders/:id
+post /api/orders/:id
 
 
 ? notifica cameriere
