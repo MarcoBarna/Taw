@@ -5,10 +5,11 @@ const result = require('dotenv').config({ path: __dirname + '/.env' }); // caric
 const http = require('http');
 const https = require('https');
 const express = require('express');
-const app = express();
-const port = process.env.PORT;
+const cors = require('cors');
+var app = express();
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
+const port = process.env.PORT;
 const items = require("./modules/items");
 const orders = require("./modules/orders");
 const tables = require("./modules/tables");
@@ -67,24 +68,25 @@ app.use((req, res, next) => {
 // *  API ROUTES
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(cors());
 
 // app.use((req,res,next) => {
 //     res.status(404).send("The resource you are looking for is not here sorry :( ")
 // });
 
-// !  NON FUNZIONA PER IL MOMENTO, È PER TEST INSERIMENTO AL DATABASE
-app.post('/api/users', async (req, res, next) =>{
-    try{
-        var user = new users(req.body);
-        var resultUser = await user.save();
-        res.send(resultUser);
-    }catch (error){
-        res.status(500).send(error);
-    };
+app.route("/api/users").get((req,res) => {
+    res.send("You have requested a user") // ! MOMENTANEO
+}).post(async (req, res, next) => { // ! MOMENTANEO
+    // try{
+        var nwuser = users.newUser(req.body);
+        nwuser.save()
+    // }catch (error){
+    //     res.status(500).send(error);
+    // };
 });
 
 app.get('/api/users', (req, res) =>{
-    res.send("You have requested a user")
+    
 });
 
 app.get('/api/users/:username', (req, res) =>{

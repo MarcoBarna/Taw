@@ -1,5 +1,5 @@
 "use strict"
-
+Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 
@@ -32,3 +32,9 @@ function getModel() {
 }
 exports.getModel = getModel;
 
+function newUser(data) {
+    var _usermodel = getModel();
+    var user = new _usermodel(data);
+    return user;
+}
+exports.newUser = newUser;
