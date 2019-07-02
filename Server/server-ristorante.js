@@ -70,27 +70,42 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cors());
 
-// app.use((req,res,next) => {
-//     res.status(404).send("The resource you are looking for is not here sorry :( ")
-// });
-
 app.route("/api/users").get((req,res) => {
-    res.send("You have requested a user") // ! MOMENTANEO
-}).post(async (req, res, next) => { // ! MOMENTANEO
-    // try{
-        var nwuser = users.newUser(req.body);
-        nwuser.save()
-    // }catch (error){
-    //     res.status(500).send(error);
-    // };
+    users.getModel().find()
+        .then(allusers => {
+            res.json({
+                confirmation: "success",
+                data: allusers
+            })
+        })
+        .catch(err => {
+            res.json({
+                confirmation: "fail",
+                message : err.message
+            })
+        });
+}).post((req, res, next) => { // ! MOMENTANEO
+     var nwuser = users.newUser(req.body);
+     nwuser.save().then(data => {
+         res.json({
+             confirmation: "success",
+             data: data
+         })
+     })
 });
 
-app.get('/api/users', (req, res) =>{
-    
-});
-
-app.get('/api/users/:username', (req, res) =>{
-    res.send(`You have requested a user ${req.params.username}`)
+app.route("/api/users/:username").delete((req,res,next) => {
+    users.getModel().deleteOne({username: req.params.username})
+        .then(() => {
+            res.status(200).json({
+                confirmation: "successfully deleted",
+            })
+        }).catch((err) => { // ? SE VUOTA STRANAMENTE NON DA ERROE ?????
+            next.json({
+                confirmation: "fail",
+                message : err.message
+            })
+        });
 });
 mongoose.connect('mongodb://localhost/ristdb').then(function onconnected() {
     console.log("Connected to MongoDB");

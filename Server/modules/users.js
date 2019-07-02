@@ -20,6 +20,24 @@ let userSchema = new Schema({
     }
 });
 
+userSchema.methods.getRole = function(){
+    return this.role;
+}
+
+userSchema.methods.setCashier = function(){
+    this.role = 1;
+}
+userSchema.methods.setWaiter = function(){
+    this.role = 2;
+}
+userSchema.methods.setCook = function(){
+    this.role = 3;
+}
+userSchema.methods.setBartender = function(){
+    this.role = 4;
+}
+
+
 function getSchema() { return userSchema; }
 exports.getSchema = getSchema;
 
