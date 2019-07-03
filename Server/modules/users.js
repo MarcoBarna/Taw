@@ -6,7 +6,8 @@ var Schema = mongoose.Schema;
 let userSchema = new Schema({
     username: {
         type: mongoose.SchemaTypes.String,
-        trim: true,
+        unique: true,
+        trim: true, 
         required: true
     },
     password: {
