@@ -14,7 +14,6 @@ let tableSchema = new Schema({
     },
     occupied: { // 1 - Cassiere, 2 - Cameriere, 3 - Cuoco, 4 - Barista
         type: mongoose.SchemaTypes.Boolean,
-        required: true,
         default: false
     }
 });
@@ -31,3 +30,13 @@ function getModel() {
 }
 exports.getModel = getModel;
 
+function newTable(data) {
+    var _tablemodel = getModel();
+    var table = new _tablemodel(data);
+    return table;
+}
+exports.newTable = newTable;
+
+exports.setOccupation = function (boolean){
+    this.occupied = boolean;
+}

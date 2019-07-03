@@ -6,7 +6,7 @@ const http = require('http');
 const https = require('https');
 const express = require('express');
 const cors = require('cors');
-const Joi = require('joi');
+const validation = require('./validation');
 const app = express();
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
@@ -66,46 +66,12 @@ app.use((req, res, next) => {
 });
 
 
-// * FUNCTIONS
-
-function validateBody(user){
-    const schema = {
-        username: Joi.string().min(5).required(),
-        password: Joi.string().min(5).required(),
-        role: Joi.number().integer().min(1).max(4).required(),
-    }
-    return Joi.validate(user, schema);
-}
-
-function validateUsername(user){
-    const schema = {
-        username: Joi.string().min(5).required()
-    }
-    return Joi.validate(user, schema);
-}
-
-function validatePassword(user){
-    const schema = {
-        password: Joi.string().min(5).required()
-    }
-    return Joi.validate(user, schema);
-}
-
-function validateRole(user){
-    const schema = {
-        role: Joi.number().integer().min(1).max(4).required()
-    }
-    return Joi.validate(user, schema);
-}
-
-
-
-
 // *  API ROUTES
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cors());
 
+// * GESTIONE DEGLI UTENTI - CREAZIONE
 app.route("/api/users").get((req,res) => {
     users.getModel().find()
         .then(allusers => {
@@ -122,11 +88,8 @@ app.route("/api/users").get((req,res) => {
         });
 
 }).post((req, res, next) => {
-    const {error} = validateBody(req.body);
-    if(error){
-        res.status(400).send(error.details[0].message)
-        return;
-    }
+    const {error} = validation.validateBody(req.body);
+    if(error) return res.status(400).send(error.details[0].message);
     else{
         var nwuser = users.newUser(req.body);
         nwuser.save().then(data => {
@@ -140,8 +103,8 @@ app.route("/api/users").get((req,res) => {
     
 });
 
+//* CANCELLAZIONE UTENTI
 app.route("/api/users/:username").delete((req,res,next) => {
-
     users.getModel().deleteOne({username: req.params.username})
     .then(() => {
         res.status(200).json({
@@ -154,9 +117,63 @@ app.route("/api/users/:username").delete((req,res,next) => {
         })
     });
 });
-mongoose.connect('mongodb://localhost/ristdb').then(function onconnected() {
+
+// * CREAZIONE DI UN TAVOLO
+
+app.route("/api/tables").post((req,res,next) => {
+    // !check controllo che id tavolo sia unico
+    const {error} = validation.validateTable(req.body);
+    if(error) return res.status(400).send(error.details[0].message);
+    else{
+        var newtable = tables.newTable(req.body);
+        newtable.save().then(data =>{
+            res.json({
+                confirmation: "success",
+                data: data
+            })
+        })
+    }
+}).get((req,res,next) =>{
+    tables.getModel().find()
+        .then(alltables => {
+            res.json({
+                confirmation: "success",
+                data: alltables
+            })
+        })
+        .catch(err => {
+            res.json({
+                confirmation: "fail",
+                message : err.message
+            })
+        });
+});
+
+
+//* MODIFICA STATO DI UN TAVOLO
+app.route("/api/tables/:id").put((req,res,next) =>{
+    const {error} = validation.validateTable(req.body);
+    if(error) return res.status(400).send(error.details[0].message);
+    // else{
+    //     var table = tables.getModel().find(t => t.id === req.params.tableNumber);
+    //     tables.setOccupation(table.occupied);
+    // }
+}).delete((req,res,next) => {
+    tables.getModel().deleteOne({tableNumber: req.params.tableNumber})
+    .then(() => {
+        res.status(200).json({
+            confirmation: "successfully deleted",
+        })
+    }).catch((err) => {
+        next.json({
+            confirmation: "fail",
+            message : err.message
+        })
+    });
+})
+mongoose.connect('mongodb://localhost/ristdb', { useNewUrlParser: true }).then(function onconnected() {
     console.log("Connected to MongoDB");
 });
 module.exports = app;
 const server = http.createServer(app);
-server.listen(port, () => console.info(`Server has started on ${port}`));
+server.listen(port, () => console.info(`Server has started on port: ${port}`));
