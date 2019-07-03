@@ -4,9 +4,10 @@ const mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 
 let itemSchema = new Schema({
-    nome: {
+    name: {
         type: mongoose.SchemaTypes.String,
-        required: true
+        required: true,
+        unique: true
     },
     requiredTime: {
         type: mongoose.SchemaTypes.Number,
@@ -24,6 +25,13 @@ let itemSchema = new Schema({
 
 function getSchema() { return itemSchema; }
 exports.getSchema = getSchema;
+
+function newItem(data) {
+    var _itemmodel = getModel();
+    var item = new _itemmodel(data);
+    return item;
+}
+exports.newItem = newItem;
 
 var itemModel;
 function getModel() {

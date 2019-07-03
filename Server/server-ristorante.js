@@ -119,7 +119,6 @@ app.route("/api/users/:username").delete((req,res,next) => {
 });
 
 // * CREAZIONE DI UN TAVOLO
-
 app.route("/api/tables").post((req,res,next) => {
     // !check controllo che id tavolo sia unico
     const {error} = validation.validateTable(req.body);
@@ -171,6 +170,54 @@ app.route("/api/tables/:id").put((req,res,next) =>{
         })
     });
 })
+
+//* CREAZIONE PRODOTTO(ITEM)
+app.route("/api/items").get((req,res) => {
+    items.getModel().find()
+        .then(allitems => {
+            res.json({
+                confirmation: "success",
+                data: allitems
+            })
+        })
+        .catch(err => {
+            res.json({
+                confirmation: "fail",
+                message : err.message
+            })
+        });
+
+}).post((req, res, next) => {
+    const {error} = validation.validateItem(req.body);
+    if(error) return res.status(400).send(error.details[0].message);
+    else{
+        var newitem = items.newItem(req.body);
+        newitem.save().then(data => {
+            res.json({
+                confirmation: "success",
+                data: data
+            })
+        })
+        
+    }  
+});
+
+//* CANCELLAZIONE PRODOTTO(ITEM)
+app.route("/api/items/:name").delete((req,res,next) => {
+    items.getModel().deleteOne({name: req.params.name})
+    .then(() => {
+        res.status(200).json({
+            confirmation: "successfully deleted",
+        })
+    }).catch((err) => {
+        next.json({
+            confirmation: "fail",
+            message : err.message
+        })
+    });
+});
+
+
 mongoose.connect('mongodb://localhost/ristdb', { useNewUrlParser: true }).then(function onconnected() {
     console.log("Connected to MongoDB");
 });

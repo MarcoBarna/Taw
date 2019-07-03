@@ -6,7 +6,7 @@ exports.validateBody = function(user){
     const schema = {
         username: Joi.string().min(5).required(),
         password: Joi.string().min(5).required(),
-        role: Joi.number().integer().min(1).max(4).required(),
+        role: Joi.number().integer().min(1).max(4).required()
     }
     return Joi.validate(user, schema);
 }
@@ -37,4 +37,14 @@ exports.validateTable = function(table){
         tableNumber: Joi.number().integer().required()
     }
     return Joi.validate(table, schema);
+}
+
+exports.validateItem = function(item){
+    const schema = {
+        name: Joi.string().required(),
+        requiredTime: Joi.number().integer().required(),
+        itemType: Joi.number().integer().required(),
+        price: Joi.number().required()
+    }
+    return Joi.validate(item, schema);
 }
