@@ -71,7 +71,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cors());
 
-// * GESTIONE DEGLI UTENTI - CREAZIONE
+// * RITORNO LISTA UTENTI
 app.route("/api/users").get((req,res) => {
     users.getModel().find()
         .then(allusers => {
@@ -87,7 +87,7 @@ app.route("/api/users").get((req,res) => {
             })
         });
 
-}).post((req, res, next) => {
+}).post((req, res, next) => { //* CREAZIONE UTENTE
     const {error} = validation.validateBody(req.body);
     if(error) return res.status(400).send(error.details[0].message);
     else{
@@ -132,7 +132,7 @@ app.route("/api/tables").post((req,res,next) => {
             })
         })
     }
-}).get((req,res,next) =>{
+}).get((req,res,next) =>{ //* LISTA TAVOLI
     tables.getModel().find()
         .then(alltables => {
             res.json({
@@ -151,27 +151,38 @@ app.route("/api/tables").post((req,res,next) => {
 
 //* MODIFICA STATO DI UN TAVOLO
 app.route("/api/tables/:id").put((req,res,next) =>{
-    const {error} = validation.validateTable(req.body);
-    if(error) return res.status(400).send(error.details[0].message);
-    // else{
-    //     var table = tables.getModel().find(t => t.id === req.params.tableNumber);
-    //     tables.setOccupation(table.occupied);
-    // }
-}).delete((req,res,next) => {
-    tables.getModel().deleteOne({tableNumber: req.params.tableNumber})
+    
+    tables.getModel().findOne({tableNumber: req.params.id})
+    .then((data) => {
+        console.log(data.occupied)
+        data.occupied = !data.occupied;
+        console.log(data.occupied)
+        data.save()
+        res.status(200).json({
+            confirmation: "successfully modified"
+        })
+
+    }).catch((err) => {
+        res.json({
+            confirmation: "fail",
+            message : err.message
+        })
+    });
+}).delete((req,res,next) => { //* CANCELLAZIONE DI UN TAVOLO
+    tables.getModel().deleteOne({id: req.params.tableNumber})
     .then(() => {
         res.status(200).json({
-            confirmation: "successfully deleted",
+            confirmation: "successfully deleted"
         })
     }).catch((err) => {
-        next.json({
+        res.json({
             confirmation: "fail",
             message : err.message
         })
     });
 })
 
-//* CREAZIONE PRODOTTO(ITEM)
+//* LISTA ITEM
 app.route("/api/items").get((req,res) => {
     items.getModel().find()
         .then(allitems => {
@@ -186,8 +197,7 @@ app.route("/api/items").get((req,res) => {
                 message : err.message
             })
         });
-
-}).post((req, res, next) => {
+}).post((req, res, next) => { //* CREAZIONE DI UN ITEM
     const {error} = validation.validateItem(req.body);
     if(error) return res.status(400).send(error.details[0].message);
     else{
@@ -210,13 +220,42 @@ app.route("/api/items/:name").delete((req,res,next) => {
             confirmation: "successfully deleted",
         })
     }).catch((err) => {
-        next.json({
+        res.json({
             confirmation: "fail",
             message : err.message
         })
     });
 });
 
+
+//* LISTA ORDINI
+app.route("/api/orders").get((req,res,next) => {
+    orders.getModel().find()
+        .then(allorders => {
+            res.json({
+                confirmation: "success",
+                data: allorders
+            })
+        })
+        .catch(err => {
+            res.json({
+                confirmation: "fail",
+                message : err.message
+            })
+        });
+}).post((req,res,next) => {
+    const {error} = validation.validateOrder(req.body);
+    if(error) return res.status(400).send(error.details[0].message);
+    else{
+        var neworder = orders.newOrder(req.body);
+        neworder.save().then(data =>{
+            res.json({
+                confirmation: "success",
+                data: data
+            })
+        });
+    }
+});
 
 mongoose.connect('mongodb://localhost/ristdb', { useNewUrlParser: true }).then(function onconnected() {
     console.log("Connected to MongoDB");

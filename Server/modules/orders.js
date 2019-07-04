@@ -1,31 +1,32 @@
 "use strict"
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose = require("mongoose");
+const items = require("./items");
 var Schema = mongoose.Schema;
 
-// ! STRANAMENTE CON required : true solo su questo file, CRASHA BOH????
 let orderSchema = new Schema({
     orderNumber: {
         type: mongoose.SchemaTypes.Number,
-        // required: true
+        required: true,
+        unique: true
     },
     item1List: { // 1 = Bevanda
-        name: [mongoose.SchemaTypes.String],
+        type: [items.getSchema()]
     },
     item2List: { // 2 = Piatto
-        name: [mongoose.SchemaTypes.String],
+        type: [items.getSchema()]
     },
     numberPeople: {
-        number: mongoose.SchemaTypes.Number,
-        // required: true
+        type: mongoose.SchemaTypes.Number,
+        required: true
     },
     tableNumber: {
-        table: mongoose.SchemaTypes.Number,
-        // required: true
+        type: mongoose.SchemaTypes.Number,
+        required: true
     },
     userNameWaiter: {
-        username: mongoose.SchemaTypes.String,
-        // required: true
+        type: mongoose.SchemaTypes.String,
+        required: true
     }
 });
 
@@ -40,3 +41,10 @@ function getModel() {
     return orderModel;
 }
 exports.getModel = getModel;
+
+function newOrder(data) {
+    var _ordermodel = getModel();
+    var order = new _ordermodel(data);
+    return order;
+}
+exports.newOrder = newOrder;
