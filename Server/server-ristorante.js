@@ -243,7 +243,7 @@ app.route("/api/orders").get((req,res,next) => {
                 message : err.message
             })
         });
-}).post((req,res,next) => {
+}).post((req,res,next) => { // * INSERIMENTO ORDINI
     const {error} = validation.validateOrder(req.body);
     if(error) return res.status(400).send(error.details[0].message);
     else{
@@ -253,8 +253,27 @@ app.route("/api/orders").get((req,res,next) => {
                 confirmation: "success",
                 data: data
             })
+        }).catch((err) => {
+            res.json({
+                confirmation: "fail",
+                message : err.message
+            })
         });
     }
+});
+
+app.route("/api/orders/:id").delete((req,res,next) => {
+    orders.getModel().deleteOne({orderNumber: req.params.id})
+    .then(() => {
+        res.status(200).json({
+            confirmation: "successfully deleted",
+        })
+    }).catch((err) => {
+        res.json({
+            confirmation: "fail",
+            message : err.message
+        })
+    });
 });
 
 mongoose.connect('mongodb://localhost/ristdb', { useNewUrlParser: true }).then(function onconnected() {

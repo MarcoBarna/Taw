@@ -11,10 +11,10 @@ let orderSchema = new Schema({
         unique: true
     },
     item1List: { // 1 = Bevanda
-        type: [items.getSchema()]
+        type: [mongoose.SchemaTypes.String]
     },
     item2List: { // 2 = Piatto
-        type: [items.getSchema()]
+        type: [mongoose.SchemaTypes.String]
     },
     numberPeople: {
         type: mongoose.SchemaTypes.Number,
