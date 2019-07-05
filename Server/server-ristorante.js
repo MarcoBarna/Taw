@@ -213,8 +213,8 @@ app.route("/api/items").get((req,res) => {
 });
 
 //* CANCELLAZIONE PRODOTTO(ITEM)
-app.route("/api/items/:name").delete((req,res,next) => {
-    items.getModel().deleteOne({name: req.params.name})
+app.route("/api/items/:code").delete((req,res,next) => {
+    items.getModel().deleteOne({code: req.params.code})
     .then(() => {
         res.status(200).json({
             confirmation: "successfully deleted",
@@ -224,9 +224,22 @@ app.route("/api/items/:name").delete((req,res,next) => {
             confirmation: "fail",
             message : err.message
         })
-    });
+    })
+}).get((req,res,next) => { //* RICERCA PRODOTTO
+    items.getModel().findOne({code: req.params.code})
+        .then(singleItem => {
+            res.json({
+                confirmation: "success",
+                data: singleItem
+            })
+        })
+        .catch(err => {
+            res.json({
+                confirmation: "fail",
+                message : err.message
+            })
+        });
 });
-
 
 //* LISTA ORDINI
 app.route("/api/orders").get((req,res,next) => {
@@ -274,7 +287,21 @@ app.route("/api/orders/:id").delete((req,res,next) => {
             message : err.message
         })
     });
-});
+}).get((req,res,next) => {
+    orders.getModel().findOne({orderNumber: req.params.id})
+        .then(singleOrder => {
+            res.json({
+                confirmation: "success",
+                data: singleOrder
+            })
+        })
+        .catch(err => {
+            res.json({
+                confirmation: "fail",
+                message : err.message
+            })
+        });
+})
 
 mongoose.connect('mongodb://localhost/ristdb', { useNewUrlParser: true }).then(function onconnected() {
     console.log("Connected to MongoDB");

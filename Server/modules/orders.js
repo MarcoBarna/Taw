@@ -3,18 +3,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose = require("mongoose");
 const items = require("./items");
 var Schema = mongoose.Schema;
-
+// 1|
 let orderSchema = new Schema({
     orderNumber: {
         type: mongoose.SchemaTypes.Number,
         required: true,
         unique: true
     },
-    item1List: { // 1 = Bevanda
-        type: [mongoose.SchemaTypes.String]
+    beverageList: { // 1 = Bevanda
+        type: [mongoose.SchemaTypes.Number]
     },
-    item2List: { // 2 = Piatto
-        type: [mongoose.SchemaTypes.String]
+    dishList: { // 2 = Piatto
+        type: [mongoose.SchemaTypes.Number]
     },
     numberPeople: {
         type: mongoose.SchemaTypes.Number,

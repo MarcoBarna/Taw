@@ -3,17 +3,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 
+//* Numeri che cominciano per 1 = Bevande
+//* Numeri che cominciano per 2 = Piatti
 let itemSchema = new Schema({
-    name: {
-        type: mongoose.SchemaTypes.String,
+    code: {
+        type: mongoose.SchemaTypes.Number,
         required: true,
         unique: true
     },
-    requiredTime: {
-        type: mongoose.SchemaTypes.Number,
-        required: true
+    name: {
+        type: mongoose.SchemaTypes.String,
+        required: true,
     },
-    itemType: { // 1 è bevanda, 2 è piatto
+    requiredTime: {
         type: mongoose.SchemaTypes.Number,
         required: true
     },
