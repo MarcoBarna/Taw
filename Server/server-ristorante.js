@@ -10,12 +10,18 @@ const validation = require('./validation');
 const app = express();
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
+const jwt = require("express-jwt");
+const passport = require("passport");
+const passportHTTP = require("passport-http");
 const port = process.env.PORT;
+const jsonwebtoken = require("jsonwebtoken");
 const items = require("./modules/items");
 const orders = require("./modules/orders");
 const tables = require("./modules/tables");
 const users = require("./modules/users");
 
+
+var auth = jwt({secret: process.env.JWT_SECRET });
 // Connessione al database
 
 /*
@@ -25,38 +31,6 @@ const users = require("./modules/users");
  ? = domanda
  TODO = cosa da fare
  4/ = //// completato
-
- * NOME DEGLI ENDPOINT 
-
-/api/v1/items
-/api/v1/orders
-/api/v1/tables
-/api/v1/users
-
-!1 - 
-crea nuovo utente 
-post /api//users
-
-cancella utente
-delete /api/users/:id
-? login utente
-
-!2 - 
-
-modifica stato tavolo
-put /api/tables/:id
-
-aggiungi ordinazione piatti
-post /api/orders/:id
-
-aggiungi ordinazione bevande
-post /api/orders/:id
-
-
-? notifica cameriere
-
-!3 - 
-
 
 */
 // * LOGGING DELLE VARIE RICHIESTE
@@ -71,36 +45,69 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cors());
 
+app.get("/api/login", passport.authenticate('basic', {session: false}), (req,res,next) => {
+    var token = {
+        username: req.user.username,
+        role: req.user.role,
+    };
+    var tokenjwt = jsonwebtoken.sign(token, process.env.JWT_SECRET,{ expiresIn: '4h' });
+    return res.status(200).json({confirmation: "Login granted", token: tokenjwt});
+});
+
+// ! TEST 
+
+app.post('/api/login', (req,res) => {
+    // test user
+    const user = {
+        username: "test123",
+        password: "testtest",
+        role: 1
+    }
+    jsonwebtoken.sign({user}, process.env.JWT_SECRET, (err,token) => {
+        res.json({
+            token
+        });
+    });
+});
+
 // * RITORNO LISTA UTENTI
-app.route("/api/users").get((req,res) => {
+app.route("/api/users").get(auth, (req,res,next) => {
+    if(users.newUser(req.user).getRole() != 1)
+        return next.json({
+            confirmation: "Forbidden access"
+        });
+
     users.getModel().find()
         .then(allusers => {
             res.json({
                 confirmation: "success",
                 data: allusers
-            })
+            });
         })
         .catch(err => {
             res.json({
                 confirmation: "fail",
                 message : err.message
-            })
+            });
         });
 
-}).post((req, res, next) => { //* CREAZIONE UTENTE
+}).post(auth, (req, res, next) => { //* CREAZIONE UTENTE
+    if(users.newUser(req.user).getRole() != 1)
+        return next.json({
+            confirmation: "Forbidden access"
+        });
     const {error} = validation.validateBody(req.body);
     if(error) return res.status(400).send(error.details[0].message);
     else{
         var nwuser = users.newUser(req.body);
+        nwuser.setPassword(req.body.password);
         nwuser.save().then(data => {
             res.json({
                 confirmation: "success",
                 data: data
-            })
-        })
-        
+            });
+        }); 
     }
-    
 });
 
 //* CANCELLAZIONE UTENTI
@@ -302,6 +309,26 @@ app.route("/api/orders/:id").delete((req,res,next) => {
             })
         });
 })
+
+// Configure HTTP basic authentication strategy 
+// trough passport middleware.
+passport.use(new passportHTTP.BasicStrategy(function (username, password, done) {
+    // Delegate function we provide to passport middleware
+    // to verify user credentials 
+    console.log("New login attempt from " /*.green*/ + username);
+    user.getModel().findOne({ username: username }, (err, user) => {
+        if (err) {
+            return done({ statusCode: 500, error: true, errormessage: err });
+        }
+        if (!user) {
+            return done({ statusCode: 500, error: true, errormessage: "Invalid user" });
+        }
+        if (user.validatePassword(password)) {
+            return done(null, user);
+        }
+        return done({ statusCode: 500, error: true, errormessage: "Invalid password" });
+    });
+}));
 
 mongoose.connect('mongodb://localhost/ristdb', { useNewUrlParser: true }).then(function onconnected() {
     console.log("Connected to MongoDB");
