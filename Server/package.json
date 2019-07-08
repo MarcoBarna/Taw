@@ -16,7 +16,9 @@
     "passport": "^0.4.0",
     "passport-http": "^0.3.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "eslint": "^6.0.1"
+  },
   "scripts": {
     "start": "node server-ristorante.js",
     "start-watch": "nodemon server-ristorante.js",

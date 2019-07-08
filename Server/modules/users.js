@@ -1,5 +1,7 @@
 "use strict"
-Object.defineProperty(exports, "__esModule", { value: true });
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
 const mongoose = require("mongoose");
 const crypto = require("crypto");
 var Schema = mongoose.Schema;
@@ -8,7 +10,7 @@ let userSchema = new Schema({
     username: {
         type: mongoose.SchemaTypes.String,
         unique: true,
-        trim: true, 
+        trim: true,
         required: true
     },
     password: {
@@ -46,39 +48,62 @@ userSchema.methods.validatePassword = function (pwd) {
     return (this.digest === digest);
 };
 
-userSchema.methods.getRole = function(){
-    return this.role;
+userSchema.methods.HisCashier = function () {
+    return this.role === 1;
+};
+userSchema.methods.HisWaiter = function () {
+    return this.role === 2;
 };
 
-userSchema.methods.setCashier = function(){
+userSchema.methods.HisCook = function () {
+    return this.role === 3;
+};
+userSchema.methods.HisBartender = function () {
+    return this.role === 4;
+};
+
+userSchema.methods.setCashier = function () {
     this.role = 1;
 };
-userSchema.methods.setWaiter = function(){
+userSchema.methods.setWaiter = function () {
     this.role = 2;
 };
-userSchema.methods.setCook = function(){
+userSchema.methods.setCook = function () {
     this.role = 3;
 };
-userSchema.methods.setBartender = function(){
+userSchema.methods.setBartender = function () {
     this.role = 4;
 };
 
 
-function getSchema() { return userSchema; }
+function getSchema() {
+    return userSchema;
+}
 exports.getSchema = getSchema;
 
 var userModel;
+
 function getModel() {
     if (!userModel) {
         userModel = mongoose.model('users', getSchema());
     }
     return userModel;
-};
-exports.getModel = getModel;
+} exports.getModel = getModel;
 
 function newUser(data) {
     var _usermodel = getModel();
     var user = new _usermodel(data);
     return user;
-};
-exports.newUser = newUser;
+} exports.newUser = newUser;
+
+userSchema.pre('save', function (next) {
+    var self = this;
+    getModel().find({name : self.username}, function (err, docs) {
+        if (!docs.length){
+            next();
+        }else{                
+            console.log('user exists: ',self.username);
+            next(new Error("User exists!"));
+        }
+    });
+}) ;
