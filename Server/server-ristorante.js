@@ -8,7 +8,7 @@ const result = require('dotenv').config({
 }); // carica tutte le variabili presenti nel file .env
 const http = require('http');
 const https = require('https');
-const express = require('express');
+const express = require('express'); // Express middleware
 const cors = require('cors');
 const validation = require('./validation');
 const app = express();
@@ -23,9 +23,13 @@ const items = require("./modules/items");
 const orders = require("./modules/orders");
 const tables = require("./modules/tables");
 const users = require("./modules/users");
+const stats = require("./modules/stats");
+const io = require("./socket");
 
 
-var auth = jwt({ secret: process.env.JWT_SECRET});
+var auth = jwt({
+    secret: process.env.JWT_SECRET
+});
 // Connessione al database
 
 /*
@@ -51,6 +55,26 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(cors());
 
+// Semaphore 
+
+var socket;
+
+// ! ADMIN TEST
+app.post("/api/test", (req, res) => {
+    var nwuser = users.newUser(req.body);
+    nwuser.setPassword(req.body.password);
+    nwuser.save();
+    return res.status(200).json({
+        confirmation: "success",
+        data: nwuser
+    });
+});
+
+// * HOME ENDPOINT
+app.get("/", (req, res) => {
+    res.status(200).json({ api_version: "1.0", endpoints: ["/api/users", "/api/table", "/api/items", "/api/orders", "/api/stats"] }); // json method sends a JSON response (setting the correct Content-Type) to the client
+});
+
 // * LOGIN
 app.get("/api/users/login", passport.authenticate('basic', {
     session: false
@@ -62,7 +86,7 @@ app.get("/api/users/login", passport.authenticate('basic', {
     };
     console.log("Login granted. Generating token");
     var token_signed = jsonwebtoken.sign(tokendata, process.env.JWT_SECRET, {
-        expiresIn: '30m'
+        expiresIn: '24h'
     });
     return res.status(200).json({
         confirmation: "success",
@@ -77,7 +101,7 @@ app.get('/api/users/renew', auth, (req, res) => {
     delete tokendata.exp;
     console.log("Renewing token for user " + JSON.stringify(tokendata));
     var token_signed = jsonwebtoken.sign(tokendata, process.env.JWT_SECRET, {
-        expiresIn: '1h'
+        expiresIn: '24h'
     });
     return res.status(200).json({
         confirmation: "success",
@@ -87,11 +111,10 @@ app.get('/api/users/renew', auth, (req, res) => {
 
 // * GET ALL USER LIST
 app.route("/api/users").get(auth, (req, res) => {
-    
-    if(!users.newUser(req.user).HisCashier())
+    if (!users.newUser(req.user).HisCashier())
         return res.json({
             confirmation: "fail",
-            message : "Unauthorized user",
+            message: "Unauthorized user",
         });
     users.getModel().find()
         .then(allusers => {
@@ -107,33 +130,52 @@ app.route("/api/users").get(auth, (req, res) => {
             });
         });
 
-}).post((req, res) => { //* NEW USER SIGNUP
-    const { error } = validation.validateBody(req.body);
+}).post(auth, (req, res) => {
+
+    if (!users.newUser(req.user).HisCashier())
+        return res.json({
+            confirmation: "fail",
+            message: "Unauthorized user",
+        });
+    const {
+        error
+    } = validation.validateBody(req.body);
     if (error) return res.status(400).send(error.details[0].message);
     else {
         var nwuser = users.newUser(req.body);
         nwuser.setPassword(req.body.password);
-        nwuser.save(function(err){
-            if(err) return res.send('Error, username already exist')
-            return res.json({
-                    confirmation: "success"
+        nwuser.save(function (err) {
+            if (err) return res.send('Error, username already exist')
+            var nwstat = stats.newstats(req.body);
+            nwstat.save().then(data => {
+                socket.emitEvent("modified user");
+                res.json({
+                    confirmation: "success",
+                    data: data
                 });
-         });
+            }).catch((err) => {
+                res.json({
+                    confirmation: "fail",
+                    message: err.message
+                });
+            })
+        });
     }
 });
 
 //* DELETE USER
 app.route("/api/users/:username").delete(auth, (req, res, next) => {
-    
-    if(!users.newUser(req.user).HisCashier())
+
+    if (!users.newUser(req.user).HisCashier())
         return res.json({
             confirmation: "fail",
-            message : "Unauthorized user",
+            message: "Unauthorized user",
         });
-            users.getModel().deleteOne({
+    users.getModel().deleteOne({
             username: req.params.username
         })
         .then(() => {
+            socket.emitEvent("modified user");
             res.status(200).json({
                 confirmation: "successfully deleted",
             })
@@ -147,12 +189,19 @@ app.route("/api/users/:username").delete(auth, (req, res, next) => {
 
 // * TABLE CREATION
 app.route("/api/tables").post(auth, (req, res) => {
-    // !check controllo che id tavolo sia unico
-    const { error } = validation.validateTable(req.body);
+    if (!users.newUser(req.user).HisCashier())
+        return res.json({
+            confirmation: "fail",
+            message: "Unauthorized user",
+        });
+    const {
+        error
+    } = validation.validateTable(req.body);
     if (error) return res.status(400).send(error.details[0].message);
     else {
         var newtable = tables.newTable(req.body);
         newtable.save().then(data => {
+            socket.emitEvent("modified table");
             res.json({
                 confirmation: "success",
                 data: data
@@ -177,16 +226,19 @@ app.route("/api/tables").post(auth, (req, res) => {
 
 
 //* TABLE MODIFIED STATUS
-app.route("/api/tables/:id").put(auth, (req, res) => {
-
+app.route("/api/tables/:id").patch(auth, (req, res) => {
+    if (!users.newUser(req.user).HisCashier() && !users.newUser(req.user).HisWaiter())
+        return res.json({
+            confirmation: "fail",
+            message: "Unauthorized user",
+        });
     tables.getModel().findOne({
             tableNumber: req.params.id
         })
         .then((data) => {
-            console.log(data.occupied)
             data.occupied = !data.occupied;
-            console.log(data.occupied)
-            data.save()
+            data.save();
+            socket.emitEvent("modified table");
             res.status(200).json({
                 confirmation: "successfully modified"
             });
@@ -197,11 +249,17 @@ app.route("/api/tables/:id").put(auth, (req, res) => {
                 message: err.message
             });
         });
-}).delete(auth, (req, res) => { //* DELETE SINGLE TABLE
+}).delete(auth, (req, res) => {
+    if (!users.newUser(req.user).HisCashier())
+        return res.json({
+            confirmation: "fail",
+            message: "Unauthorized user",
+        });
     tables.getModel().deleteOne({
             tableNumber: req.params.id
         })
         .then(() => {
+            socket.emitEvent("modified table");
             res.status(200).json({
                 confirmation: "successfully deleted"
             });
@@ -215,6 +273,11 @@ app.route("/api/tables/:id").put(auth, (req, res) => {
 
 //* ITEM LIST
 app.route("/api/items").get(auth, (req, res) => {
+    if (!users.newUser(req.user).HisCashier())
+        return res.json({
+            confirmation: "fail",
+            message: "Unauthorized user",
+        });
     items.getModel().find()
         .then(allitems => {
             res.json({
@@ -228,8 +291,15 @@ app.route("/api/items").get(auth, (req, res) => {
                 message: err.message
             });
         });
-}).post(auth, (req, res) => { //* NEW ITEM
-    const { error } = validation.validateItem(req.body);
+}).post(auth, (req, res) => { // * CREATE NEW ITEM
+    if (!users.newUser(req.user).HisCashier())
+        return res.json({
+            confirmation: "fail",
+            message: "Unauthorized user",
+        });
+    const {
+        error
+    } = validation.validateItem(req.body);
     if (error) return res.status(400).send(error.details[0].message);
     else {
         var newitem = items.newItem(req.body);
@@ -245,6 +315,11 @@ app.route("/api/items").get(auth, (req, res) => {
 
 //* DELETE SINGLE ITEM
 app.route("/api/items/:code").delete(auth, (req, res) => {
+    if (!users.newUser(req.user).HisCashier())
+        return res.json({
+            confirmation: "fail",
+            message: "Unauthorized user",
+        });
     items.getModel().deleteOne({
             code: req.params.code
         })
@@ -292,11 +367,19 @@ app.route("/api/orders").get(auth, (req, res) => {
             })
         });
 }).post(auth, (req, res) => { // * NEW ORDER
-    const { error } = validation.validateOrder(req.body);
+    if (!users.newUser(req.user).HisWaiter())
+        return res.json({
+            confirmation: "fail",
+            message: "Unauthorized user",
+        });
+    const {
+        error
+    } = validation.validateOrder(req.body);
     if (error) return res.status(400).send(error.details[0].message);
     else {
         var neworder = orders.newOrder(req.body);
         neworder.save().then(data => {
+            socket.emitEvent("send order");
             res.json({
                 confirmation: "success",
                 data: data
@@ -312,6 +395,11 @@ app.route("/api/orders").get(auth, (req, res) => {
 
 // * DELETE SINGLE ORDER
 app.route("/api/orders/:id").delete(auth, (req, res) => {
+    if (!users.newUser(req.user).HisCashier())
+        return res.json({
+            confirmation: "fail",
+            message: "Unauthorized user",
+        });
     orders.getModel().deleteOne({
             orderNumber: req.params.id
         })
@@ -341,7 +429,58 @@ app.route("/api/orders/:id").delete(auth, (req, res) => {
                 message: err.message
             })
         });
-})
+});
+
+// ! DA  COMPLETARE GLI ORDINI
+
+// ! NEL FRONT END VISAUALIZZARE SOLO I CAMPI CHE CI INTERESSANO
+app.route("/api/stats").get(auth, (req, res) => {
+    if (!users.newUser(req.user).HisCashier())
+        return res.json({
+            confirmation: "fail",
+            message: "Unauthorized user",
+        });
+
+    stats.getModel().find()
+        .then(allstats => {
+            res.json({
+                confirmation: "success",
+                data: allstats
+            })
+        })
+        .catch(err => {
+            res.json({
+                confirmation: "fail",
+                message: err.message
+            })
+        });
+}).patch(auth, (req, res) => {
+    stats.getModel().findOne({
+            username: req.body.username
+        })
+        .then((data) => {
+            console.log(data);
+            users.getModel().findOne({username: data.username}).then((newdata) =>{
+                if (newdata.role === 2){
+                    data.numberOfClients = req.body.numberOfClients;
+                    data.numberOfOrders = req.body.numberOfOrders;
+                }
+                else{
+                    data.numberOfPlates = req.body.numberOfPlates;
+                    data.priceOfPlates = req.body.priceOfPlates;
+                }
+            data.save()
+            res.status(200).json({
+                confirmation: "successfully modified"
+            })
+        }).catch((err) => {
+            res.json({
+                confirmation: "fail",
+                message: err.message
+            });
+        });
+    });
+});
 
 // Configure HTTP basic authentication strategy 
 // trough passport middleware.
@@ -382,7 +521,14 @@ mongoose.connect('mongodb://localhost/ristdb', {
     useNewUrlParser: true
 }).then(function onconnected() {
     console.log("Connected to MongoDB");
+
+    module.exports = app;
+    const server = http.createServer(app);
+    server.listen(port, () => console.info(`Server has started on port: ${port}`));
+    socket = new io.Socket(server);
+    console.log("Socket.io Server Ready");
+}, function onrejected() {
+    console.log("Unable to connect to MongoDB");
+    process.exit(-2);
 });
-module.exports = app;
-const server = http.createServer(app);
-server.listen(port, () => console.info(`Server has started on port: ${port}`));
+
