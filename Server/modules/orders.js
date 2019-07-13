@@ -10,11 +10,18 @@ let orderSchema = new Schema({
         required: true,
         unique: true
     },
-    beverageList: { // 1 = Bevanda
+    beverageList: { // 1 = Beverage
         type: [mongoose.SchemaTypes.Number]
     },
-    dishList: { // 2 = Piatto
+    dishList: { // 2 = DISH
         type: [mongoose.SchemaTypes.Number]
+    },
+    dishState: { // 0 = DISH NOT IN PREPARATION, 1 = DISH IN PREPARATION, 2 = DISH COMPLETE
+        type: [mongoose.SchemaTypes.Number]
+    },
+    beverageState: { // 0 = DISH NOT IN PREPARATION, 1 = DISH IN PREPARATION, 2 = DISH COMPLETE
+        type: Boolean,
+        default: false
     },
     numberPeople: {
         type: mongoose.SchemaTypes.Number,
@@ -22,6 +29,10 @@ let orderSchema = new Schema({
     },
     tableNumber: {
         type: mongoose.SchemaTypes.Number,
+        required: true
+    },
+    date: {
+        type: Date,
         required: true
     },
     userNameWaiter: {
