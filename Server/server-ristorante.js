@@ -7,23 +7,23 @@ const result = require("dotenv").config({
   path: __dirname + "/.env"
 }); // carica tutte le variabili presenti nel file .env
 const http = require("http");
-const https = require("https");
 const express = require("express"); // Express middleware
 const cors = require("cors");
-const validation = require("./validation");
-const app = express();
-const mongoose = require("mongoose");
-const bodyParser = require("body-parser");
-const jwt = require("express-jwt");
-const passport = require("passport");
-const passportHTTP = require("passport-http");
+const validation = require("./validation"); // used for validating the imput
+const app = express(); // initalizazion of express necessary for creating the API routes
+const mongoose = require("mongoose"); // module for accessing the easy way :)  mongodb 
+// mongoose.Promise = require('bluebird');
+const bodyParser = require("body-parser"); // necessary for express, (it parses the query)
+const jwt = require("express-jwt"); // makes express aware of the presence of jsonwebtoken
+const passport = require("passport"); // used for basic login auth
+const passportHTTP = require("passport-http"); // schema for passport
 const port = process.env.PORT;
-const jsonwebtoken = require("jsonwebtoken");
-const items = require("./modules/items");
-const orders = require("./modules/orders");
-const tables = require("./modules/tables");
-const users = require("./modules/users");
-const stats = require("./modules/stats");
+const jsonwebtoken = require("jsonwebtoken"); // json web tocken used for auth
+const items = require("./modules/items"); // collection db of items
+const orders = require("./modules/orders"); // collection db of orders
+const tables = require("./modules/tables"); // collection db of tables
+const users = require("./modules/users"); // collection db of users
+const stats = require("./modules/stats"); // collection db of stats for each special user ("Cooks and Waiters")
 const io = require("./socket");
 
 var auth = jwt({
@@ -707,25 +707,34 @@ app.route("/api/orders/tickets/:id").get(auth, (req, res) => {
       var arrayList = [];
       var total = 2 * data.numberPeople;
       if(data.beverageList !== [])
-        data.beverageList.forEach(elements => {
-          arrayList.push(elements)
+        data.beverageList.forEach(element => {
+          arrayList.push(element)
         })
       if(data.dishList !== [])
-        data.dishList.forEach(elements => {
-          arrayList.push(elements)
+        data.dishList.forEach(element => {
+          arrayList.push(element)
         })
-      
-      var value;
-      for (const item of arrayList){
-        value = items.getTotal(item)
-        console.log(value);
-      }
-
-      return res.json({
-        confirmation: "success",
-        total : total,
-        data : data
+      items.getModel().find({code : { $in: arrayList}})
+      .then(result => {
+        arrayList.forEach(element => {
+          result.forEach(res => {
+            if(element === res.code)
+              total += res.price;
+          })
+        })
+        return res.json({
+          confirmation : "success",
+          total : total,
+          order : arrayList,
+          dataToPrint : result
+        })
       })
+      .catch(err => {
+        res.json({
+          confirmation: "fail 2",
+          message: err.message
+        });
+      });
     })
     .catch(err => {
       res.json({
@@ -734,7 +743,6 @@ app.route("/api/orders/tickets/:id").get(auth, (req, res) => {
       });
     });
 });
-
 app.route("/api/stats").get(auth, (req, res) => {
   if (!users.newUser(req.user).HisCashier())
     return res.json({
