@@ -12,7 +12,6 @@ const cors = require("cors");
 const validation = require("./validation"); // used for validating the imput
 const app = express(); // initalizazion of express necessary for creating the API routes
 const mongoose = require("mongoose"); // module for accessing the easy way :)  mongodb 
-// mongoose.Promise = require('bluebird');
 const bodyParser = require("body-parser"); // necessary for express, (it parses the query)
 const jwt = require("express-jwt"); // makes express aware of the presence of jsonwebtoken
 const passport = require("passport"); // used for basic login auth

@@ -4,8 +4,6 @@
   "description": "Gestione del server",
   "main": "server-ristorante.js",
   "dependencies": {
-    "async": "^2.6.3",
-    "bluebird": "^3.5.5",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "dotenv": "^8.0.0",
