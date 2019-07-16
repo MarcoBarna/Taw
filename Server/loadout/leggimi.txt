@@ -1,0 +1,3 @@
+To import data on the server for windows you should use
+.\mongoimport.exe --db ristdb --collection items --drop --file "location of your file"
+.\mongoimport.exe --db ristdb --collection tables --drop --file "location of your file"

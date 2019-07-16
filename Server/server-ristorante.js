@@ -30,15 +30,7 @@ var auth = jwt({
 });
 // Connessione al database
 
-/*
- Leggenda better comments
- * = informazioni importanti
- ! = allerta
- ? = domanda
- TODO = cosa da fare
- 4/ = //// completato
 
-*/
 // * LOGGING DELLE VARIE RICHIESTE
 app.use((req, res, next) => {
   console.log(`${new Date().toString()} => ${req.originalUrl}`);
@@ -126,7 +118,7 @@ app
   .route("/api/users")
   .get(auth, (req, res) => {
     if (!users.newUser(req.user).HisCashier())
-      return res.json({
+      return res.status(401).json({
         confirmation: "fail",
         message: "Unauthorized user"
       });
@@ -134,13 +126,13 @@ app
       .getModel()
       .find()
       .then(allusers => {
-        res.json({
+        return res.status(200).json({
           confirmation: "success",
           data: allusers
         });
       })
       .catch(err => {
-        res.json({
+        return res.status(500).json({
           confirmation: "fail",
           message: err.message
         });
@@ -148,7 +140,7 @@ app
   })
   .post(auth, (req, res) => {
     if (!users.newUser(req.user).HisCashier())
-      return res.json({
+      return res.status(401).json({
         confirmation: "fail",
         message: "Unauthorized user"
       });
@@ -164,13 +156,13 @@ app
           .save()
           .then(data => {
             socket.emitEvent("modified user");
-            res.json({
+            return res.status(200).json({
               confirmation: "success",
               data: data
             });
           })
           .catch(err => {
-            res.json({
+            return res.status(500).json({
               confirmation: "fail",
               message: err.message
             });
@@ -182,7 +174,7 @@ app
 //* DELETE USER
 app.route("/api/users/:username").delete(auth, (req, res, next) => {
   if (!users.newUser(req.user).HisCashier())
-    return res.json({
+    return res.status(401).json({
       confirmation: "fail",
       message: "Unauthorized user"
     });
@@ -192,13 +184,24 @@ app.route("/api/users/:username").delete(auth, (req, res, next) => {
       username: req.params.username
     })
     .then(() => {
-      socket.emitEvent("modified user");
-      res.status(200).json({
-        confirmation: "successfully deleted"
-      });
+      stats.getModel().deleteOne({
+        username : req.params.username
+      })
+      .then(() => {
+        socket.emitEvent("modified user");
+        return res.status(200).json({
+          confirmation: "successfully deleted"
+        });
+      })
+      .catch(err => {
+        return next.status(500).json({
+          confirmation: "fail",
+          message: err.message
+        });     
+      })
     })
     .catch(err => {
-      next.json({
+      return next.status(500).json({
         confirmation: "fail",
         message: err.message
       });
@@ -210,7 +213,7 @@ app
   .route("/api/tables")
   .post(auth, (req, res) => {
     if (!users.newUser(req.user).HisCashier())
-      return res.json({
+      return res.status(401).json({
         confirmation: "fail",
         message: "Unauthorized user"
       });
@@ -220,7 +223,7 @@ app
       var newtable = tables.newTable(req.body);
       newtable.save().then(data => {
         socket.emitEvent("modified table");
-        res.json({
+        return res.status(200).json({
           confirmation: "success",
           data: data
         });
@@ -233,13 +236,13 @@ app
       .getModel()
       .find()
       .then(alltables => {
-        res.json({
+        return res.status(200).json({
           confirmation: "success",
           data: alltables
         });
       })
       .catch(err => {
-        res.json({
+        return res.status(500).json({
           confirmation: "fail",
           message: err.message
         });
@@ -254,7 +257,7 @@ app
       !users.newUser(req.user).HisCashier() &&
       !users.newUser(req.user).HisWaiter()
     )
-      return res.json({
+      return res.status(401).json({
         confirmation: "fail",
         message: "Unauthorized user"
       });
@@ -267,12 +270,12 @@ app
         data.occupied = !data.occupied;
         data.save();
         socket.emitEvent("modified table");
-        res.status(200).json({
+        return res.status(200).json({
           confirmation: "successfully modified"
         });
       })
       .catch(err => {
-        res.json({
+        return res.status(500).json({
           confirmation: "fail",
           message: err.message
         });
@@ -280,7 +283,7 @@ app
   })
   .delete(auth, (req, res) => {
     if (!users.newUser(req.user).HisCashier())
-      return res.json({
+      return res.status(401).json({
         confirmation: "fail",
         message: "Unauthorized user"
       });
@@ -291,12 +294,12 @@ app
       })
       .then(() => {
         socket.emitEvent("modified table");
-        res.status(200).json({
+        return res.status(200).json({
           confirmation: "successfully deleted"
         });
       })
       .catch(err => {
-        res.json({
+        return res.status(500).json({
           confirmation: "fail",
           message: err.message
         });
@@ -316,13 +319,13 @@ app
       .getModel()
       .find()
       .then(allitems => {
-        res.json({
+        return res.status(200).json({
           confirmation: "success",
           data: allitems
         });
       })
       .catch(err => {
-        res.json({
+        return res.status(500).json({
           confirmation: "fail",
           message: err.message
         });
@@ -331,7 +334,7 @@ app
   .post(auth, (req, res) => {
     // * CREATE NEW ITEM
     if (!users.newUser(req.user).HisCashier())
-      return res.json({
+      return res.status(401).json({
         confirmation: "fail",
         message: "Unauthorized user"
       });
@@ -340,7 +343,7 @@ app
     else {
       var newitem = items.newItem(req.body);
       newitem.save().then(data => {
-        res.json({
+        return res.status(200).json({
           confirmation: "success",
           data: data
         });
@@ -353,7 +356,7 @@ app
   .route("/api/items/:code")
   .delete(auth, (req, res) => {
     if (!users.newUser(req.user).HisCashier())
-      return res.json({
+      return res.status(401).json({
         confirmation: "fail",
         message: "Unauthorized user"
       });
@@ -363,12 +366,12 @@ app
         code: req.params.code
       })
       .then(() => {
-        res.status(200).json({
+        return res.status(200).json({
           confirmation: "successfully deleted"
         });
       })
       .catch(err => {
-        res.json({
+        return res.status(500).json({
           confirmation: "fail",
           message: err.message
         });
@@ -382,13 +385,13 @@ app
         code: req.params.code
       })
       .then(singleItem => {
-        res.json({
+        return res.status(200).json({
           confirmation: "success",
           data: singleItem
         });
       })
       .catch(err => {
-        res.json({
+        return res.status(500).json({
           confirmation: "fail",
           message: err.message
         });
@@ -400,7 +403,7 @@ app
   .route("/api/orders")
   .get(auth, (req, res) => {
     if (users.newUser(req.user).HisWaiter())
-      return res.json({
+      return res.status(401).json({
         confirmation: "fail",
         message: "Unauthorized user"
       });
@@ -408,13 +411,13 @@ app
       .getModel()
       .find()
       .then(allorders => {
-        res.json({
+        return res.status(200).json({
           confirmation: "success",
           data: allorders
         });
       })
       .catch(err => {
-        res.json({
+        return res.status(500).json({
           confirmation: "fail",
           message: err.message
         });
@@ -423,7 +426,7 @@ app
   .post(auth, (req, res) => {
     // * NEW ORDER
     if (!users.newUser(req.user).HisWaiter())
-      return res.json({
+      return res.status(401).json({
         confirmation: "fail",
         message: "Unauthorized user"
       });
@@ -448,20 +451,20 @@ app
               user.numberOfOrders++;
 
               user.save().catch(err => {
-                res.json({
+                res.status(500).json({
                   confirmation: "fail",
                   message: err.message
                 });
               });
             });
           socket.emitEvent("send order");
-          res.json({
+          return res.status(200).json({
             confirmation: "success",
             order: data
           });
         })
         .catch(err => {
-          res.json({
+          return res.status(500).json({
             confirmation: "fail",
             message: err.message
           });
@@ -471,7 +474,7 @@ app
   .patch(auth, (req, res) => {
     //* ADD A NEW ORDER TO AN EXISTING ONE
     if (!users.newUser(req.user).HisWaiter())
-      return res.json({
+      return res.status(401).json({
         confirmation: "fail",
         message: "Unauthorized user"
       });
@@ -517,7 +520,7 @@ app
           });
         })
         .catch(err => {
-          res.json({
+          return res.status(500).json({
             confirmation: "fail",
             message: err.message
           });
@@ -530,7 +533,7 @@ app
   .route("/api/orders/:id")
   .delete(auth, (req, res) => {
     if (!users.newUser(req.user).HisCashier())
-      return res.json({
+      return res.status(401).json({
         confirmation: "fail",
         message: "Unauthorized user"
       });
@@ -540,12 +543,12 @@ app
         orderNumber: req.params.id
       })
       .then(() => {
-        res.status(200).json({
+        return res.status(200).json({
           confirmation: "successfully deleted"
         });
       })
       .catch(err => {
-        res.json({
+        return res.status(500).json({
           confirmation: "fail",
           message: err.message
         });
@@ -564,23 +567,22 @@ app
         orderNumber: req.params.id
       })
       .then(singleOrder => {
-        res.json({
+        return res.status(200).json({
           confirmation: "success",
           data: singleOrder
         });
       })
       .catch(err => {
-        res.json({
+        return res.status(500).json({
           confirmation: "fail",
           message: err.message
         });
       });
   });
 
-// ! TESTARE QUESTA API RICORDANDOSI DI INSERIRE I CODICI GIUSTI IN ITEMS
 app.route("/api/orders/dishes/:id").patch(auth, (req, res) => {
   if (!users.newUser(req.user).HisCook())
-    return res.json({
+    return res.status(401).json({
       confirmation: "fail",
       message: "Unauthorized user",
       data: req.user
@@ -598,9 +600,7 @@ app.route("/api/orders/dishes/:id").patch(auth, (req, res) => {
           .getModel()
           .findOne({ username: req.user.username })
           .then(cook => {
-            console.log(cook.numberOfPlates);
             cook.numberOfPlates += 1;
-            console.log(cook.numberOfPlates);
             items
               .getModel()
               .findOne({ code: data.dishList[req.body.index] })
@@ -609,13 +609,13 @@ app.route("/api/orders/dishes/:id").patch(auth, (req, res) => {
                 cook
                   .save()
                   .catch(err => {
-                    res.json({
+                    return res.status(500).json({
                       confirmation: "fail",
                       message: err.message
                     });
                   })
                   .catch(err => {
-                    res.json({
+                    return res.status(500).json({
                       confirmation: "fail",
                       message: err.message
                     });
@@ -623,7 +623,7 @@ app.route("/api/orders/dishes/:id").patch(auth, (req, res) => {
               });
           })
           .catch(err => {
-            res.json({
+            return res.status(500).json({
               confirmation: "fail",
               message: err.message
             });
@@ -637,20 +637,20 @@ app.route("/api/orders/dishes/:id").patch(auth, (req, res) => {
       data
         .save()
         .then(() => {
-          res.status(200).json({
+          return res.status(200).json({
             confirmation: "successfully modified",
             dishState: data.dishState[req.body.index]
           });
         })
         .catch(err => {
-          res.json({
+          return res.status(500).json({
             confirmation: "fail",
             message: err.message
           });
         });
     })
     .catch(err => {
-      res.json({
+      return res.status(500).json({
         confirmation: "fail",
         message: err.message
       });
@@ -659,7 +659,7 @@ app.route("/api/orders/dishes/:id").patch(auth, (req, res) => {
 
 app.route("/api/orders/beverages/:id").patch(auth, (req, res) => {
   if (!users.newUser(req.user).HisBartender())
-    return res.json({
+    return res.status(401).json({
       confirmation: "fail",
       message: "Unauthorized user"
     });
@@ -673,20 +673,20 @@ app.route("/api/orders/beverages/:id").patch(auth, (req, res) => {
         .save()
         .then(() => {
           socket.emitEvent("beverages ready");
-          res.status(200).json({
+          return res.status(200).json({
             confirmation: "successfully modified",
             dishState: data.beverageState
           });
         })
         .catch(err => {
-          res.json({
+          return res.status(500).json({
             confirmation: "fail",
             message: err.message
           });
         });
     })
     .catch(err => {
-      res.json({
+      return res.status(500).json({
         confirmation: "fail",
         message: err.message
       });
@@ -695,7 +695,7 @@ app.route("/api/orders/beverages/:id").patch(auth, (req, res) => {
 
 app.route("/api/orders/tickets/:id").get(auth, (req, res) => {
   if (!users.newUser(req.user).HisCashier())
-    return res.json({
+    return res.status(401).json({
       confirmation: "fail",
       message: "Unauthorized user"
     });
@@ -721,7 +721,7 @@ app.route("/api/orders/tickets/:id").get(auth, (req, res) => {
               total += res.price;
           })
         })
-        return res.json({
+        return res.status(200).json({
           confirmation : "success",
           total : total,
           order : arrayList,
@@ -729,14 +729,14 @@ app.route("/api/orders/tickets/:id").get(auth, (req, res) => {
         })
       })
       .catch(err => {
-        res.json({
-          confirmation: "fail 2",
+        return res.status(500).json({
+          confirmation: "fail",
           message: err.message
         });
       });
     })
     .catch(err => {
-      res.json({
+      return res.status(500).json({
         confirmation: "fail",
         message: err.message
       });
@@ -744,7 +744,7 @@ app.route("/api/orders/tickets/:id").get(auth, (req, res) => {
 });
 app.route("/api/stats").get(auth, (req, res) => {
   if (!users.newUser(req.user).HisCashier())
-    return res.json({
+    return res.status(401).json({
       confirmation: "fail",
       message: "Unauthorized user"
     });
@@ -753,13 +753,13 @@ app.route("/api/stats").get(auth, (req, res) => {
     .getModel()
     .find()
     .then(allstats => {
-      res.json({
+      return res.status(200).json({
         confirmation: "success",
         data: allstats
       });
     })
     .catch(err => {
-      res.json({
+      return res.status(200).json({
         confirmation: "fail",
         message: err.message
       });
@@ -820,6 +820,75 @@ mongoose
       );
       socket = new io.Socket(server);
       console.log("Socket.io Server Ready");
+
+      // * ADMIN CREATION
+      var nwuser = users.newUser({
+        "username" : "admin",
+        "password" : "admin",
+        "role" : 1
+      });
+      nwuser.setPassword("admin");
+      nwuser.save(function(err) {
+        if (!err){
+          var nwstat = stats.newstats({
+            "username" : "admin"
+          });
+          nwstat
+            .save()
+        }
+        else console.log("admin alredy created");
+      });
+      // * WAITER CREATION
+      var nwuser2 = users.newUser({
+        "username" : "waiter",
+        "password" : "waiter",
+        "role" : 2
+      });
+      nwuser2.setPassword("waiter");
+      nwuser2.save(function(err) {
+        if (!err){
+          var nwstat = stats.newstats({
+            "username" : "waiter"
+          });
+          nwstat
+            .save()
+        }
+        else console.log("waiter alredy created");
+      });
+      // * COOK CREATION
+      var nwuser3 = users.newUser({
+        "username" : "cook",
+        "password" : "cook",
+        "role" : 3
+      });
+      nwuser3.setPassword("cook");
+      nwuser3.save(function(err) {
+        if (!err){
+          var nwstat = stats.newstats({
+            "username" : "cook"
+          });
+          nwstat
+            .save()
+        }
+        else console.log("cook alredy created");
+      });
+      // * BARTENDER CREATION
+      var nwuser4 = users.newUser({
+        "username" : "bartender",
+        "password" : "bartender",
+        "role" : 1
+      });
+      nwuser4.setPassword("bartender");
+      nwuser4.save(function(err) {
+        if (!err){
+          var nwstat = stats.newstats({
+            "username" : "bartender"
+          });
+          nwstat
+            .save()
+        }
+        else console.log("bartender alredy created");
+      });
     },
     function onrejected() {
       console.log("Unable to connect to MongoDB");
