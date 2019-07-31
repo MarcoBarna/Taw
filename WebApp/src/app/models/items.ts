@@ -1,4 +1,4 @@
-export interface items {
+export interface Items {
     code: number;
     name: string;
     requiredTime: number;

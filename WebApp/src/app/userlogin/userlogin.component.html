@@ -1,0 +1,59 @@
+<div class="container" style="width: 400px; margin-top: 20px;">
+  <div class="form-signin text-center loginform ">
+    <i class="fas fa-envelope loginlogo"></i>
+
+    <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+
+    <br />
+
+    <label for="inputEmail" class="sr-only">Email address</label>
+    <input
+      type="email"
+      #mailtxt
+      id="inputEmail"
+      class="form-control"
+      placeholder="Email address"
+      required
+      autofocus
+    />
+
+    <br />
+
+    <label for="inputPassword" class="sr-only">Password</label>
+    <input
+      type="password"
+      #passwdtxt
+      id="inputPassword"
+      class="form-control"
+      placeholder="Password"
+      required
+    />
+
+    <br />
+
+    <div *ngIf="errmessage" class="alert alert-danger" role="alert">
+      Login error: {{ errmessage }}
+    </div>
+
+    <button
+      class="btn btn-lg btn-primary btn-block"
+      (click)="login(mailtxt.value, passwdtxt.value)"
+      [disabled]="disableButton"
+    >
+      Sign in
+      <span
+        class="spinner-border spinner-border-sm"
+        role="status"
+        aria-hidden="true"
+        [hidden]="!disableButton"
+      ></span>
+    </button>
+
+    <!--<button class="btn btn-lg btn-primary btn-block" (click)="login( 'admin', 'admin');" >Admin</button>
+    <button class="btn btn-lg btn-primary btn-block" (click)="login( 'waiter1', 'waiter1');" >Waiter</button>
+    <button class="btn btn-lg btn-primary btn-block" (click)="login( 'cook1', 'cook1');" >Cook</button>
+    <button class="btn btn-lg btn-primary btn-block" (click)="login( 'bartender1', 'bartender1');" >Bartender</button>-->
+
+    <p class="mt-5 mb-3 text-muted">&copy;CannavaScript</p>
+  </div>
+</div>
