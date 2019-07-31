@@ -19,7 +19,7 @@ let userSchema = new Schema({
     required: true
   },
   role: {
-    // 1 - Cassiere, 2 - Cameriere, 3 - Cuoco, 4 - Barista
+    // 1 - Cashier, 2 - Waiter, 3 - Cook, 4 - Bartender, 5 - Client (Restaurant) 
     type: mongoose.SchemaTypes.Number,
     required: true
   },
@@ -61,6 +61,10 @@ userSchema.methods.HisCook = function() {
 };
 userSchema.methods.HisBartender = function() {
   return this.role === 4;
+};
+
+userSchema.methods.HisClient = function() {
+  return this.role === 5;
 };
 
 function getSchema() {

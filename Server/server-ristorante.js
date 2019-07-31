@@ -1,8 +1,11 @@
+/* eslint-disable no-undef */
 "use strict";
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+// eslint-disable-next-line no-unused-vars
 var ObjectID = require("mongodb").ObjectID;
+// eslint-disable-next-line no-unused-vars
 const result = require("dotenv").config({
   path: __dirname + "/.env"
 }); // carica tutte le variabili presenti nel file .env
@@ -11,7 +14,7 @@ const express = require("express"); // Express middleware
 const cors = require("cors");
 const validation = require("./validation"); // used for validating the imput
 const app = express(); // initalizazion of express necessary for creating the API routes
-const mongoose = require("mongoose"); // module for accessing the easy way :)  mongodb 
+const mongoose = require("mongoose"); // module for accessing the easy way :)  mongodb
 const bodyParser = require("body-parser"); // necessary for express, (it parses the query)
 const jwt = require("express-jwt"); // makes express aware of the presence of jsonwebtoken
 const passport = require("passport"); // used for basic login auth
@@ -29,7 +32,6 @@ var auth = jwt({
   secret: process.env.JWT_SECRET
 });
 // Connessione al database
-
 
 // * LOGGING DELLE VARIE RICHIESTE
 app.use((req, res, next) => {
@@ -184,21 +186,23 @@ app.route("/api/users/:username").delete(auth, (req, res, next) => {
       username: req.params.username
     })
     .then(() => {
-      stats.getModel().deleteOne({
-        username : req.params.username
-      })
-      .then(() => {
-        socket.emitEvent("modified user");
-        return res.status(200).json({
-          confirmation: "successfully deleted"
+      stats
+        .getModel()
+        .deleteOne({
+          username: req.params.username
+        })
+        .then(() => {
+          socket.emitEvent("modified user");
+          return res.status(200).json({
+            confirmation: "successfully deleted"
+          });
+        })
+        .catch(err => {
+          return next.status(500).json({
+            confirmation: "fail",
+            message: err.message
+          });
         });
-      })
-      .catch(err => {
-        return next.status(500).json({
-          confirmation: "fail",
-          message: err.message
-        });     
-      })
     })
     .catch(err => {
       return next.status(500).json({
@@ -206,6 +210,56 @@ app.route("/api/users/:username").delete(auth, (req, res, next) => {
         message: err.message
       });
     });
+});
+
+// * CREATE CLIENT APP
+app.route("/api/clients").post((req, res) => {
+  const { error } = validation.validateBody(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
+  else {
+    var nwuser = users.newUser(req.body);
+    nwuser.setPassword(req.body.password);
+    nwuser.save(function(err) {
+      if (err) return res.send("Error, username already exist");
+    });
+    return res.status(200).json({
+      confirmation: "success",
+      data: req.body
+    });
+  }
+});
+
+app.route("/api/clients/order").post(auth, (req, res) => {
+  // * NEW ORDER
+  if (!users.newUser(req.user).HisClient())
+    return res.status(401).json({
+      confirmation: "fail",
+      message: "Unauthorized user"
+    });
+  const { error } = validation.validateOrder(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
+  else {
+    var neworder = orders.newOrder(req.body);
+    neworder.date = new Date();
+    neworder.dishList.forEach(element => {
+      neworder.dishState.push(0);
+    });
+    neworder
+      .save()
+      .then(data => {
+        socket.emitEvent("send order");
+        return res.status(200).json({
+          confirmation: "success",
+          order: data
+        });
+      })
+      .catch(err => {
+        return res.status(500).json({
+          confirmation: "fail",
+          message: err.message
+        });
+      });
+  }
 });
 
 // * TABLE CREATION
@@ -255,7 +309,8 @@ app
   .patch(auth, (req, res) => {
     if (
       !users.newUser(req.user).HisCashier() &&
-      !users.newUser(req.user).HisWaiter()
+      !users.newUser(req.user).HisWaiter() &&
+      !users.newUser(req.user).HisClient()
     )
       return res.status(401).json({
         confirmation: "fail",
@@ -705,35 +760,36 @@ app.route("/api/orders/tickets/:id").get(auth, (req, res) => {
     .then(data => {
       var arrayList = [];
       var total = 2 * data.numberPeople;
-      if(data.beverageList !== [])
+      if (data.beverageList !== [])
         data.beverageList.forEach(element => {
-          arrayList.push(element)
-        })
-      if(data.dishList !== [])
-        data.dishList.forEach(element => {
-          arrayList.push(element)
-        })
-      items.getModel().find({code : { $in: arrayList}})
-      .then(result => {
-        arrayList.forEach(element => {
-          result.forEach(res => {
-            if(element === res.code)
-              total += res.price;
-          })
-        })
-        return res.status(200).json({
-          confirmation : "success",
-          total : total,
-          order : arrayList,
-          dataToPrint : result
-        })
-      })
-      .catch(err => {
-        return res.status(500).json({
-          confirmation: "fail",
-          message: err.message
+          arrayList.push(element);
         });
-      });
+      if (data.dishList !== [])
+        data.dishList.forEach(element => {
+          arrayList.push(element);
+        });
+      items
+        .getModel()
+        .find({ code: { $in: arrayList } })
+        .then(result => {
+          arrayList.forEach(element => {
+            result.forEach(res => {
+              if (element === res.code) total += res.price;
+            });
+          });
+          return res.status(200).json({
+            confirmation: "success",
+            total: total,
+            order: arrayList,
+            dataToPrint: result
+          });
+        })
+        .catch(err => {
+          return res.status(500).json({
+            confirmation: "fail",
+            message: err.message
+          });
+        });
     })
     .catch(err => {
       return res.status(500).json({
@@ -823,71 +879,63 @@ mongoose
 
       // * ADMIN CREATION
       var nwuser = users.newUser({
-        "username" : "admin",
-        "password" : "admin",
-        "role" : 1
+        username: "admin",
+        password: "admin",
+        role: 1
       });
       nwuser.setPassword("admin");
       nwuser.save(function(err) {
-        if (!err){
+        if (!err) {
           var nwstat = stats.newstats({
-            "username" : "admin"
+            username: "admin"
           });
-          nwstat
-            .save()
-        }
-        else console.log("admin alredy created");
+          nwstat.save();
+        } else console.log("admin alredy created");
       });
       // * WAITER CREATION
       var nwuser2 = users.newUser({
-        "username" : "waiter",
-        "password" : "waiter",
-        "role" : 2
+        username: "waiter",
+        password: "waiter",
+        role: 2
       });
       nwuser2.setPassword("waiter");
       nwuser2.save(function(err) {
-        if (!err){
+        if (!err) {
           var nwstat = stats.newstats({
-            "username" : "waiter"
+            username: "waiter"
           });
-          nwstat
-            .save()
-        }
-        else console.log("waiter alredy created");
+          nwstat.save();
+        } else console.log("waiter alredy created");
       });
       // * COOK CREATION
       var nwuser3 = users.newUser({
-        "username" : "cook",
-        "password" : "cook",
-        "role" : 3
+        username: "cook",
+        password: "cook",
+        role: 3
       });
       nwuser3.setPassword("cook");
       nwuser3.save(function(err) {
-        if (!err){
+        if (!err) {
           var nwstat = stats.newstats({
-            "username" : "cook"
+            username: "cook"
           });
-          nwstat
-            .save()
-        }
-        else console.log("cook alredy created");
+          nwstat.save();
+        } else console.log("cook alredy created");
       });
       // * BARTENDER CREATION
       var nwuser4 = users.newUser({
-        "username" : "bartender",
-        "password" : "bartender",
-        "role" : 1
+        username: "bartender",
+        password: "bartender",
+        role: 1
       });
       nwuser4.setPassword("bartender");
       nwuser4.save(function(err) {
-        if (!err){
+        if (!err) {
           var nwstat = stats.newstats({
-            "username" : "bartender"
+            username: "bartender"
           });
-          nwstat
-            .save()
-        }
-        else console.log("bartender alredy created");
+          nwstat.save();
+        } else console.log("bartender alredy created");
       });
     },
     function onrejected() {
