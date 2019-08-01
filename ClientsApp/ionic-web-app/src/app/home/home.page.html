@@ -1,0 +1,35 @@
+<ion-item-divider>
+  <ion-label>
+    LOGO O NOME RISTORANTE
+  </ion-label>
+</ion-item-divider>
+
+  <ion-grid>
+      <ion-col>
+        <ion-row>
+            <ion-item> 
+                <ion-label position="stacked">Username</ion-label>
+                <ion-input
+                id="inputUsername"
+                class="form-control"
+                required
+                autofocus> </ion-input>
+              </ion-item>
+        </ion-row> 
+        <ion-row>
+            <ion-item>
+                <ion-label position="stacked">Password</ion-label>
+                <ion-input
+                type="password"
+                #passwdtxt
+                id="inputPassword"
+                class="form-control"
+                required></ion-input>
+              </ion-item>
+        </ion-row>
+        <ion-row>
+          <ion-button shape="round" fill="outline">Log in</ion-button>
+        </ion-row>
+      </ion-col>
+    </ion-grid>
+
