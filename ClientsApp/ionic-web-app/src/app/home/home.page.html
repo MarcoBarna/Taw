@@ -1,35 +1,48 @@
-<ion-item-divider>
-  <ion-label>
-    LOGO O NOME RISTORANTE
-  </ion-label>
-</ion-item-divider>
-
-  <ion-grid>
-      <ion-col>
-        <ion-row>
-            <ion-item> 
-                <ion-label position="stacked">Username</ion-label>
+<ion-app>
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-title> RESTAURANT DENTINO</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+    <ion-grid>
+      <ion-row>
+        <ion-col size-md="6" offset-md="3">
+          <ion-card>
+            <ion-card-header>
+              <ion-card-title>AREA LOGIN</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              <ion-item>
+                <ion-label position="floating">Username</ion-label>
                 <ion-input
-                id="inputUsername"
-                class="form-control"
-                required
-                autofocus> </ion-input>
+                  id="inputUsername"
+                  class="form-control"
+                  required
+                  autofocus
+                >
+                </ion-input>
               </ion-item>
-        </ion-row> 
-        <ion-row>
-            <ion-item>
-                <ion-label position="stacked">Password</ion-label>
+              <ion-item>
+                <ion-label position="floating">Password</ion-label>
                 <ion-input
-                type="password"
-                #passwdtxt
-                id="inputPassword"
-                class="form-control"
-                required></ion-input>
+                  type="password"
+                  #passwdtxt
+                  id="inputPassword"
+                  class="form-control"
+                  required
+                ></ion-input>
               </ion-item>
-        </ion-row>
-        <ion-row>
-          <ion-button shape="round" fill="outline">Log in</ion-button>
-        </ion-row>
-      </ion-col>
+              <div margin-vertical text-right>
+                <ion-button id="btn-login" shape="round" fill="outline">
+                  <ion-icon slot="start" name="log-in"></ion-icon>
+                  Log in</ion-button
+                >
+              </div>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
     </ion-grid>
-
+  </ion-content>
+</ion-app>
