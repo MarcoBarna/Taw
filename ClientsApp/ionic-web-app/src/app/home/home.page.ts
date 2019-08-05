@@ -31,7 +31,25 @@ export class HomePage implements OnInit {
       this.errmessage = undefined;
       console.log('Login granted: ' + JSON.stringify(data));
       console.log('User service token: ' + this.us.get_token() );
-      // this.router.navigate(['/' + this.role.toLowerCase()])
+      switch(this.role){
+        case 1 :
+          this.router.navigate(['cashier']);
+          break;
+        case 2 :
+          this.router.navigate(['waiter']);
+          break;
+        case 3 :
+          this.router.navigate(['cook']);
+          break;
+        case 4 :
+          this.router.navigate(['bartender']);
+          break;
+        case 5 :
+          this.router.navigate(['client']);
+          break;
+      }
+
+      // this.router.navigate(['/' + this.role]);
     }, (err) => {
       console.log('Login error: ' + JSON.stringify(err.error.errormessage) );
       // this.errmessage = (err.error) ? err.error.errormessage || err.error.message : err;

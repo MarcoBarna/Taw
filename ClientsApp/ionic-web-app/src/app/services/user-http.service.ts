@@ -101,7 +101,7 @@ export class UserHttpService {
     this.token = '';
     sessionStorage.removeItem('restaurant_token');
     clearInterval(this.renew_clock);
-    this.router.navigate(['users/login']);
+    this.router.navigate(['/login']);
   }
 
   ngOnDestroy() {
@@ -127,7 +127,7 @@ export class UserHttpService {
     // console.log('lollo cazzaro: ' + (this.token));
     console.log(this.token);
     // console.log(jwt_decode(this.token).role);
-    return jwt_decode(this.token).role.toLowerCase();
+    return jwt_decode(this.token).role;
   }
 
   get_id() {

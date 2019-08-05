@@ -3,8 +3,8 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
 
 const routes: Routes = [
-  { path: '', redirectTo: 'users/login', pathMatch: 'full' },
-  { path: 'users/login',
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: 'login',
     children: [
       {
         path: '',
@@ -13,8 +13,17 @@ const routes: Routes = [
       }
     ]
   },
-  { path: 'cashier', loadChildren: './cashier/cashier.module#CashierPageModule' }
-  
+  {
+    path: 'cashier',
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        loadChildren: () => import('./cashier/cashier.module').then(c => c.CashierPageModule)
+      }
+    ]
+  },
+  { path: 'menu', loadChildren: './menu/menu.module#MenuPageModule' }
 ];
 
 @NgModule({
