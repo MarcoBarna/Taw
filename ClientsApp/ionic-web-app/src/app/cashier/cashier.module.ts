@@ -10,7 +10,33 @@ import { CashierPage } from './cashier.page';
 const routes: Routes = [
   {
     path: '',
-    component: CashierPage
+    redirectTo: '1/tablestatus'
+  },
+  {
+    path: '1',
+    component: CashierPage,
+    children: [
+      {
+        path: 'tablestatus',
+        loadChildren: () => import('./modules/tablestatus/tablestatus.module').then(p => p.TablestatusPageModule)
+      },
+      {
+        path: 'kitchenque',
+        loadChildren: () => import('./modules/kitchenque/kitchenque.module').then(p => p.KitchenquePageModule)
+      },
+      {
+        path: 'ticket',
+        loadChildren: () => import('./modules/ticket/ticket.module').then(p => p.TicketPageModule)
+      },
+      {
+        path: 'gestusers',
+        loadChildren: () => import('./modules/gestusers/gestusers.module').then(p => p.GestusersPageModule)
+      },
+      {
+        path: 'stats',
+        loadChildren: () => import('./modules/stats/stats.module').then(p => p.StatsPageModule)
+      }
+    ]
   }
 ];
 

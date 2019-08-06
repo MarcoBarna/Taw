@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MenuController } from '@ionic/angular';
+import { Router, RouterEvent } from '@angular/router';
 
 
 @Component({
@@ -9,14 +10,38 @@ import { MenuController } from '@ionic/angular';
 })
 export class CashierPage implements OnInit {
 
-  constructor(private menu: MenuController) { }
+  pages = [
+    {
+      title: 'Table Status',
+      url: 'tablestatus'
+    },
+    {
+      title: 'Kitchen Queque',
+      url: 'kitchenque'
+    },
+    {
+      title: 'Tickets',
+      url: 'ticket'
+    },
+    {
+      title: 'User Management ',
+      url: 'gestusers'
+    },
+    {
+      title: 'Statistics',
+      url: 'stats'
+    }
+  ];
 
-  ngOnInit() {
+  selectedPath = '';
+
+  constructor(private router: Router) {
+    this.router.events.subscribe((event: RouterEvent) => {
+      this.selectedPath = event.url;
+    });
   }
 
-  openMenu(){
-    this.menu.enable(true, 'myMenu');
-    this.menu.open('myMenu');
+  ngOnInit() {
   }
 
 }
