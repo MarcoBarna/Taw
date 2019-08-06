@@ -10,6 +10,7 @@ import { Router, RouterEvent } from '@angular/router';
 })
 export class CashierPage implements OnInit {
 
+  selectedPath = '';
   pages = [
     {
       title: 'Table Status',
@@ -32,12 +33,13 @@ export class CashierPage implements OnInit {
       url: 'stats'
     }
   ];
-
-  selectedPath = '';
-
+  
   constructor(private router: Router) {
     this.router.events.subscribe((event: RouterEvent) => {
-      this.selectedPath = event.url;
+      if(event && event.url){
+        this.selectedPath = event.url;
+        console.log(this.selectedPath);
+      }
     });
   }
 

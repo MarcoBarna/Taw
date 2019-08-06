@@ -10,31 +10,36 @@ import { CashierPage } from './cashier.page';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: '1/tablestatus'
+    redirectTo: 'menu/tablestatus'
   },
   {
-    path: '1',
+    path: 'menu',
     component: CashierPage,
     children: [
       {
         path: 'tablestatus',
-        loadChildren: () => import('./modules/tablestatus/tablestatus.module').then(p => p.TablestatusPageModule)
+        loadChildren: () =>
+          import('./modules/tablestatus/tablestatus.module').then(table => table.TablestatusPageModule)
       },
       {
         path: 'kitchenque',
-        loadChildren: () => import('./modules/kitchenque/kitchenque.module').then(p => p.KitchenquePageModule)
+        loadChildren: () =>
+          import('./modules/kitchenque/kitchenque.module').then(kitch => kitch.KitchenquePageModule)
       },
       {
         path: 'ticket',
-        loadChildren: () => import('./modules/ticket/ticket.module').then(p => p.TicketPageModule)
+        loadChildren: () =>
+          import('./modules/ticket/ticket.module').then(ticket => ticket.TicketPageModule)
       },
       {
         path: 'gestusers',
-        loadChildren: () => import('./modules/gestusers/gestusers.module').then(p => p.GestusersPageModule)
+        loadChildren: () =>
+          import('./modules/gestusers/gestusers.module').then(gestusr => gestusr.GestusersPageModule)
       },
       {
         path: 'stats',
-        loadChildren: () => import('./modules/stats/stats.module').then(p => p.StatsPageModule)
+        loadChildren: () =>
+          import('./modules/stats/stats.module').then(stats => stats.StatsPageModule)
       }
     ]
   }
