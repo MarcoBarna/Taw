@@ -937,6 +937,18 @@ mongoose
           nwstat.save();
         } else console.log("bartender alredy created");
       });
+      // * CLIENT CREATION
+      var nwuser5 = users.newUser({
+        username: "client",
+        password: "client",
+        role: 5
+      });
+      nwuser5.setPassword("client");
+      nwuser5.save(function(err) {
+        if (!err) {
+          console.log("Client user created")
+        } else console.log("client alredy created");
+      });
     },
     function onrejected() {
       console.log("Unable to connect to MongoDB");
