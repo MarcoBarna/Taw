@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { Platform } from '@ionic/angular';
+import { Platform, MenuController } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 
@@ -14,28 +14,29 @@ export class AppComponent implements OnInit  {
 
   public appPages = [
     {
-      title: 'Dashboard',
-      url: 'cashier/menu'
-    },
-    {
-      title: 'Table Status',
-      url: 'cashier/menu/tablestatus'
+      title: 'Table Status List',
+      url: 'cashier/menu/tablestatus',
+      icon: 'home'
     },
     {
       title: 'Kitchen Queque',
-      url: 'cashier/menu/kitchenque'
+      url: 'cashier/menu/kitchenque',
+      icon: 'time'
     },
     {
       title: 'Tickets',
-      url: 'cashier/menu/ticket'
+      url: 'cashier/menu/ticket',
+      icon: 'paper'
     },
     {
-      title: 'User Management',
-      url: 'cashier/menu/gestusers'
+      title: 'Users',
+      url: 'cashier/menu/gestusers',
+      icon: 'people'
     },
     {
       title: 'Statistics',
-      url: 'cashier/menu/stats'
+      url: 'cashier/menu/stats',
+      icon: 'stats'
     }
   ];
 
@@ -43,7 +44,8 @@ export class AppComponent implements OnInit  {
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,
-    private statusBar: StatusBar
+    private statusBar: StatusBar,
+    private menuCtrl: MenuController,
   ) {
     this.initializeApp();
   }

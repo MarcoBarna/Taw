@@ -9,6 +9,10 @@ import { MenuController } from '@ionic/angular';
 })
 export class TablestatusPage implements OnInit {
 
+  tables = [
+    
+  ]
+
   constructor(private router: Router,  public menuCtrl: MenuController) {
     this.menuCtrl.enable(true);
   }

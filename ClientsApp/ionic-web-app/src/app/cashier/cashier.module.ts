@@ -9,14 +9,10 @@ import { CashierPage } from './cashier.page';
 
 const routes: Routes = [
 
-  { path: '', redirectTo: 'menu', pathMatch: 'full' },
+  { path: '', redirectTo: 'menu/tablestatus', pathMatch: 'full' },
   {
     path: 'menu',
     children: [
-      {
-        path: '',
-        component: CashierPage
-      },
       {
         path: 'tablestatus',
         loadChildren: () => import('./modules/tablestatus/tablestatus.module').then(m => m.TablestatusPageModule)

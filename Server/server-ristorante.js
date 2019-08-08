@@ -101,7 +101,7 @@ app.get(
 );
 
 // ! RENEW TOKEN, CI VA L'AUTH?
-app.get("/api/users/renew", auth, (req, res) => {
+app.get("/api/renew", auth, (req, res) => {
   var tokendata = req.user;
   delete tokendata.iat;
   delete tokendata.exp;

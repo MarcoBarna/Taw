@@ -1,9 +1,26 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>tablestatus</ion-title>
+    <ion-toolbar color='primary'>
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+    <ion-title>TABLE STATUS LIST</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content padding>
+    <ion-grid>
+        <ion-row>
+            <ion-col **ngFor="let table of tables">
+                <ion-card>
+                    <ion-card-header>
+                        <ion-card-title> {{ table.title }}</ion-card-title>
+                    </ion-card-header>
+                    <ion-card-content>
+                        {{ table.text }}
+                    </ion-card-content>
+                </ion-card>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
 
 </ion-content>
