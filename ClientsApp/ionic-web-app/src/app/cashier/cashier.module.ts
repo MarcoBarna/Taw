@@ -8,18 +8,18 @@ import { IonicModule } from '@ionic/angular';
 import { CashierPage } from './cashier.page';
 
 const routes: Routes = [
-  {
-    path: '',
-    redirectTo: 'menu/tablestatus'
-  },
+
+  { path: '', redirectTo: 'menu', pathMatch: 'full' },
   {
     path: 'menu',
-    component: CashierPage,
     children: [
       {
+        path: '',
+        component: CashierPage
+      },
+      {
         path: 'tablestatus',
-        loadChildren: () =>
-          import('./modules/tablestatus/tablestatus.module').then(table => table.TablestatusPageModule)
+        loadChildren: () => import('./modules/tablestatus/tablestatus.module').then(m => m.TablestatusPageModule)
       },
       {
         path: 'kitchenque',
@@ -42,6 +42,7 @@ const routes: Routes = [
           import('./modules/stats/stats.module').then(stats => stats.StatsPageModule)
       }
     ]
+
   }
 ];
 

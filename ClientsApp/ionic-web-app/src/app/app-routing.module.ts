@@ -16,14 +16,44 @@ const routes: Routes = [
   },
   {
     path: 'cashier',
-      loadChildren: () =>
-          import('./cashier/cashier.module').then(c => c.CashierPageModule)
+    loadChildren: () =>
+      import('./cashier/cashier.module').then(m => m.CashierPageModule)
   },
-  // { path: 'ticket', loadChildren: './cashier/modules/ticket/ticket.module#TicketPageModule' },
-  // { path: 'tablestatus', loadChildren: './cashier/modules/tablestatus/tablestatus.module#TablestatusPageModule' },
-  // { path: 'kitchenque', loadChildren: './cashier/modules/kitchenque/kitchenque.module#KitchenquePageModule' },
-  // { path: 'gestusers', loadChildren: './cashier/modules/gestusers/gestusers.module#GestusersPageModule' },
-  // { path: 'stats', loadChildren: './cashier/modules/stats/stats.module#StatsPageModule' }
+  {
+    path: 'tablestatus',
+    loadChildren: () =>
+      import('./cashier/modules/tablestatus/tablestatus.module').then(
+        m => m.TablestatusPageModule
+      )
+  },
+  {
+    path: 'ticket',
+    loadChildren: () =>
+      import('./cashier/modules/ticket/ticket.module').then(
+        m => m.TicketPageModule
+      )
+  },
+  {
+    path: 'kitchenque',
+    loadChildren: () =>
+      import('./cashier/modules/kitchenque/kitchenque.module').then(
+        m => m.KitchenquePageModule
+      )
+  },
+  {
+    path: 'gestusers',
+    loadChildren: () =>
+      import('./cashier/modules/gestusers/gestusers.module').then(
+        m => m.GestusersPageModule
+      )
+  },
+  {
+    path: 'stats',
+    loadChildren: () =>
+      import('./cashier/modules/stats/stats.module').then(
+        m => m.StatsPageModule
+      )
+  }
 ];
 
 @NgModule({

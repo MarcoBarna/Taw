@@ -18,14 +18,11 @@ export class HomePage implements OnInit {
     this.disableButton = false;
   }
 
-  constructor(private us: UserHttpService, private router: Router, public menuCtrl: MenuController) { }
-
-  onViewWillEnter() {
+  constructor(private us: UserHttpService, private router: Router, public menuCtrl: MenuController) { 
     this.menuCtrl.enable(false);
-   }
-  // ngOnInit() {
-  //   this.disableButton = false;
-  // }
+  }
+
+
 
   login(username: string, password: string){
     // this.disableButton = true;

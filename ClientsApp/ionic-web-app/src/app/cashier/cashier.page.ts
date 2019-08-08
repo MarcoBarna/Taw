@@ -10,37 +10,10 @@ import { Router, RouterEvent } from '@angular/router';
 })
 export class CashierPage implements OnInit {
 
-  selectedPath = '';
-  pages = [
-    {
-      title: 'Table Status',
-      url: 'tablestatus'
-    },
-    {
-      title: 'Kitchen Queque',
-      url: 'kitchenque'
-    },
-    {
-      title: 'Tickets',
-      url: 'ticket'
-    },
-    {
-      title: 'User Management ',
-      url: 'gestusers'
-    },
-    {
-      title: 'Statistics',
-      url: 'stats'
-    }
-  ];
-  
-  constructor(private router: Router) {
-    this.router.events.subscribe((event: RouterEvent) => {
-      if(event && event.url){
-        this.selectedPath = event.url;
-        console.log(this.selectedPath);
-      }
-    });
+
+
+  constructor(private router: Router,  public menuCtrl: MenuController) {
+    this.menuCtrl.enable(true);
   }
 
   ngOnInit() {
