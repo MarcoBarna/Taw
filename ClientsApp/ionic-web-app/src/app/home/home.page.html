@@ -1,19 +1,17 @@
-  <ion-header>
-    <ion-toolbar color="primary">
-      <ion-title> RESTAURANT DENTINO</ion-title>
-    </ion-toolbar>
-  </ion-header>
+
+
+  
   <ion-content>
-    <ion-grid>
-      <ion-row>
-        <ion-col size-md="6" offset-md="3">
-          <ion-card>
-            <ion-card-header>
-              <ion-card-title>AREA LOGIN</ion-card-title>
+    <ion-grid style="height: 100%">
+      <ion-row justify-content-center align-items-center style="height: 100%">
+        <ion-col size-md="3" offset-md="0">
+          <ion-card class="card1">
+            <ion-card-header class="card2">
+                <ion-label position="floating" style="font-size: 16px "><font color="black">Ristorante Dentino  </font></ion-label>
             </ion-card-header>
             <ion-card-content>
               <ion-item>
-                <ion-label position="floating">Username</ion-label>
+                <ion-label position="floating" style="font-size: 13px">Username</ion-label>
                 <ion-input 
                   type="email" 
                   #mailtxt id="inputEmail" 
@@ -23,7 +21,7 @@
                 </ion-input>
               </ion-item>
               <ion-item>
-                <ion-label position="floating">Password</ion-label>
+                <ion-label position="floating" style="font-size: 13px">Password</ion-label>
                 <ion-input
                   type="password" 
                   #passwdtxt 
@@ -31,6 +29,7 @@
                   required
                 ></ion-input>
               </ion-item>
+              <br>
               <div margin-vertical text-right>
                   <div *ngIf="errmessage" class="alert alert-danger" role="alert">
                       Login error: {{errmessage}}
@@ -46,3 +45,4 @@
       </ion-row>
     </ion-grid>
   </ion-content>
+
