@@ -53,7 +53,8 @@ const routes: Routes = [
       import('./cashier/modules/stats/stats.module').then(
         m => m.StatsPageModule
       )
-  }
+  },
+  { path: 'tabledetails', loadChildren: './cashier/modules/tablestatus/tabledetails/tabledetails.module#TabledetailsPageModule' }
 ];
 
 @NgModule({

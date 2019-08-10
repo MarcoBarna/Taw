@@ -1,6 +1,7 @@
 export interface Tables {
-    tablenumber: number;
+    tableNumber: number;
     seats: number;
+    occupied: boolean;
 }
 
 export function isTable(arg: any): arg is Tables {

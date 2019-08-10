@@ -8,19 +8,19 @@
 </ion-header>
 
 <ion-content padding>
-    <!-- <ion-grid>
+    <ion-grid>
         <ion-row>
-            <ion-col **ngFor="let table of tables">
-                <ion-card>
+            <ion-col *ngFor="let table of tables" size-sm='4' col-xs-3>
+                <ion-card >
                     <ion-card-header>
-                        <ion-card-title> {{ table.title }}</ion-card-title>
+                        <ion-card-title>TABLE : {{ table.tableNumber }}</ion-card-title>
                     </ion-card-header>
                     <ion-card-content>
-                        {{ table.text }}
+                        <p> Seats : {{ table.seats }}</p>
+                        <p> Occupied : {{ table.occupied }}</p>
                     </ion-card-content>
                 </ion-card>
             </ion-col>
         </ion-row>
-    </ion-grid> -->
-
+    </ion-grid>
 </ion-content>

@@ -26,8 +26,8 @@ import { HttpClientModule } from '@angular/common/http';
     StatusBar,
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    {provide: UserHttpService, useClass: UserHttpService},
-    {provide: HTTP_INTERCEPTORS, useClass: HttpInterceptorService, multi: true}
+    { provide: UserHttpService, useClass: UserHttpService },
+    { provide: HTTP_INTERCEPTORS, useClass: HttpInterceptorService, multi: true }
   ],
   bootstrap: [AppComponent]
 })

@@ -128,10 +128,7 @@ app
       .getModel()
       .find()
       .then(allusers => {
-        return res.status(200).json({
-          confirmation: "success",
-          data: allusers
-        });
+        return res.status(200).json(allusers);
       })
       .catch(err => {
         return res.status(500).json({
@@ -158,10 +155,7 @@ app
           .save()
           .then(data => {
             socket.emitEvent("modified user");
-            return res.status(200).json({
-              confirmation: "success",
-              data: data
-            });
+            return res.status(200).json(data);
           })
           .catch(err => {
             return res.status(500).json({
@@ -222,10 +216,7 @@ app.route("/api/clients").post((req, res) => {
     nwuser.save(function(err) {
       if (err) return res.send("Error, username already exist");
     });
-    return res.status(200).json({
-      confirmation: "success",
-      data: req.body
-    });
+    return res.status(200).json(req.body);
   }
 });
 
@@ -248,10 +239,7 @@ app.route("/api/clients/order").post(auth, (req, res) => {
       .save()
       .then(data => {
         socket.emitEvent("send order");
-        return res.status(200).json({
-          confirmation: "success",
-          order: data
-        });
+        return res.status(200).json(data);
       })
       .catch(err => {
         return res.status(500).json({
@@ -277,10 +265,7 @@ app
       var newtable = tables.newTable(req.body);
       newtable.save().then(data => {
         socket.emitEvent("modified table");
-        return res.status(200).json({
-          confirmation: "success",
-          data: data
-        });
+        return res.status(200).json(data);
       });
     }
   })
@@ -290,10 +275,7 @@ app
       .getModel()
       .find()
       .then(alltables => {
-        return res.status(200).json({
-          confirmation: "success",
-          data: alltables
-        });
+        return res.status(200).json(alltables);
       })
       .catch(err => {
         return res.status(500).json({
@@ -374,10 +356,7 @@ app
       .getModel()
       .find()
       .then(allitems => {
-        return res.status(200).json({
-          confirmation: "success",
-          data: allitems
-        });
+        return res.status(200).json(allitems);
       })
       .catch(err => {
         return res.status(500).json({
@@ -398,10 +377,7 @@ app
     else {
       var newitem = items.newItem(req.body);
       newitem.save().then(data => {
-        return res.status(200).json({
-          confirmation: "success",
-          data: data
-        });
+        return res.status(200).json(data);
       });
     }
   });
@@ -440,10 +416,7 @@ app
         code: req.params.code
       })
       .then(singleItem => {
-        return res.status(200).json({
-          confirmation: "success",
-          data: singleItem
-        });
+        return res.status(200).json(singleItem);
       })
       .catch(err => {
         return res.status(500).json({
@@ -466,10 +439,7 @@ app
       .getModel()
       .find()
       .then(allorders => {
-        return res.status(200).json({
-          confirmation: "success",
-          data: allorders
-        });
+        return res.status(200).json(allorders);
       })
       .catch(err => {
         return res.status(500).json({
@@ -513,10 +483,7 @@ app
               });
             });
           socket.emitEvent("send order");
-          return res.status(200).json({
-            confirmation: "success",
-            order: data
-          });
+          return res.status(200).json(data);
         })
         .catch(err => {
           return res.status(500).json({
@@ -566,7 +533,7 @@ app
             i++;
           }
           socket.emitEvent("send order");
-          return res.status(200).json({
+          return res.status(200).json({ // !  WILL SEE IF WE USE THIS
             confirmation: "succesfully modified",
             beverageList,
             dishList,
@@ -622,10 +589,7 @@ app
         orderNumber: req.params.id
       })
       .then(singleOrder => {
-        return res.status(200).json({
-          confirmation: "success",
-          data: singleOrder
-        });
+        return res.status(200).json(singleOrder);
       })
       .catch(err => {
         return res.status(500).json({
@@ -692,10 +656,7 @@ app.route("/api/orders/dishes/:id").patch(auth, (req, res) => {
       data
         .save()
         .then(() => {
-          return res.status(200).json({
-            confirmation: "successfully modified",
-            dishState: data.dishState[req.body.index]
-          });
+          return res.status(200).json(data.dishState[req.body.index]);
         })
         .catch(err => {
           return res.status(500).json({
@@ -728,10 +689,7 @@ app.route("/api/orders/beverages/:id").patch(auth, (req, res) => {
         .save()
         .then(() => {
           socket.emitEvent("beverages ready");
-          return res.status(200).json({
-            confirmation: "successfully modified",
-            dishState: data.beverageState
-          });
+          return res.status(200).json(data.beverageState);
         })
         .catch(err => {
           return res.status(500).json({
@@ -809,10 +767,7 @@ app.route("/api/stats").get(auth, (req, res) => {
     .getModel()
     .find()
     .then(allstats => {
-      return res.status(200).json({
-        confirmation: "success",
-        data: allstats
-      });
+      return res.status(200).json(allstats);
     })
     .catch(err => {
       return res.status(200).json({
