@@ -4,3 +4,7 @@ export interface Items {
     requiredTime: number;
     price: number;
 }
+
+export function isItem(arg: any): arg is Items {
+    return arg;
+  }

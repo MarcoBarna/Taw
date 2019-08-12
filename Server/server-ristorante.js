@@ -735,12 +735,7 @@ app.route("/api/orders/tickets/:id").get(auth, (req, res) => {
               if (element === res.code) total += res.price;
             });
           });
-          return res.status(200).json({
-            confirmation: "success",
-            total: total,
-            order: arrayList,
-            dataToPrint: result
-          });
+          return res.status(200).json(total,arrayList,result);
         })
         .catch(err => {
           return res.status(500).json({
