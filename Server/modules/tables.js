@@ -12,6 +12,10 @@ let tableSchema = new Schema({
     type: mongoose.SchemaTypes.Number,
     required: true
   },
+  orderId: {
+    type: mongoose.SchemaTypes.Number,
+    default: '0'
+  },
   occupied: {
     // 1 - Cassiere, 2 - Cameriere, 3 - Cuoco, 4 - Barista
     type: mongoose.SchemaTypes.Boolean,

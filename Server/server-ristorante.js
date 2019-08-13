@@ -285,9 +285,34 @@ app
       });
   });
 
-//* TABLE MODIFIED STATUS
+//* SINGLE TABLE
 app
   .route("/api/tables/:id")
+  .get(auth, (req,res) => {
+    if (
+      !users.newUser(req.user).HisCashier() &&
+      !users.newUser(req.user).HisWaiter() &&
+      !users.newUser(req.user).HisClient()
+    )
+    return res.status(401).json({
+      confirmation: "fail",
+      message: "Unauthorized user"
+    });
+    tables
+    .getModel()
+    .findOne({
+      tableNumber: req.params.id
+    })
+    .then(data => {
+      return res.status(200).json(data)
+    })
+    .catch(err => {
+      return res.status(500).json({
+        confirmation: "fail",
+        message: err.message
+      });
+    }) // * MODIFIED STATUS
+  })
   .patch(auth, (req, res) => {
     if (
       !users.newUser(req.user).HisCashier() &&
@@ -305,6 +330,7 @@ app
       })
       .then(data => {
         data.occupied = !data.occupied;
+        data.orderId = req.body.orderId;
         data.save();
         socket.emitEvent("modified table");
         return res.status(200).json({
