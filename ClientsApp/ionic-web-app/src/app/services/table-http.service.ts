@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { UserHttpService } from './user-http.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Tables } from '../models/Tables';
-import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs/internal/Observable';
 @Injectable({
   providedIn: 'root'
 })
@@ -15,11 +15,11 @@ export class TableHttpService {
   getTables() {
     return this.http.get<Tables[]>(this.endpoint);
   }
-  getSingleTable(tableId){
+  getSingleTable(tableId: number) {
     return this.http.get<Tables[]>(this.endpoint + '/' + tableId);
   }
 
-  changeTableStatus(tableId, orderId) {
+  changeTableStatus(tableId: number, orderId: number) {
     return this.http.patch<Tables>(this.endpoint + '/' + tableId, {orderId});
   }
 

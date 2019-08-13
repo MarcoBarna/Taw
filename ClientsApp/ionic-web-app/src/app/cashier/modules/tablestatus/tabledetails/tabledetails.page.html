@@ -1,9 +1,40 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>tabledetails</ion-title>
+    <ion-toolbar color='primary'>
+      <!-- <ion-buttons slot="start">
+        <ion-back-button></ion-back-button>
+      </ion-buttons> -->
+    <ion-title>TALBE: {{loadedOrder.tableNumber}}</ion-title>
   </ion-toolbar>
 </ion-header>
-
 <ion-content>
-
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <h1>Dish List</h1>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-list>
+          <ion-item *ngFor="let ord of loadedOrder.dishList">
+            {{ ord }}
+          </ion-item>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+        <ion-col>
+          <h1>Beverage List</h1>
+        </ion-col>
+      </ion-row>
+    <ion-row>
+      <ion-col>
+          <ion-list>
+              <ion-item *ngFor="let bev of loadedOrder.beverageList">
+                {{ bev }}
+              </ion-item>
+            </ion-list>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>

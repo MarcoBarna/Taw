@@ -15,7 +15,22 @@ const routes: Routes = [
     children: [
       {
         path: 'tablestatus',
-        loadChildren: () => import('./modules/tablestatus/tablestatus.module').then(m => m.TablestatusPageModule)
+        children: [
+          {
+            path: '',
+            loadChildren: () =>
+              import('./modules/tablestatus/tablestatus.module').then(
+                m => m.TablestatusPageModule
+              )
+          },
+          {
+            path: ':tableId',
+            loadChildren: ()=>
+              import('./modules/tablestatus/tabledetails/tabledetails.module').then(
+                m => m.TabledetailsPageModule
+              )
+          }
+        ]
       },
       {
         path: 'kitchenque',
