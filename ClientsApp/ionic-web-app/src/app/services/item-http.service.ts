@@ -15,6 +15,10 @@ export class ItemHttpService {
     return this.http.get<Items[]>(this.endpoint);
   }
 
+  getSingleItem(code: number) {
+    return this.http.get<Items[]>(this.endpoint + '/' + code);
+  }
+
   addItem(code: number, name: string, requiredTime: number, price: number) {
     let item: Items;
 
