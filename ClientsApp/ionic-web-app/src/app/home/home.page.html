@@ -1,48 +1,56 @@
-
-
-  
-  <ion-content>
-    <ion-grid style="height: 100%">
-      <ion-row justify-content-center align-items-center style="height: 100%">
-        <ion-col size-md="3" offset-md="0">
-          <ion-card class="card1">
-            <ion-card-header class="card2">
-                <ion-label position="floating" style="font-size: 16px "><font color="black">Ristorante Dentino  </font></ion-label>
-            </ion-card-header>
-            <ion-card-content>
-              <ion-item>
-                <ion-label position="floating" style="font-size: 13px">Username</ion-label>
-                <ion-input 
-                  type="email" 
-                  #mailtxt id="inputEmail" 
-                  required 
-                  autofocus
-                >
-                </ion-input>
-              </ion-item>
-              <ion-item>
-                <ion-label position="floating" style="font-size: 13px">Password</ion-label>
-                <ion-input
-                  type="password" 
-                  #passwdtxt 
-                  id="inputPassword" 
-                  required
-                ></ion-input>
-              </ion-item>
-              <br>
-              <div margin-vertical text-right>
-                  <div *ngIf="errmessage" class="alert alert-danger" role="alert">
-                      Login error: {{errmessage}}
-                    </div>                
-                <ion-button id="btn-login" shape="round" fill="outline" (click)="login(mailtxt.value, passwdtxt.value)">
-                  <ion-icon slot="start" name="log-in"></ion-icon>
-                  Log in</ion-button
-                >
+<ion-content>
+  <ion-grid style="height: 100%">
+    <ion-row justify-content-center align-items-center style="height: 100%">
+      <ion-col size-md="3" offset-md="0">
+        <ion-card class="card1">
+          <ion-card-header class="card2">
+            <ion-label position="floating" style="font-size: 16px "
+              ><font color="black">Ristorante Dentino </font></ion-label
+            >
+          </ion-card-header>
+          <ion-card-content>
+            <ion-item>
+              <ion-label position="floating" style="font-size: 13px"
+                >Username</ion-label
+              >
+              <ion-input
+                type="email"
+                #mailtxt
+                id="inputEmail"
+                required
+                autofocus
+              >
+              </ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label position="floating" style="font-size: 13px"
+                >Password</ion-label
+              >
+              <ion-input
+                type="password"
+                #passwdtxt
+                id="inputPassword"
+                required
+              ></ion-input>
+            </ion-item>
+            <br />
+            <div margin-vertical text-right>
+              <div *ngIf="errmessage" class="alert alert-danger" role="alert">
+                Login error: {{ errmessage }}
               </div>
-            </ion-card-content>
-          </ion-card>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-  </ion-content>
-
+              <ion-button
+                id="btn-login"
+                shape="round"
+                fill="outline"
+                (click)="login(mailtxt.value, passwdtxt.value)"
+              >
+                <ion-icon slot="start" name="log-in"></ion-icon>
+                Log in</ion-button
+              >
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
