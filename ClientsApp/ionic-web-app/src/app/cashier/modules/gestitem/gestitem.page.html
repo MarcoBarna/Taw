@@ -7,5 +7,20 @@
   </ion-toolbar>
 </ion-header>
 <ion-content> 
-  
+  <ion-grid>
+    <ion-row>
+        <ion-col *ngFor="let item of items" size-sm='4' col-xs-3>
+            <ion-card>
+                <ion-card-header>
+                    <ion-card-title>{{ item.name }}</ion-card-title>
+                </ion-card-header>
+                <ion-card-content>
+                    <p> code   : {{item.code}}.</p>
+                    <p> reqTime: {{item.requiredTime}}.</p>
+                    <p> price  : {{item.price}}.</p>
+                </ion-card-content>
+            </ion-card>
+        </ion-col>
+    </ion-row>
+</ion-grid>
 </ion-content>

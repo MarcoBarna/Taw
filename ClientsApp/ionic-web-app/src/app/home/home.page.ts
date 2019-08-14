@@ -10,12 +10,10 @@ import { MenuController } from '@ionic/angular';
 })
 export class HomePage implements OnInit {
 
-  private disableButton;
   private errmessage = undefined;
   private role = undefined;
 
   ngOnInit() {
-    this.disableButton = false;
   }
 
   constructor(private us: UserHttpService, private router: Router, public menuCtrl: MenuController) { 
