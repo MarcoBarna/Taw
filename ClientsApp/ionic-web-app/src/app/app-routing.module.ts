@@ -21,10 +21,22 @@ const routes: Routes = [
   },
   {
     path: 'tablestatus',
-    loadChildren: () =>
-      import('./cashier/modules/tablestatus/tablestatus.module').then(
-        m => m.TablestatusPageModule
-      )
+    children: [
+      {
+        path: '',
+        loadChildren: () =>
+          import('./cashier/modules/tablestatus/tablestatus.module').then(
+            m => m.TablestatusPageModule
+          )
+      },
+      {
+        path: ':tableId',
+        loadChildren: () =>
+          import('./cashier/modules/tablestatus/tabledetails/tabledetails.module').then(
+            m => m.TabledetailsPageModule
+          )
+      }
+    ]
   },
   {
     path: 'ticket',

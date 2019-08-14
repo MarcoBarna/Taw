@@ -10,6 +10,9 @@ import { AppRoutingModule } from './app-routing.module';
 import { HttpInterceptorService } from './services/http-interceptor.service';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HttpClientModule } from '@angular/common/http';
+import { TableHttpService } from './services/table-http.service';
+import { OrderHttpService } from './services/order-http.service';
+import { ItemHttpService } from './services/item-http.service';
 
 @NgModule({
   declarations: [
@@ -27,7 +30,11 @@ import { HttpClientModule } from '@angular/common/http';
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     { provide: UserHttpService, useClass: UserHttpService },
-    { provide: HTTP_INTERCEPTORS, useClass: HttpInterceptorService, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: HttpInterceptorService, multi: true },
+    { provide: TableHttpService, useClass: TableHttpService},
+    { provide: OrderHttpService, useClass: OrderHttpService},
+    { provide: ItemHttpService, useClass: ItemHttpService}
+
   ],
   bootstrap: [AppComponent]
 })

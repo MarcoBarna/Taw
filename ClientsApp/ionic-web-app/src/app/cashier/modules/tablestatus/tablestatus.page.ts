@@ -15,8 +15,6 @@ export class TablestatusPage implements OnInit {
 
   private tables: Tables[];
   private role;
-
-
   // private socketio: SocketioService
   // tslint:disable-next-line: max-line-length
   constructor(private router: Router,

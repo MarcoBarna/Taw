@@ -1,6 +1,7 @@
 export interface Tables {
     tableNumber: number;
     seats: number;
+    orderId: number;
     occupied: boolean;
 }
 

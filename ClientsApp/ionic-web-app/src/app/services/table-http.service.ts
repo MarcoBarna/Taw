@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { UserHttpService } from './user-http.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Tables } from '../models/Tables';
-import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs/internal/Observable';
 @Injectable({
   providedIn: 'root'
 })
@@ -12,19 +12,22 @@ export class TableHttpService {
 
   constructor(private us: UserHttpService, private http: HttpClient) {}
 
-  getTables(){
+  getTables() {
     return this.http.get<Tables[]>(this.endpoint);
   }
-
-  changeTableStatus(tableId){
-    return this.http.patch<Tables>(this.endpoint + '/' + tableId.number, tableId);
-  }
-  
-  addTable(tableNumber: number, seats: number){
-    return this.http.post<Tables>(this.endpoint, {tableNumber:tableNumber, seats:seats});
+  getSingleTable(tableId: number) {
+    return this.http.get<Tables[]>(this.endpoint + '/' + tableId);
   }
 
-  deleteTable(tableNumber: number){
+  changeTableStatus(tableId: number, orderId: number) {
+    return this.http.patch<Tables>(this.endpoint + '/' + tableId, {orderId});
+  }
+
+  addTable(tableNumber: number, seats: number) {
+    return this.http.post<Tables>(this.endpoint, {tableNumber, seats});
+  }
+
+  deleteTable(tableNumber: number) {
     console.log(`Table number ${tableNumber} has been deleated`);
     return this.http.delete(this.endpoint + '/' + tableNumber);
   }
