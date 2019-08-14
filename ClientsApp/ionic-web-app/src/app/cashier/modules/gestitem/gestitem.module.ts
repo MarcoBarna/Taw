@@ -5,13 +5,13 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
 
-import { TablestatusPage } from './tablestatus.page';
+import { GestitemPage } from './gestitem.page';
 
 const routes: Routes = [
   {
     path: '',
-    component: TablestatusPage
-  },
+    component: GestitemPage
+  }
 ];
 
 @NgModule({
@@ -21,6 +21,6 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [TablestatusPage]
+  declarations: [GestitemPage]
 })
-export class TablestatusPageModule {}
+export class GestitemPageModule {}

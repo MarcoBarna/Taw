@@ -1,8 +1,8 @@
 <ion-header>
-    <ion-toolbar color='primary'>
-      <!-- <ion-buttons slot="start">
-        <ion-back-button></ion-back-button>
-      </ion-buttons> -->
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+        <ion-back-button defaultHref="/cashier/menu/tablestatus"></ion-back-button>
+      </ion-buttons>
     <ion-title>TABLE</ion-title>
   </ion-toolbar>
 </ion-header>
@@ -18,30 +18,30 @@
         <ion-list>
           <ion-item *ngFor="let ord of loadDish">
             <ion-text *ngFor="let lname of loadname">
-                <span *ngIf="lname.code === ord">
-                    {{ ord }} : {{ lname.name }}
-                  </span>
-            </ion-text>   
+              <span *ngIf="lname.code === ord">
+                {{ ord }} : {{ lname.name }}
+              </span>
+            </ion-text>
           </ion-item>
         </ion-list>
       </ion-col>
     </ion-row>
     <ion-row>
-        <ion-col>
-          <h1>Beverage List</h1>
-        </ion-col>
-      </ion-row>
+      <ion-col>
+        <h1>Beverage List</h1>
+      </ion-col>
+    </ion-row>
     <ion-row>
       <ion-col>
-          <ion-list>
-              <ion-item *ngFor="let bev of loadBev">
-                <ion-text *ngFor="let lname of loadname">
-                  <span *ngIf="lname.code === bev">
-                    {{ bev }} : {{ lname.name }}
-                  </span>
-                </ion-text>
-              </ion-item>
-            </ion-list>
+        <ion-list>
+          <ion-item *ngFor="let bev of loadBev">
+            <ion-text *ngFor="let lname of loadname">
+              <span *ngIf="lname.code === bev">
+                {{ bev }} : {{ lname.name }}
+              </span>
+            </ion-text>
+          </ion-item>
+        </ion-list>
       </ion-col>
     </ion-row>
   </ion-grid>

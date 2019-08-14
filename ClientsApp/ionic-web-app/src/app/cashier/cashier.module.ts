@@ -51,7 +51,22 @@ const routes: Routes = [
         path: 'stats',
         loadChildren: () =>
           import('./modules/stats/stats.module').then(stats => stats.StatsPageModule)
-      }
+      },
+      {
+        path: 'gestitem',
+        loadChildren: () =>
+          import('./modules/gestitem/gestitem.module').then(
+            m => m.GestitemPageModule
+          )
+      },
+      {
+        path: 'gesttable',
+        loadChildren: () =>
+          import('./modules/gesttable/gesttable.module').then(
+            m => m.GesttablePageModule
+          )
+      },
+
     ]
 
   }
