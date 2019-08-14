@@ -60,6 +60,20 @@ const routes: Routes = [
       )
   },
   {
+    path: 'gestitem',
+    loadChildren: () =>
+      import('./cashier/modules/gestitem/gestitem.module').then(
+        m => m.GestitemPageModule
+      )
+  },
+  {
+    path: 'gesttable',
+    loadChildren: () =>
+      import('./cashier/modules/gesttable/gesttable.module').then(
+        m => m.GesttablePageModule
+      )
+  },
+  {
     path: 'stats',
     loadChildren: () =>
       import('./cashier/modules/stats/stats.module').then(
@@ -73,7 +87,6 @@ const routes: Routes = [
   imports: [
     RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })
   ],
-  // imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
 export class AppRoutingModule {}

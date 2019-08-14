@@ -34,6 +34,16 @@ export class AppComponent implements OnInit  {
       icon: 'people'
     },
     {
+      title: 'Tables',
+      url: 'cashier/menu/gesttable',
+      icon: 'hammer'
+    },
+    {
+      title: 'Items',
+      url: 'cashier/menu/gestitem',
+      icon: 'hammer'
+    },
+    {
       title: 'Statistics',
       url: 'cashier/menu/stats',
       icon: 'stats'
