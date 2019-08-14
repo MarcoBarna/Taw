@@ -17,7 +17,11 @@
       <ion-col>
         <ion-list>
           <ion-item *ngFor="let ord of loadDish">
-            {{ ord }}
+            <ion-text *ngFor="let lname of loadname">
+                <span *ngIf="lname.code === ord">
+                    {{ ord }} : {{ lname.name }}
+                  </span>
+            </ion-text>   
           </ion-item>
         </ion-list>
       </ion-col>
@@ -31,7 +35,11 @@
       <ion-col>
           <ion-list>
               <ion-item *ngFor="let bev of loadBev">
-                {{ bev }}
+                <ion-text *ngFor="let lname of loadname">
+                  <span *ngIf="lname.code === bev">
+                    {{ bev }} : {{ lname.name }}
+                  </span>
+                </ion-text>
               </ion-item>
             </ion-list>
       </ion-col>
