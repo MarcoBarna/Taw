@@ -41,18 +41,27 @@ export class TabledetailsPage implements OnInit {
         return;
       }
       const tableId = paramMap.get('tableId');
-      this.table.getSingleTable(parseInt(tableId, 10)).subscribe(res => {
+      this.table.getSingleTable(parseInt(tableId, 10)).toPromise().then(res => {
         this.loadedTable = res;
-        this.ord.getOrder(this.loadedTable['orderId']).subscribe(val => {
+        this.ord.getOrder(this.loadedTable['orderId']).toPromise().then(val => {
           this.loadedOrder = val;
           console.log(this.loadedOrder); 
           this.loadDish = Object.values(this.loadedOrder['dishList']);
           this.loadBev = Object.values(this.loadedOrder['beverageList']);
-          this.itm.getItems().subscribe(itmdish => {
+          this.itm.getItems().toPromise().then(itmdish => {
             this.loadname = itmdish;
             console.log(this.loadname);
           })
+          .catch(err => {
+            console.log(err);
+          });
+        })
+        .catch(err => {
+          console.log(err);
         });
+      })
+      .catch(err => {
+        console.log(err);
       });
     });
   }

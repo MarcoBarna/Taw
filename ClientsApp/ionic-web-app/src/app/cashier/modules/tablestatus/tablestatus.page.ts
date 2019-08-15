@@ -41,6 +41,8 @@ export class TablestatusPage implements OnInit {
     });
   }
 
+  condition(){
+  }
   ngOnInit() {
   }
 

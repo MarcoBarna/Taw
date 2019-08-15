@@ -1,12 +1,78 @@
 <ion-header>
-  <ion-toolbar color='primary'>
-      <ion-buttons slot="start">
-          <ion-menu-button></ion-menu-button>
-      </ion-buttons>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
     <ion-title>USERS</ion-title>
   </ion-toolbar>
 </ion-header>
-
 <ion-content>
-
+  <ion-grid style="height: 100%">
+    <ion-row justify-content-center align-items-center style="height: 100%">
+      <ion-col size-md="6" offset-md="0">
+        <ion-card class="card1">
+          <ion-card-header>
+            <ion-label position="floating" style="font-size: 16px "
+              ><font color="black"> <h2> NEW USER </h2> </font></ion-label
+            >
+          </ion-card-header>
+          <ion-card-content>
+            <ion-item>
+              <ion-label position="floating" style="font-size: 13px"
+                >Username</ion-label
+              >
+              <ion-input
+                clearInput
+                type="email"
+                #mailtxt
+                id="inputEmail"
+                required
+                autofocus
+              >
+              </ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label position="floating" style="font-size: 13px"
+                >Password</ion-label
+              >
+              <ion-input
+                clearInput
+                type="password"
+                #passwdtxt
+                id="inputPassword"
+                required
+              ></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label position="floating" style="font-size: 13px"
+                >Role</ion-label
+              >
+              <ion-input
+                clearInput
+                type="role"
+                #roletxt
+                id="RoleID"
+                required
+              ></ion-input>
+            </ion-item>
+            <br />
+            <div margin-vertical text-right>
+              <div *ngIf="errmessage" class="alert alert-danger" role="alert">
+                Register error: {{ errmessage }}
+              </div>
+              <ion-button
+                id="btn-login"
+                shape="round"
+                fill="outline"
+                (click)="addUser(mailtxt.value, passwdtxt.value, roletxt.value)"
+              >
+                <ion-icon slot="start" name="send"></ion-icon>
+                Send </ion-button
+              >
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>

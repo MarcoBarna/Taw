@@ -6,12 +6,11 @@
     <ion-title>TABLE STATUS LIST</ion-title>
   </ion-toolbar>
 </ion-header>
-
 <ion-content padding>
     <ion-grid>
         <ion-row>
             <ion-col *ngFor="let table of tables" size-sm='4' col-xs-3>
-                <ion-card [routerLink]="['./', table.tableNumber]">
+                <ion-card [routerLink]="['./', table.tableNumber]" [color]="(table.occupied === true) ? 'danger' : 'success'">
                     <ion-card-header>
                         <ion-card-title>TABLE : {{ table.tableNumber }}</ion-card-title>
                     </ion-card-header>

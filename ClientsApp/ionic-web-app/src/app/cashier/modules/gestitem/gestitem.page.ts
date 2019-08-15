@@ -22,25 +22,29 @@ export class GestitemPage implements OnInit {
   }
 
   getSingleItem(code: number) {
-    this.itm.getSingleItem(code).subscribe((data) => {
+    this.itm.getSingleItem(code).toPromise().then((data) => {
       this.item = data;
       console.log(this.item);
     });
   }
 
   getAllItems() {
-    this.itm.getItems().subscribe((data) => {
+    this.itm.getItems().toPromise().then((data) => {
       this.items = data;
       this.items.sort((item1,item2) => {
         return item1.code - item2.code;
       });
       console.log(this.items);
-    })
+    }).catch(err => {
+      console.log(err);
+    });
   }
 
   sendItem(code: number, name: string, requiredTime: number , price: number){
-    this.itm.addItem(code, name, requiredTime, price).subscribe((data) => {
+    this.itm.addItem(code, name, requiredTime, price).toPromise().then((data) => {
       console.log(code, name, requiredTime, price);
+    }).catch(err => {
+      console.log(err);
     });
   }
 }
