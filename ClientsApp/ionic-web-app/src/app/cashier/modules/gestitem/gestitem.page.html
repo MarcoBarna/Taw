@@ -7,7 +7,90 @@
   </ion-toolbar>
 </ion-header>
 <ion-content>
-  <ion-grid>
+  <ion-grid style="height: 100%">
+    <ion-row justify-content-center align-items-center style="height: 100%">
+      <ion-col size-md="6" offset-md="0">
+        <ion-card class="card1">
+          <ion-card-header>
+            <ion-label position="floating" style="font-size: 16px "
+              ><font color="black"> <h2>NEW ITEM</h2> </font></ion-label
+            >
+          </ion-card-header>
+          <ion-card-content>
+            <form>
+              <ion-item>
+                <ion-label position="floating" style="font-size: 13px"
+                  >Code</ion-label
+                >
+                <ion-input
+                  clearInput
+                  type="text"
+                  #Codetxt
+                  id="CodeId"
+                  required
+                  autofocus
+                >
+                </ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-label position="floating" style="font-size: 13px"
+                  >Item Name</ion-label
+                >
+                <ion-input
+                  clearInput
+                  type="text"
+                  #nametxt
+                  id="nameID"
+                  required
+                ></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-label position="floating" style="font-size: 13px"
+                  >Required time to prepare</ion-label
+                >
+                <ion-input
+                  clearInput
+                  type="text"
+                  #ttptxt
+                  id="timeToPrepareID"
+                  required
+                ></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-label position="floating" style="font-size: 13px"
+                  >Price</ion-label
+                >
+                <ion-input
+                  clearInput
+                  type="text"
+                  #pricetxt
+                  id="priceID"
+                  required
+                ></ion-input>
+              </ion-item>
+              <br />
+              <div margin-vertical text-right>
+                <div *ngIf="errmessage" class="alert alert-danger" role="alert">
+                  Error: {{ errmessage }}
+                </div>
+                <ion-button
+                  id="btn-login"
+                  shape="round"
+                  fill="outline"
+                  type="submit"
+                  (click)="sendItem(Codetxt.value, nametxt.value, ttptxt.value, pricetxt.value)"
+                >
+                  <ion-icon slot="start" name="send"></ion-icon>
+                  Send
+                </ion-button>
+              </div>
+            </form>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <!-- <ion-grid>
     <ion-row>
       <ion-col *ngFor="let item of items" size-sm="4" col-xs-3>
         <ion-card>
@@ -22,5 +105,5 @@
         </ion-card>
       </ion-col>
     </ion-row>
-  </ion-grid>
+  </ion-grid> -->
 </ion-content>
