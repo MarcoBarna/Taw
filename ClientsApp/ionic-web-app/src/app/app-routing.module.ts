@@ -80,7 +80,28 @@ const routes: Routes = [
         m => m.StatsPageModule
       )
   },
-  { path: 'tabledetails', loadChildren: './cashier/modules/tablestatus/tabledetails/tabledetails.module#TabledetailsPageModule' }
+  { path: 'tabledetails', loadChildren: './cashier/modules/tablestatus/tabledetails/tabledetails.module#TabledetailsPageModule' },
+  {
+    path: 'waiter',
+    loadChildren: () =>
+      import('./waiter/waiter.module').then(
+        m => m.WaiterPageModule
+      )
+  },
+  {
+    path: 'cook',
+    loadChildren: () =>
+      import('./cook/cook.module').then(
+        m => m.CookPageModule
+      )
+  },
+  {
+    path: 'bartender',
+    loadChildren: () =>
+      import('./bartender/bartender.module').then(
+        m => m.BartenderPageModule
+      )
+  },
 ];
 
 @NgModule({

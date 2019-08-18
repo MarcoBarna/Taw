@@ -902,7 +902,7 @@ mongoose
       var nwuser4 = users.newUser({
         username: "bartender",
         password: "bartender",
-        role: 1
+        role: 4
       });
       nwuser4.setPassword("bartender");
       nwuser4.save(function(err) {

@@ -13,6 +13,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { TableHttpService } from './services/table-http.service';
 import { OrderHttpService } from './services/order-http.service';
 import { ItemHttpService } from './services/item-http.service';
+import { SocketioService } from './services/socketio.service'
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { ItemHttpService } from './services/item-http.service';
     { provide: HTTP_INTERCEPTORS, useClass: HttpInterceptorService, multi: true },
     { provide: TableHttpService, useClass: TableHttpService},
     { provide: OrderHttpService, useClass: OrderHttpService},
-    { provide: ItemHttpService, useClass: ItemHttpService}
+    { provide: ItemHttpService, useClass: ItemHttpService},
+    { provide: SocketioService, useClass: SocketioService }
 
   ],
   bootstrap: [AppComponent]

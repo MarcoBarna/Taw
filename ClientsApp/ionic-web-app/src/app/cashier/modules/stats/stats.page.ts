@@ -15,13 +15,13 @@ export class StatsPage implements OnInit {
   private stats: Stats[];
   private role;
 
-  constructor(private router: Router, private stat: StatHttpService ,private user: UserHttpService, public menuCtrl: MenuController) {
+  constructor(private router: Router, private stat: StatHttpService , private user: UserHttpService, public menuCtrl: MenuController) {
     this.menuCtrl.enable(true);
     this.getStats();
     this.role = this.user.get_role();
   }
 
-  public getStats(){
+  public getStats() {
     this.stat.getStats().toPromise().then((stats: Stats[]) => {
       this.stats = stats;
       console.log(stats);
@@ -32,6 +32,10 @@ export class StatsPage implements OnInit {
   }
 
   ngOnInit() {
+    if (this.user.get_token() === undefined || this.user.get_token() === '' || this.user.get_role() !== 1) {
+      console.log('Acces Denided');
+      this.user.logout();
+    }
   }
 
 }

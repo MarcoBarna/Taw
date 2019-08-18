@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MenuController } from '@ionic/angular';
 import { ItemHttpService } from 'src/app/services/item-http.service';
+import { UserHttpService } from 'src/app/services/user-http.service';
 
 @Component({
   selector: 'app-gestitem',
@@ -13,12 +14,16 @@ export class GestitemPage implements OnInit {
   item = {};
   items = [];
 
-  constructor(private router: Router,  public menuCtrl: MenuController, private itm: ItemHttpService) {
+  constructor(private router: Router,  public menuCtrl: MenuController, private itm: ItemHttpService, private us: UserHttpService) {
     this.menuCtrl.enable(true);
     this.getAllItems();
   }
 
   ngOnInit() {
+    if (this.us.get_token() === undefined || this.us.get_token() === '' || this.us.get_role() !== 1) {
+      console.log('Acces Denided');
+      this.us.logout();
+    }
   }
 
   getSingleItem(code: number) {
@@ -31,7 +36,7 @@ export class GestitemPage implements OnInit {
   getAllItems() {
     this.itm.getItems().toPromise().then((data) => {
       this.items = data;
-      this.items.sort((item1,item2) => {
+      this.items.sort((item1, item2) => {
         return item1.code - item2.code;
       });
       console.log(this.items);
@@ -40,7 +45,7 @@ export class GestitemPage implements OnInit {
     });
   }
 
-  sendItem(code: number, name: string, requiredTime: number , price: number){
+  sendItem(code: number, name: string, requiredTime: number , price: number) {
     this.itm.addItem(code, name, requiredTime, price).toPromise().then((data) => {
       console.log(code, name, requiredTime, price);
     }).catch(err => {

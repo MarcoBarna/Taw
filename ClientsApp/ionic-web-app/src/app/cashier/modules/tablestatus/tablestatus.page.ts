@@ -20,14 +20,14 @@ export class TablestatusPage implements OnInit {
   constructor(private router: Router,
               public menuCtrl: MenuController,
               private table: TableHttpService,
-              private user: UserHttpService,
+              private us: UserHttpService,
               ) {
     this.menuCtrl.enable(true);
     this.getTables();
-    this.role = this.user.get_role();
+    this.role = this.us.get_role();
   }
 
-  public getTables(){
+  public getTables() {
     this.table.getTables().toPromise().then((tables: Tables[]) => {
       this.tables = tables;
       console.log(tables);
@@ -41,9 +41,11 @@ export class TablestatusPage implements OnInit {
     });
   }
 
-  condition(){
-  }
   ngOnInit() {
+    if (this.us.get_token() === undefined || this.us.get_token() === '' || this.us.get_role() !== 1) {
+      console.log('Acces Denided');
+      this.us.logout();
+    }
   }
 
 }
