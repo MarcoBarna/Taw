@@ -31,8 +31,12 @@ let orderSchema = new Schema({
         required: true
     },
     date: {
-        type: Date,
+        type: mongoose.SchemaTypes.String,
         required: true
+    },
+    orderStatus: {
+        type: mongoose.SchemaTypes.Number,
+        default: 0
     },
     userNameWaiter: {
         type: mongoose.SchemaTypes.String,

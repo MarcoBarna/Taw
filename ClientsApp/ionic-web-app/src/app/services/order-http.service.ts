@@ -27,6 +27,11 @@ export class OrderHttpService {
     return this.http.get<Orders[]>(this.endpoint + '/' + orderID);
   }
 
+  // Will return all the tickets of the given day
+  getTicketsByDate(date: string) {
+    return this.http.get<Orders[]>(this.endpoint + '/' + 'tickets');
+  }
+
   /* will return the Total, an arraylist with all the beverages and dishes
   and finally another arraylist called Result which has all the info for printing
   */
@@ -65,12 +70,17 @@ export class OrderHttpService {
   }
 
   modifyDisState(orderID: number, index: number, state: number) {
-    return this.http.patch(this.endpoint + '/' + 'dish' + '/' + orderID, {index, state});
+    return this.http.patch(this.endpoint + '/' + 'dishes' + '/' + orderID, {index, state});
   }
 
   modifyIndexState(orderID: number, state: number) {
     return this.http.patch(this.endpoint + '/' + orderID, {state});
   }
+
+  modifyOrderState(orderID: number) {
+    return this.http.patch(this.endpoint, {orderID});
+  }
+
   deleteOrder(orderID: number) {
     return this.http.delete(this.endpoint + '/' + orderID);
   }

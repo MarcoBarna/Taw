@@ -1,25 +1,44 @@
 <ion-header>
-  <ion-toolbar color='primary'>
-      <ion-buttons slot="start">
-          <ion-menu-button></ion-menu-button>
-      </ion-buttons>
-  <ion-title>NEW ORDER</ion-title>
-</ion-toolbar>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>NEW ORDER</ion-title>
+  </ion-toolbar>
 </ion-header>
 <ion-content padding>
   <ion-grid>
-      <ion-row>
-          <ion-col *ngFor="let table of tables" size-sm='4' col-xs-3>
-              <ion-card [routerLink]="['./', table.tableNumber]" [color]="(table.occupied === true) ? 'danger' : 'success'">
-                  <ion-card-header>
-                      <ion-card-title>TABLE : {{ table.tableNumber }}</ion-card-title>
-                  </ion-card-header>
-                  <ion-card-content>
-                      <p> Seats : {{ table.seats }}</p>
-                      <p> Occupied : {{ table.occupied }}</p>
-                  </ion-card-content>
-              </ion-card>
-          </ion-col>
-      </ion-row>
+    <ion-row>
+      <ion-col *ngFor="let table of tables" size-sm="4" col-xs-3>
+        <ng-container
+          *ngIf="table.occupied === false; then thenTemplate; else elseTemplate"
+        ></ng-container>
+        <ng-template #thenTemplate>
+          <ion-card
+            [routerLink]="['./', table.tableNumber]"
+            [color]="table.occupied === true ? 'danger' : 'success'"
+          >
+            <ion-card-header>
+              <ion-card-title>TABLE : {{ table.tableNumber }}</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              <p>Seats : {{ table.seats }}</p>
+              <p>Occupied : {{ table.occupied }}</p>
+            </ion-card-content>
+          </ion-card>
+        </ng-template>
+        <ng-template #elseTemplate>
+          <ion-card [color]="table.occupied === true ? 'danger' : 'success'">
+            <ion-card-header>
+              <ion-card-title>TABLE : {{ table.tableNumber }}</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              <p>Seats : {{ table.seats }}</p>
+              <p>Occupied : {{ table.occupied }}</p>
+            </ion-card-content>
+          </ion-card>
+        </ng-template>
+      </ion-col>
+    </ion-row>
   </ion-grid>
 </ion-content>

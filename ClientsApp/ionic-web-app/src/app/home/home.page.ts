@@ -16,13 +16,13 @@ export class HomePage implements OnInit {
   ngOnInit() {
   }
 
-  constructor(private us: UserHttpService, private router: Router, public menuCtrl: MenuController) { 
+  constructor(private us: UserHttpService, private router: Router, public menuCtrl: MenuController) {
     this.menuCtrl.enable(false);
   }
 
 
 
-  login(username: string, password: string){
+  login(username: string, password: string) {
     // this.disableButton = true;
     this.us.login(username, password).subscribe( (data) => {
       console.log(username + password);
@@ -30,7 +30,7 @@ export class HomePage implements OnInit {
       this.errmessage = undefined;
       console.log('Login granted: ' + JSON.stringify(data));
       console.log('User service token: ' + this.us.get_token() );
-      switch(this.role){
+      switch (this.role) {
         case 1 :
           this.router.navigate(['cashier']);
           break;

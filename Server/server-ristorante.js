@@ -456,7 +456,7 @@ app
 app
   .route("/api/orders")
   .get(auth, (req, res) => {
-    if (users.newUser(req.user).HisWaiter())
+    if (!users.newUser(req.user).HisWaiter())
       return res.status(401).json({
         confirmation: "fail",
         message: "Unauthorized user"
@@ -485,7 +485,8 @@ app
     if (error) return res.status(400).send(error.details[0].message);
     else {
       var neworder = orders.newOrder(req.body);
-      neworder.date = new Date();
+      const date = new Date();
+      neworder.date = date.toLocaleDateString();
       neworder.dishList.forEach(element => {
         neworder.dishState.push(0);
       });
@@ -520,52 +521,27 @@ app
     }
   })
   .patch(auth, (req, res) => {
-    //* ADD A NEW ORDER TO AN EXISTING ONE
-    if (!users.newUser(req.user).HisWaiter())
+    //* CLOSE AN ORDER AFTER ALL OF THE DISHES ARE PREPARED  || 0 = new order , 1 = order prepared, 2 = order paid
+    if (!users.newUser(req.user).HisCook() && !users.newUser(req.user).HisCashier())
       return res.status(401).json({
         confirmation: "fail",
         message: "Unauthorized user"
       });
-    const { error } = validation.validateExistingOrder(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
-    else {
       orders
         .getModel()
         .findOne({
           orderNumber: req.body.orderNumber
         })
         .then(data => {
-          const beverageList = req.body.beverageList;
-          if (beverageList.length > 0) {
-            beverageList.forEach(element => {
-              data.beverageList.push(element);
+          data.orderStatus = data.orderStatus + 1;
+          data.markModified("orderStatus");
+          data.save()
+          .catch(err => {
+            return res.status(500).json({
+              confirmation: "fail",
+              message: err.message
             });
-            data.beverageState = false;
-            data.markModified("beverageState");
-          }
-          const dishList = req.body.dishList;
-          if (dishList.length > 0) {
-            dishList.forEach(element => {
-              data.dishList.push(element);
-              data.dishState.push(0);
-            });
-          }
-          // data.markModified('dishList');
-          data.save();
-          var index = 0;
-          var i = 0;
-          while (data.dishState[i] != 0) {
-            index++;
-            i++;
-          }
-          socket.emitEvent("send order");
-          return res.status(200).json({ // !  WILL SEE IF WE USE THIS
-            confirmation: "succesfully modified",
-            beverageList,
-            dishList,
-            orderNumber: data.orderNumber,
-            index: index
-          });
+          })
         })
         .catch(err => {
           return res.status(500).json({
@@ -573,8 +549,7 @@ app
             message: err.message
           });
         });
-    }
-  });
+    });
 
 // * DELETE SINGLE ORDER
 app
@@ -732,6 +707,27 @@ app.route("/api/orders/beverages/:id").patch(auth, (req, res) => {
     });
 });
 
+// * THIS RETURNS ALL OF THE TICKETS OF THE DAY
+app.route("/api/orders/tickets").get(auth, (req, res) => {
+  if (!users.newUser(req.user).HisCashier())
+    return res.status(401).json({
+      confirmation: "fail",
+      message: "Unauthorized user"
+    });
+  orders
+    .getModel()
+    .find({ date: req.params.data })
+    .then(data => {
+      return res.status(200).json(data);
+    })
+    .catch(err => {
+      return res.status(500).json({
+        confirmation: "fail",
+        message: err.message
+      });
+    });
+});
+
 app.route("/api/orders/tickets/:id").get(auth, (req, res) => {
   if (!users.newUser(req.user).HisCashier())
     return res.status(401).json({
@@ -777,6 +773,7 @@ app.route("/api/orders/tickets/:id").get(auth, (req, res) => {
       });
     });
 });
+
 app.route("/api/stats").get(auth, (req, res) => {
   if (!users.newUser(req.user).HisCashier())
     return res.status(401).json({

@@ -35,7 +35,7 @@ export class TabledetailsPage implements OnInit {
   }
 
   ngOnInit() {
-    this.ActivatedRoute.paramMap.toPromise().then(paramMap => {
+    this.ActivatedRoute.paramMap.subscribe(paramMap => {
       if (!paramMap.has('tableId')) {
         // redirect
         return;
