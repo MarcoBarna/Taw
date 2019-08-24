@@ -10,13 +10,36 @@
 <ion-content padding>
     <ion-grid>
         <ion-row>
-            <ion-col *ngFor="let stat of stats" size-sm='4' col-xs-3>
-                <ion-card >
-                    <ion-card-header>
-                        <ion-card-title>Username : {{ stats.username }}</ion-card-title>
-                    </ion-card-header>
+            <ion-col *ngFor="let user of users" size-sm='4' col-xs-3>
+                <ion-card *ngIf="user.role===2 || user.role===3">
                     <ion-card-content>
-                        
+                        <div *ngFor="let stat of stats">
+                            <div *ngIf="user.username===stat.username">
+                                <ion-text>
+                                        Username: {{ user.username }}    
+                                    <div *ngIf="user.role===2">
+                                        <div>
+                                            <p><br>
+                                                Number of clients served: {{stat.numberOfClients}}
+                                            </p>
+                                            <p>
+                                                Number of orders served: {{stat.numberOfOrders}}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="user.role===3">
+                                            <div>
+                                                <p><br>
+                                                    Number of plates prepared: {{stat.numberOfPlates}}
+                                                </p>
+                                                <p>
+                                                    Total price of plates prepared: {{stat.priceOfPlates}}
+                                                </p>
+                                            </div>
+                                    </div>
+                                </ion-text>
+                            </div>
+                        </div>
                     </ion-card-content>
                 </ion-card>
             </ion-col>
