@@ -36,12 +36,12 @@ export class AppComponent implements OnInit  {
     {
       title: 'Tables',
       url: 'cashier/menu/gesttable',
-      icon: 'hammer'
+      icon: 'basket'
     },
     {
       title: 'Items',
       url: 'cashier/menu/gestitem',
-      icon: 'hammer'
+      icon: 'restaurant'
     },
     {
       title: 'Statistics',
