@@ -9,12 +9,12 @@
 
 <ion-content padding>
     <ion-grid>
-        <ion-row>
-            <ion-col *ngFor="let user of users" size-sm='4' col-xs-3>
-                <ion-card *ngIf="user.role===2 || user.role===3">
-                    <ion-card-content>
-                        <div *ngFor="let stat of stats">
-                            <div *ngIf="user.username===stat.username">
+        <ion-row *ngFor="let stat of stats">
+            <ion-col>
+                <div *ngFor="let user of users">
+                    <div *ngIf="user.role===2 || user.role===3">
+                        <ion-card *ngIf="user.username===stat.username">
+                            <ion-card-content>
                                 <ion-text>
                                         Username: {{ user.username }}    
                                     <div *ngIf="user.role===2">
@@ -38,10 +38,10 @@
                                             </div>
                                     </div>
                                 </ion-text>
-                            </div>
-                        </div>
-                    </ion-card-content>
-                </ion-card>
+                            </ion-card-content>
+                        </ion-card>
+                    </div>
+                </div>
             </ion-col>
         </ion-row>
     </ion-grid>
