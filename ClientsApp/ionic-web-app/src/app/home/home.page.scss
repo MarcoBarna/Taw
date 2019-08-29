@@ -3,12 +3,25 @@
         --background: url('../home/img/back.jpg') 0 0/100% 100% no-repeat;
     }
 
-    .card1 {
+    .grid1{
+        height: 100%;
+    }
+
+    .row1{
+        height: 100%;
+    }
+
+    .card1{
         background-color: rgb(255, 255, 255); 
     }
 
-    .card2 {
-        background-color: rgb(44, 131, 172, 0.7); 
+    .card2{
+        background-color:#3880ff; 
     }
-
+  
+    .label1{
+        font-size: 14 px;
+    }
+        
+    
     

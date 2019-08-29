@@ -124,8 +124,6 @@ export class UserHttpService {
   }
 
   get_role() {
-    // console.log('lollo cazzaro: ' + jwt_decode(this.token).roles[0]);
-    // console.log('lollo cazzaro: ' + (this.token));
     console.log(this.token);
     // console.log(jwt_decode(this.token).role);
     return jwt_decode(this.token).role;
