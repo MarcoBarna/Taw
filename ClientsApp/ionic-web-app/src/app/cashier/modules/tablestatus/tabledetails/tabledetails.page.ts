@@ -35,6 +35,10 @@ export class TabledetailsPage implements OnInit {
   }
 
   ngOnInit() {
+    if (this.us.get_token() === undefined || this.us.get_token() === '' || this.us.get_role() !== 1) {
+      console.log('Acces Denided');
+      this.us.logout();
+    }
     this.ActivatedRoute.paramMap.subscribe(paramMap => {
       if (!paramMap.has('tableId')) {
         // redirect
@@ -45,7 +49,7 @@ export class TabledetailsPage implements OnInit {
         this.loadedTable = res;
         this.ord.getOrder(this.loadedTable['orderId']).toPromise().then(val => {
           this.loadedOrder = val;
-          console.log(this.loadedOrder); 
+          console.log(this.loadedOrder);
           this.loadDish = Object.values(this.loadedOrder['dishList']);
           this.loadBev = Object.values(this.loadedOrder['beverageList']);
           this.itm.getItems().toPromise().then(itmdish => {

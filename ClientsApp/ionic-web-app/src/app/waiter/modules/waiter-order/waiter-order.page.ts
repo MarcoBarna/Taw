@@ -53,11 +53,11 @@ export class WaiterOrderPage implements OnInit {
       + date.getDate()
       + date.getMonth()
       + date.getFullYear()
-      + date.getHours()
-      + date.getMinutes()
-      + date.getSeconds()
+      + (date.getHours() < 10 ? '0' : '') + date.getHours()
+      + (date.getMinutes() < 10 ? '0' : '') + date.getMinutes()
+      + (date.getSeconds() < 10 ? '0' : '') + date.getSeconds()
     );
-    this.ord.addOrder(parseInt(value, 10), arrayOutBev, arrayOutDish, nPeople, this.tableID, this.nick).toPromise().then(or => {
+    this.ord.addOrder(parseInt(value, 10), arrayOutDish, arrayOutBev , nPeople, this.tableID, this.nick).toPromise().then(or => {
       console.log(or);
     })
     .catch(err => {

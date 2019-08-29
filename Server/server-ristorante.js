@@ -288,30 +288,30 @@ app
 //* SINGLE TABLE
 app
   .route("/api/tables/:id")
-  .get(auth, (req,res) => {
+  .get(auth, (req, res) => {
     if (
       !users.newUser(req.user).HisCashier() &&
       !users.newUser(req.user).HisWaiter() &&
       !users.newUser(req.user).HisClient()
     )
-    return res.status(401).json({
-      confirmation: "fail",
-      message: "Unauthorized user"
-    });
-    tables
-    .getModel()
-    .findOne({
-      tableNumber: req.params.id
-    })
-    .then(data => {
-      return res.status(200).json(data)
-    })
-    .catch(err => {
-      return res.status(500).json({
+      return res.status(401).json({
         confirmation: "fail",
-        message: err.message
+        message: "Unauthorized user"
       });
-    }) // * MODIFIED STATUS
+    tables
+      .getModel()
+      .findOne({
+        tableNumber: req.params.id
+      })
+      .then(data => {
+        return res.status(200).json(data);
+      })
+      .catch(err => {
+        return res.status(500).json({
+          confirmation: "fail",
+          message: err.message
+        });
+      }); // * MODIFIED STATUS
   })
   .patch(auth, (req, res) => {
     if (
@@ -486,7 +486,11 @@ app
     else {
       var neworder = orders.newOrder(req.body);
       const date = new Date();
-      neworder.date = date.toLocaleDateString();
+      const dateStr =
+        `${date.getDate()}` +
+        `${date.getMonth() + 1}` +
+        `${date.getFullYear()}`;
+      neworder.date = parseInt(dateStr, 10);
       neworder.dishList.forEach(element => {
         neworder.dishState.push(0);
       });
@@ -522,34 +526,36 @@ app
   })
   .patch(auth, (req, res) => {
     //* CLOSE AN ORDER AFTER ALL OF THE DISHES ARE PREPARED  || 0 = new order , 1 = order prepared, 2 = order paid
-    if (!users.newUser(req.user).HisCook() && !users.newUser(req.user).HisCashier())
+    if (
+      !users.newUser(req.user).HisCook() &&
+      !users.newUser(req.user).HisCashier()
+    )
       return res.status(401).json({
         confirmation: "fail",
         message: "Unauthorized user"
       });
-      orders
-        .getModel()
-        .findOne({
-          orderNumber: req.body.orderNumber
-        })
-        .then(data => {
-          data.orderStatus = data.orderStatus + 1;
-          data.markModified("orderStatus");
-          data.save()
-          .catch(err => {
-            return res.status(500).json({
-              confirmation: "fail",
-              message: err.message
-            });
-          })
-        })
-        .catch(err => {
+    orders
+      .getModel()
+      .findOne({
+        orderNumber: req.body.orderNumber
+      })
+      .then(data => {
+        data.orderStatus = data.orderStatus + 1;
+        data.markModified("orderStatus");
+        data.save().catch(err => {
           return res.status(500).json({
             confirmation: "fail",
             message: err.message
           });
         });
-    });
+      })
+      .catch(err => {
+        return res.status(500).json({
+          confirmation: "fail",
+          message: err.message
+        });
+      });
+  });
 
 // * DELETE SINGLE ORDER
 app
@@ -708,15 +714,18 @@ app.route("/api/orders/beverages/:id").patch(auth, (req, res) => {
 });
 
 // * THIS RETURNS ALL OF THE TICKETS OF THE DAY
-app.route("/api/orders/tickets").get(auth, (req, res) => {
-  if (!users.newUser(req.user).HisCashier())
+app.route("/api/orders/tickets/day/:date").get(auth, (req, res) => {
+  if (
+    !users.newUser(req.user).HisCashier() &&
+    !users.newUser(req.user).HisCook()
+  )
     return res.status(401).json({
       confirmation: "fail",
       message: "Unauthorized user"
     });
   orders
     .getModel()
-    .find({ date: req.params.data })
+    .find({ date: req.params.date })
     .then(data => {
       return res.status(200).json(data);
     })
@@ -757,7 +766,7 @@ app.route("/api/orders/tickets/:id").get(auth, (req, res) => {
               if (element === res.code) total += res.price;
             });
           });
-          return res.status(200).json(total,arrayList,result);
+          return res.status(200).json(total, arrayList, result);
         })
         .catch(err => {
           return res.status(500).json({
@@ -919,7 +928,7 @@ mongoose
       nwuser5.setPassword("client");
       nwuser5.save(function(err) {
         if (!err) {
-          console.log("Client user created")
+          console.log("Client user created");
         } else console.log("client alredy created");
       });
     },

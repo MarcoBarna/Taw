@@ -11,12 +11,6 @@ import { Tickets } from '../models/Tickets';
 export class OrderHttpService {
   public endpoint = 'orders';
 
-  // private create_options( params = {} ) {
-  //   return  {
-  //     params : new HttpParams( {fromObject: params} )
-  //   };
-  // }
-
   constructor(private us: UserHttpService, private http: HttpClient) { }
 
   getOrders() {
@@ -28,8 +22,8 @@ export class OrderHttpService {
   }
 
   // Will return all the tickets of the given day
-  getTicketsByDate(date: string) {
-    return this.http.get<Orders[]>(this.endpoint + '/' + 'tickets');
+  getTicketsByDate(date: number) {
+    return this.http.get<Orders[]>(this.endpoint + '/' + 'tickets' + '/' + 'day' + '/' + date);
   }
 
   /* will return the Total, an arraylist with all the beverages and dishes

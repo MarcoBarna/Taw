@@ -31,7 +31,7 @@ let orderSchema = new Schema({
         required: true
     },
     date: {
-        type: mongoose.SchemaTypes.String,
+        type: mongoose.SchemaTypes.Number,
         required: true
     },
     orderStatus: {

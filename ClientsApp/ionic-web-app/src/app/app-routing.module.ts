@@ -80,7 +80,6 @@ const routes: Routes = [
         m => m.StatsPageModule
       )
   },
-  { path: 'tabledetails', loadChildren: './cashier/modules/tablestatus/tabledetails/tabledetails.module#TabledetailsPageModule' },
   {
     path: 'waiter',
     children: [
@@ -102,10 +101,22 @@ const routes: Routes = [
   },
   {
     path: 'cook',
-    loadChildren: () =>
-      import('./cook/cook.module').then(
-        m => m.CookPageModule
-      )
+    children: [
+      {
+        path: '',
+        loadChildren: () =>
+          import('./cook/cook.module').then(
+            m => m.CookPageModule
+          )
+      },
+      {
+        path: ':orderId',
+        loadChildren: () =>
+          import('./cook/cook-details/cook-details.module').then(
+            m => m.CookDetailsPageModule
+          )
+      }
+    ]
   },
   {
     path: 'bartender',
@@ -113,9 +124,7 @@ const routes: Routes = [
       import('./bartender/bartender.module').then(
         m => m.BartenderPageModule
       )
-  },
-  { path: 'waiter-order', loadChildren: './waiter/modules/waiter-order/waiter-order.module#WaiterOrderPageModule' },
-
+  }
 ];
 
 @NgModule({
