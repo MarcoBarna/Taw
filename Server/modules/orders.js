@@ -34,7 +34,7 @@ let orderSchema = new Schema({
         type: mongoose.SchemaTypes.Number,
         required: true
     },
-    orderStatus: {
+    orderStatus: { // 0 - New order, 1 - All dish complete, 2 - Order paied
         type: mongoose.SchemaTypes.Number,
         default: 0
     },
