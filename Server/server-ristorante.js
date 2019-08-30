@@ -486,10 +486,12 @@ app
     else {
       var neworder = orders.newOrder(req.body);
       const date = new Date();
-      const dateStr =
-        `${date.getDate()}` +
-        `${date.getMonth() + 1}` +
-        `${date.getFullYear()}`;
+      const dateStr = (
+        (date.getDate() < 10 ? "0" : "") +
+        date.getDate() +
+        ((date.getMonth() < 10 ? "0" : "") + `${date.getMonth() + 1}`) +
+        date.getFullYear()
+      );
       neworder.date = parseInt(dateStr, 10);
       neworder.dishList.forEach(element => {
         neworder.dishState.push(0);

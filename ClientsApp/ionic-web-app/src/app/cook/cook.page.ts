@@ -31,7 +31,12 @@ export class CookPage implements OnInit {
   getOrders() {
 
     const date = new Date();
-    const dateStr = `${date.getDate()}` + `${date.getMonth() + 1}` + `${date.getFullYear()}`;
+    const dateStr = (
+      (date.getDate() < 10 ? '0' : '') +
+      date.getDate() +
+      ((date.getMonth() < 10 ? '0' : '') + `${date.getMonth() + 1}`) +
+      date.getFullYear()
+    );
     console.log(dateStr);
     this.ord.getTicketsByDate(parseInt(dateStr, 10)).toPromise().then(order => {
       this.loadedOrder = order;

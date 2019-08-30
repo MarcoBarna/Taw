@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-title>COOK DASHBOARD</ion-title>
+    <ion-title>DISHES</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -9,11 +9,8 @@
     <ion-row>
       <ion-col>
         <ion-list>
-          <ion-item
-            *ngFor="let ord of loadedOrder"
-            [routerLink]="['./', ord.orderNumber]"
-          >
-            <ion-text> ORDER NUMBER : {{ ord.orderNumber }} </ion-text>
+          <ion-item *ngFor="let dish of loadedArrayOrder">
+            <ion-text> dish : {{ dish }} </ion-text>
           </ion-item>
         </ion-list>
       </ion-col>
