@@ -373,11 +373,6 @@ app
 app
   .route("/api/items")
   .get(auth, (req, res) => {
-    if (!users.newUser(req.user).HisCashier())
-      return res.json({
-        confirmation: "fail",
-        message: "Unauthorized user"
-      });
     items
       .getModel()
       .find()
@@ -486,12 +481,10 @@ app
     else {
       var neworder = orders.newOrder(req.body);
       const date = new Date();
-      const dateStr = (
-        (date.getDate() < 10 ? "0" : "") +
+      const dateStr =
         date.getDate() +
         ((date.getMonth() < 10 ? "0" : "") + `${date.getMonth() + 1}`) +
-        date.getFullYear()
-      );
+        date.getFullYear();
       neworder.date = parseInt(dateStr, 10);
       neworder.dishList.forEach(element => {
         neworder.dishState.push(0);
@@ -619,7 +612,7 @@ app.route("/api/orders/dishes/:id").patch(auth, (req, res) => {
     .getModel()
     .findOne({ orderNumber: req.params.id })
     .then(data => {
-      data.dishState[req.body.index] = req.body.state;
+      data.dishState[req.body.index] = data.dishState[req.body.index] + 1;
       data.markModified("dishState");
       if (req.body.state === 1) socket.emitEvent("dish in preparation");
       else {

@@ -10,10 +10,10 @@
       <ion-col>
         <ion-list>
           <ion-item
-            *ngFor="let ord of loadedOrder"
-            [routerLink]="['./', ord.orderNumber]"
+            *ngFor="let ord of loadedOrder; let i = index"
+            [routerLink]="(loadedOrder[i].orderStatus === 0) ?  ['./', ord.orderNumber] : removeItem(i)"
           >
-            <ion-text> ORDER NUMBER : {{ ord.orderNumber }} </ion-text>
+            <ion-text *ngIf="loadedOrder[i].orderStatus === 0"> ORDER NUMBER : {{ ord.orderNumber }} </ion-text>
           </ion-item>
         </ion-list>
       </ion-col>

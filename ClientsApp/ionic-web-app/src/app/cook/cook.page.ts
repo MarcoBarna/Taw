@@ -10,10 +10,9 @@ import { SocketioService } from '../services/socketio.service';
 @Component({
   selector: 'app-cook',
   templateUrl: './cook.page.html',
-  styleUrls: ['./cook.page.scss'],
+  styleUrls: ['./cook.page.scss']
 })
 export class CookPage implements OnInit {
-
   loadedOrder: Orders[];
 
   constructor(
@@ -27,34 +26,42 @@ export class CookPage implements OnInit {
     this.menuCRTL.enable(false);
     this.getOrders();
   }
-
+  removeItem(index: number) {
+    this.loadedOrder.splice(index, 1);
+  }
   getOrders() {
-
     const date = new Date();
-    const dateStr = (
+    const dateStr =
       (date.getDate() < 10 ? '0' : '') +
       date.getDate() +
       ((date.getMonth() < 10 ? '0' : '') + `${date.getMonth() + 1}`) +
-      date.getFullYear()
-    );
+      date.getFullYear();
     console.log(dateStr);
-    this.ord.getTicketsByDate(parseInt(dateStr, 10)).toPromise().then(order => {
-      this.loadedOrder = order;
-      this.loadedOrder.sort((order1: Orders, order2: Orders) => {
-        return (order1.orderNumber % 1000000 ) - (order2.orderNumber % 1000000 );
+    this.ord
+      .getTicketsByDate(parseInt(dateStr, 10))
+      .toPromise()
+      .then(order => {
+        this.loadedOrder = order;
+        this.loadedOrder.sort((order1: Orders, order2: Orders) => {
+          return (
+            (order1.orderNumber % 1000000) - (order2.orderNumber % 1000000)
+          );
+        });
+        console.log(this.loadedOrder);
+      })
+      .catch(err => {
+        console.log(err);
       });
-      console.log(this.loadedOrder);
-    })
-    .catch(err => {
-      console.log(err);
-    });
   }
 
   ngOnInit() {
-    if (this.us.get_token() === undefined || this.us.get_token() === '' || this.us.get_role() !== 3) {
+    if (
+      this.us.get_token() === undefined ||
+      this.us.get_token() === '' ||
+      this.us.get_role() !== 3
+    ) {
       console.log('Acces Denided');
       this.us.logout();
     }
   }
-
 }

@@ -63,16 +63,12 @@ export class OrderHttpService {
     return this.http.patch(this.endpoint + '/' + 'beverages' + '/' + orderID, {});
   }
 
-  modifyDisState(orderID: number, index: number, state: number) {
-    return this.http.patch(this.endpoint + '/' + 'dishes' + '/' + orderID, {index, state});
+  modifyDisState(orderID: number, index: number) {
+    return this.http.patch(this.endpoint + '/' + 'dishes' + '/' + orderID, {index});
   }
 
-  modifyIndexState(orderID: number, state: number) {
-    return this.http.patch(this.endpoint + '/' + orderID, {state});
-  }
-
-  modifyOrderState(orderID: number) {
-    return this.http.patch(this.endpoint, {orderID});
+  modifyOrderState(orderNumber: number) {
+    return this.http.patch(this.endpoint, {orderNumber});
   }
 
   deleteOrder(orderID: number) {
