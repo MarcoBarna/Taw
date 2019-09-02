@@ -712,7 +712,8 @@ app.route("/api/orders/beverages/:id").patch(auth, (req, res) => {
 app.route("/api/orders/tickets/day/:date").get(auth, (req, res) => {
   if (
     !users.newUser(req.user).HisCashier() &&
-    !users.newUser(req.user).HisCook()
+    !users.newUser(req.user).HisCook() &&
+    !users.newUser(req.user).HisBartender()
   )
     return res.status(401).json({
       confirmation: "fail",

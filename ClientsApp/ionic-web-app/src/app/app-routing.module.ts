@@ -127,11 +127,24 @@ const routes: Routes = [
   },
   {
     path: 'bartender',
-    loadChildren: () =>
-      import('./bartender/bartender.module').then(
-        m => m.BartenderPageModule
-      )
+    children: [
+      {
+        path: '',
+        loadChildren: () =>
+          import('./bartender/bartender.module').then(
+            m => m.BartenderPageModule
+          )
+      },
+      {
+        path: ':orderID',
+        loadChildren: () =>
+          import('./bartender/bartender-details/bartender-details.module').then(
+            m => m.BartenderDetailsPageModule
+          )
+      }
+    ]
   }
+
 ];
 
 @NgModule({
