@@ -81,13 +81,6 @@ const routes: Routes = [
       )
   },
   {
-    path: 'vieworders',
-    loadChildren: () =>
-      import('./cashier/modules/vieworders/vieworders.module').then(
-        m => m.ViewordersPageModule
-      )
-  },
-  {
     path: 'waiter',
     children: [
       {

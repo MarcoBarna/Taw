@@ -65,8 +65,7 @@ const routes: Routes = [
           import('./modules/gesttable/gesttable.module').then(
             m => m.GesttablePageModule
           )
-      },
-
+      }
     ]
 
   }

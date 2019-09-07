@@ -52,17 +52,6 @@ app.use(cors());
 
 var socket;
 
-// ! ADMIN TEST
-app.post("/api/test", (req, res) => {
-  var nwuser = users.newUser(req.body);
-  nwuser.setPassword(req.body.password);
-  nwuser.save();
-  return res.status(200).json({
-    confirmation: "success",
-    data: nwuser
-  });
-});
-
 // * HOME ENDPOINT
 app.get("/", (req, res) => {
   res.status(200).json({
@@ -100,7 +89,6 @@ app.get(
   }
 );
 
-// ! RENEW TOKEN, CI VA L'AUTH?
 app.get("/api/renew", auth, (req, res) => {
   var tokendata = req.user;
   delete tokendata.iat;
@@ -451,7 +439,9 @@ app
 app
   .route("/api/orders")
   .get(auth, (req, res) => {
-    if (!users.newUser(req.user).HisWaiter())
+    if (!users.newUser(req.user).HisWaiter() &&
+        !users.newUser(req.user).HisCashier()
+    )
       return res.status(401).json({
         confirmation: "fail",
         message: "Unauthorized user"
@@ -520,7 +510,7 @@ app
     }
   })
   .patch(auth, (req, res) => {
-    //* CLOSE AN ORDER AFTER ALL OF THE DISHES ARE PREPARED  || 0 = new order , 1 = order prepared, 2 = order paid
+    //! CLOSE AN ORDER AFTER ALL OF THE DISHES ARE PREPARED  || 0 = new order , 1 = order prepared, 2 = order paid | SOCKET IO DA AGGIUNGERE
     if (
       !users.newUser(req.user).HisCook() &&
       !users.newUser(req.user).HisCashier()

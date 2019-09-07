@@ -22,6 +22,7 @@ export class TabledetailsPage implements OnInit {
   loadDish;
   loadBev;
   loadname;
+  loadnameWaiter;
   // tslint:disable-next-line: no-shadowed-variable
   constructor(
     private ActivatedRoute: ActivatedRoute,
@@ -49,6 +50,7 @@ export class TabledetailsPage implements OnInit {
         this.loadedTable = res;
         this.ord.getOrder(this.loadedTable['orderId']).toPromise().then(val => {
           this.loadedOrder = val;
+          this.loadnameWaiter = this.loadedOrder['userNameWaiter'];
           console.log(this.loadedOrder);
           this.loadDish = Object.values(this.loadedOrder['dishList']);
           this.loadBev = Object.values(this.loadedOrder['beverageList']);

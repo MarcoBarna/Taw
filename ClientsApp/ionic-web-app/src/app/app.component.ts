@@ -29,11 +29,6 @@ export class AppComponent implements OnInit  {
       icon: 'paper'
     },
     {
-      title: 'View Orders',
-      url: 'cashier/menu/vieworders',
-      icon: 'paper'
-    },
-    {
       title: 'Users',
       url: 'cashier/menu/gestusers',
       icon: 'people'
