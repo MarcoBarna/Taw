@@ -47,10 +47,22 @@ const routes: Routes = [
   },
   {
     path: 'kitchenque',
-    loadChildren: () =>
-      import('./cashier/modules/kitchenque/kitchenque.module').then(
-        m => m.KitchenquePageModule
-      )
+    children: [
+      {
+        path: '',
+        loadChildren: () =>
+          import('./cashier/modules/kitchenque/kitchenque.module').then(
+            m => m.KitchenquePageModule
+          )
+      },
+      {
+        path: ':orderID',
+        loadChildren: () =>
+          import('./cashier/modules/kitchenque/kitchen-details/kitchen-details.module').then(
+            m => m.KitchenDetailsPageModule
+          )
+      }
+    ]
   },
   {
     path: 'gestusers',
@@ -137,6 +149,7 @@ const routes: Routes = [
       }
     ]
   }
+
 
 ];
 

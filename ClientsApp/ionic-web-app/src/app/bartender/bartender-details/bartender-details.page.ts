@@ -8,6 +8,7 @@ import { OrderHttpService } from 'src/app/services/order-http.service';
 import { ItemHttpService } from 'src/app/services/item-http.service';
 import { UserHttpService } from 'src/app/services/user-http.service';
 import { Router, ActivatedRoute } from '@angular/router';
+import { SocketioService } from 'src/app/services/socketio.service';
 
 @Component({
   selector: 'app-bartender-details',
@@ -29,9 +30,13 @@ export class BartenderDetailsPage implements OnInit {
     private us: UserHttpService,
     private ord: OrderHttpService,
     private itm: ItemHttpService,
-    private router: Router
+    private router: Router,
+    private socketio: SocketioService
   ) {
     this.menuCtrl.enable(false);
+    this.socketio.get().on('Batender',() => {
+      this.router.navigate(['bartender']);
+    });
   }
 
   OrderFinished() {
@@ -44,9 +49,10 @@ export class BartenderDetailsPage implements OnInit {
       .catch(err => {
         console.log(err);
       });
-    this.router.navigate(['bartender']);
+    
 
   }
+
 
   ngOnInit() {
     if (

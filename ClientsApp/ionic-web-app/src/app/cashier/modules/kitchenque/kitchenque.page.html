@@ -3,10 +3,23 @@
       <ion-buttons slot="start">
           <ion-menu-button></ion-menu-button>
       </ion-buttons>
-    <ion-title>KITCHEN QUEUE</ion-title>
+    <ion-title>KITCHEN</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-list>
+          <ion-item
+            *ngFor="let ord of loadedOrder; let i = index"
+            [routerLink]="(loadedOrder[i].orderStatus === 0) ?  ['./', ord.orderNumber] : removeItem(i)"
+          >
+            <ion-text *ngIf="loadedOrder[i].orderStatus === 0"> ORDER NUMBER : {{ ord.orderNumber }} </ion-text>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>

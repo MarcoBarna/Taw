@@ -24,6 +24,9 @@ export class BartenderPage implements OnInit {
     private socketio: SocketioService
   ) {
     this.menuCRTL.enable(false);
+    this.socketio.get().on('Bartender', () => {
+      this.getOrders();
+    });
     this.getOrders();
   }
   removeItem(index: number) {

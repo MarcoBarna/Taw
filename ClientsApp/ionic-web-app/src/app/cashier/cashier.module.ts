@@ -25,7 +25,7 @@ const routes: Routes = [
           },
           {
             path: ':tableId',
-            loadChildren: ()=>
+            loadChildren: () =>
               import('./modules/tablestatus/tabledetails/tabledetails.module').then(
                 m => m.TabledetailsPageModule
               )
@@ -34,23 +34,37 @@ const routes: Routes = [
       },
       {
         path: 'kitchenque',
-        loadChildren: () =>
-          import('./modules/kitchenque/kitchenque.module').then(kitch => kitch.KitchenquePageModule)
+        children: [
+          {
+            path: '',
+            loadChildren: () =>
+              import('./modules/kitchenque/kitchenque.module').then(
+                m => m.KitchenquePageModule
+                )
+          },
+          {
+            path: ':orderID',
+            loadChildren: () =>
+              import('./modules/kitchenque/kitchen-details/kitchen-details.module').then(
+                m => m.KitchenDetailsPageModule
+              )
+          }
+        ]
       },
       {
         path: 'ticket',
         loadChildren: () =>
-          import('./modules/ticket/ticket.module').then(ticket => ticket.TicketPageModule)
+          import('./modules/ticket/ticket.module').then(m => m.TicketPageModule)
       },
       {
         path: 'gestusers',
         loadChildren: () =>
-          import('./modules/gestusers/gestusers.module').then(gestusr => gestusr.GestusersPageModule)
+          import('./modules/gestusers/gestusers.module').then(m => m.GestusersPageModule)
       },
       {
         path: 'stats',
         loadChildren: () =>
-          import('./modules/stats/stats.module').then(stats => stats.StatsPageModule)
+          import('./modules/stats/stats.module').then(m => m.StatsPageModule)
       },
       {
         path: 'gestitem',

@@ -527,6 +527,7 @@ app
       .then(data => {
         data.orderStatus = data.orderStatus + 1;
         data.markModified("orderStatus");
+        socket.emitEvent("order prepared");
         data.save().catch(err => {
           return res.status(500).json({
             confirmation: "fail",
@@ -677,10 +678,10 @@ app.route("/api/orders/beverages/:id").patch(auth, (req, res) => {
     .then(data => {
       data.beverageState = true;
       data.markModified("beverageState");
+      socket.emitEvent("beverages ready");
       data
         .save()
         .then(() => {
-          socket.emitEvent("beverages ready");
           return res.status(200).json(data.beverageState);
         })
         .catch(err => {
