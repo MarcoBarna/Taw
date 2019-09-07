@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { MenuController } from '@ionic/angular';
-import { TableHttpService } from 'src/app/services/table-http.service';
+import { OrderHttpService } from '../../../services/order-http.service';
+import { Orders } from 'src/app/models/Orders';
 import { UserHttpService } from 'src/app/services/user-http.service';
-import { OrderHttpService } from 'src/app/services/order-http.service';
-import { ItemHttpService } from 'src/app/services/item-http.service';
-
 @Component({
   selector: 'app-vieworders',
   templateUrl: './vieworders.page.html',
@@ -12,19 +11,38 @@ import { ItemHttpService } from 'src/app/services/item-http.service';
 })
 export class ViewordersPage implements OnInit {
 
-  constructor(public menuCtrl: MenuController,
-              private table: TableHttpService,
-              private us: UserHttpService,
-              private ord: OrderHttpService,
-              private itm: ItemHttpService) {
-      this.menuCtrl.enable(true);
+  private orders: Orders[];
+  private role;
+
+      constructor(
+              private router: Router,
+              public menuCtrl: MenuController,
+              private order: OrderHttpService,
+              private us: UserHttpService,) {
+      this.menuCtrl.enable(true);  
+      this.getOrders();
+      this.role = this.us.get_role();
      }
 
-  ngOnInit() {
-    if (this.us.get_token() === undefined || this.us.get_token() === '' || this.us.get_role() !== 1) {
-      console.log('Acces Denided');
-      this.us.logout();
+     public getOrders() {
+      this.order.getOrders().toPromise().then((orders: Orders[]) => {
+        this.orders = orders;
+        console.log(orders);
+  
+        orders.sort((order1: Orders, order2: Orders) => {
+          return order1.tableNumber - order2.tableNumber;
+        });
+  
+      }).catch((err) => {
+        console.log(err);
+      });
     }
-  }
+  
+    ngOnInit() {
+      if (this.us.get_token() === undefined || this.us.get_token() === '' || this.us.get_role() !== 1) {
+        console.log('Acces Denided');
+        this.us.logout();
+      }
+    }
 
 }
