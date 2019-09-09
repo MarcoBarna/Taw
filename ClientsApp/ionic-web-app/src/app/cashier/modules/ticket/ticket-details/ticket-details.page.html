@@ -1,0 +1,40 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+        <ion-back-button defaultHref="/cashier/menu/ticket"></ion-back-button>
+      </ion-buttons>
+    <ion-title>TICKETS</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <p> </p>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-list>
+          <ion-item
+            *ngFor="let dish of loadedItemsArray; let i = index"
+          >
+            <ion-text *ngFor="let lname of loadname">
+              <span *ngIf="lname.code === dish.code">
+                {{ lname.name }} | Price: {{ lname.price }}
+              </span>
+            </ion-text>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-button (click)="CheckOrderFinished()">
+          Order Finished
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

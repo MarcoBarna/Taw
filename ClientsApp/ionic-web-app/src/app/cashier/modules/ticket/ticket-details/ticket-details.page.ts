@@ -9,18 +9,19 @@ import { Orders } from 'src/app/models/Orders';
 import { Items } from 'src/app/models/Items';
 
 @Component({
-  selector: 'app-cook-details',
-  templateUrl: './cook-details.page.html',
-  styleUrls: ['./cook-details.page.scss']
+  selector: 'app-ticket-details',
+  templateUrl: './ticket-details.page.html',
+  styleUrls: ['./ticket-details.page.scss'],
 })
-export class CookDetailsPage implements OnInit {
-  
+export class TicketDetailsPage implements OnInit {
+
   orderID;
   loadedOrder: Orders[];
   loadedArrayOrder;
+  loadedArrayBevOrder;
   loadedItemsArray = new Array<Items>();
   loadname;
-  
+
   constructor(
     private ActivatedRoute: ActivatedRoute,
     public menuCtrl: MenuController,
@@ -30,61 +31,17 @@ export class CookDetailsPage implements OnInit {
     private itm: ItemHttpService,
     private router: Router
   ) {
-    this.menuCtrl.enable(false);
-  }
-
-  ChangeStatusDish(dishStatus: number, index: number) {
-    if (dishStatus >= 0 && dishStatus <= 1) {
-      this.ord
-        .modifyDisState(this.orderID, index)
-        .toPromise()
-        .then(data => {
-          console.log(data);
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    } else {
-      console.log('Dish is already compleated');
-    }
-  }
-  CheckColorStatus(value: number) {
-    switch (value) {
-      case 1:
-        return 'warning';
-      case 2:
-        return 'success';
-      case 0:
-        return 'danger';
-    }
+    this.menuCtrl.enable(true);
   }
 
   CheckOrderFinished() {
-    const dishStatusArray = Object.values(this.loadedOrder['dishState']);
-    let flag = 0;
-    dishStatusArray.forEach(element => {
-      if (element === 0 || element === 1) {
-        flag = 1;
-      }
-    });
-    if (flag === 0) {
-      this.ord
-        .modifyOrderState(this.orderID)
-        .toPromise()
-        .then(data => {
-          console.log('Order Completed');
-        });
-      this.router.navigate(['cook']);
-    } else {
-      return console.log('Order not Completed');
-    }
   }
 
   ngOnInit() {
     if (
       this.us.get_token() === undefined ||
       this.us.get_token() === '' ||
-      this.us.get_role() !== 3
+      this.us.get_role() !== 1
     ) {
       console.log('Acces Denided');
       this.us.logout();
@@ -103,6 +60,7 @@ export class CookDetailsPage implements OnInit {
           this.loadedOrder = order;
           console.log(this.loadedOrder);
           this.loadedArrayOrder = Object.values(this.loadedOrder['dishList']);
+          this.loadedArrayBevOrder = Object.values(this.loadedArrayBevOrder['beverageList']);
           console.log(this.loadedArrayOrder);
           this.itm
             .getItems()
@@ -130,4 +88,5 @@ export class CookDetailsPage implements OnInit {
         });
     });
   }
+
 }

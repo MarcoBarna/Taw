@@ -6,6 +6,20 @@
     <ion-title>TICKETS</ion-title>
   </ion-toolbar>
 </ion-header>
-<ion-content>
 
+<ion-content>
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+              <ion-list>
+                <ion-item
+                  *ngFor="let ord of loadedOrder; let i = index"
+                  [routerLink]="(loadedOrder[i].orderStatus === 1) ?  ['./', ord.orderNumber] : removeItem(i)"
+                >
+                  <ion-text *ngIf="loadedOrder[i].orderStatus === 1"> ORDER NUMBER : {{ ord.orderNumber }} </ion-text>
+                </ion-item>
+              </ion-list>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
 </ion-content>

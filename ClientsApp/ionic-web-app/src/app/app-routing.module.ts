@@ -40,10 +40,23 @@ const routes: Routes = [
   },
   {
     path: 'ticket',
-    loadChildren: () =>
-      import('./cashier/modules/ticket/ticket.module').then(
-        m => m.TicketPageModule
-      )
+    children: [
+      {
+        path: '',
+        loadChildren: () =>
+          import('./cashier/modules/ticket/ticket.module').then(
+            m => m.TicketPageModule
+        )
+      },
+      {
+        path: ':orderID',
+        loadChildren: () =>
+          import('./cashier/modules/ticket/ticket-details/ticket-details.module').then(
+            m => m.TicketDetailsPageModule
+          )
+      }
+    ]
+    
   },
   {
     path: 'kitchenque',
@@ -148,7 +161,8 @@ const routes: Routes = [
           )
       }
     ]
-  }
+  },
+
 
 
 ];

@@ -53,8 +53,22 @@ const routes: Routes = [
       },
       {
         path: 'ticket',
-        loadChildren: () =>
-          import('./modules/ticket/ticket.module').then(m => m.TicketPageModule)
+        children: [
+          {
+            path: '',
+            loadChildren: () =>
+              import('./modules/ticket/ticket.module').then(
+                m => m.TicketPageModule
+            )
+          },
+          {
+            path: ':orderID',
+            loadChildren: () =>
+              import('./modules/ticket/ticket-details/ticket-details.module').then(
+                m => m.TicketDetailsPageModule
+              )
+          }
+        ]
       },
       {
         path: 'gestusers',

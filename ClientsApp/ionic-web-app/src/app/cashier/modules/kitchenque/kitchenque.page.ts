@@ -49,6 +49,11 @@ export class KitchenquePage implements OnInit {
           );
         });
         console.log(this.loadedOrder);
+        // this.loadedOrder.forEach(element => {
+        //   if (element.orderStatus !== 0) {
+        //     this.loadedOrder.shift();
+        //   }
+        // })
       })
       .catch(err => {
         console.log(err);

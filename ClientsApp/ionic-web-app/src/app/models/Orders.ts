@@ -7,6 +7,7 @@ export interface Orders {
     numberPeople: number;
     tableNumber: number;
     date: Date;
+    orderStatus: number;
     userNameWaiter: string;
 
 }

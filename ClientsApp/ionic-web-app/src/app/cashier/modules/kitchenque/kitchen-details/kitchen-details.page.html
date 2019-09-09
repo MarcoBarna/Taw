@@ -1,12 +1,57 @@
 <ion-header>
-    <ion-toolbar color="primary">
-      <ion-buttons slot="start">
-          <ion-back-button defaultHref="/cashier/menu/kitchenque"></ion-back-button>
-        </ion-buttons>
-      <ion-title>KITCHEN</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/cashier/menu/kitchenque"></ion-back-button>
+    </ion-buttons>
+    <ion-title>KITCHEN</ion-title>
+  </ion-toolbar>
+</ion-header>
 
 <ion-content>
-
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <h3>DISH LIST</h3>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-list>
+          <ion-item
+            button
+            *ngFor="let dish of loadedItemsArray; let i = index"
+            [color]="CheckColorStatus(loadedOrder.dishState[i])"
+          >
+            <ion-text *ngFor="let lname of loadname">
+              <span *ngIf="lname.code === dish.code">
+                {{ lname.name }} | Req.Time: {{ lname.requiredTime }}
+              </span>
+            </ion-text>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <h3>BEVERAGE LIST</h3>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-list>
+          <ion-item
+            button
+            *ngFor="let bev of loadedItemsArrayBev"
+            [color]="CheckColorStatusBev(loadedOrder.beverageState)"
+          >
+            <ion-text *ngFor="let lname of loadname">
+              <span *ngIf="lname.code === bev.code">
+                {{ lname.name }} | Req.Time: {{ lname.requiredTime }}
+              </span>
+            </ion-text>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
