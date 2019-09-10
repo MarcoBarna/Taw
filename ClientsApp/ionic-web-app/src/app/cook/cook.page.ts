@@ -24,12 +24,12 @@ export class CookPage implements OnInit {
     private socketio: SocketioService
   ) {
     this.menuCRTL.enable(false);
-    this.getOrders();
+    this.getOrders(0);
   }
   removeItem(index: number) {
     this.loadedOrder.splice(index, 1);
   }
-  getOrders() {
+  getOrders(type: number) {
     const date = new Date();
     const dateStr =
       date.getDate() +
@@ -37,7 +37,7 @@ export class CookPage implements OnInit {
       date.getFullYear();
     console.log(dateStr);
     this.ord
-      .getTicketsByDate(parseInt(dateStr, 10))
+      .getTicketsByDate(parseInt(dateStr, 10), type)
       .toPromise()
       .then(order => {
         this.loadedOrder = order;

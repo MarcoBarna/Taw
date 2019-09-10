@@ -16,7 +16,6 @@ import { Orders } from 'src/app/models/Orders';
 export class TicketPage implements OnInit {
 
   loadedOrder;
-
   constructor(
     private us: UserHttpService,
     private router: Router,
@@ -27,14 +26,14 @@ export class TicketPage implements OnInit {
     private itm: ItemHttpService
   ) {
     this.menuCRTL.enable(true);
-    this.getOrders();
+    this.getOrders(1);
   }
 
   removeItem(index: number) {
     this.loadedOrder.splice(index, 1);
   }
 
-  getOrders() {
+  getOrders(type: number) {
     const date = new Date();
     const dateStr =
       date.getDate() +
@@ -42,7 +41,7 @@ export class TicketPage implements OnInit {
       date.getFullYear();
     console.log(dateStr);
     this.ord
-      .getTicketsByDate(parseInt(dateStr, 10))
+      .getTicketsByDate(parseInt(dateStr, 10), type)
       .toPromise()
       .then(order => {
         this.loadedOrder = order;
@@ -51,12 +50,6 @@ export class TicketPage implements OnInit {
             (order1.orderNumber % 1000000) - (order2.orderNumber % 1000000)
           );
         });
-        console.log(this.loadedOrder);
-        // this.loadedOrder.forEach(element => {
-        //   if (element.orderStatus !== 0) {
-        //     this.loadedOrder.shift();
-        //   }
-        // })
       })
       .catch(err => {
         console.log(err);

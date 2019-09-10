@@ -21,7 +21,8 @@ export class TicketDetailsPage implements OnInit {
   loadedArrayBevOrder;
   loadedItemsArray = new Array<Items>();
   loadname;
-
+  loadTotal;
+  loadCoverCharge;
   constructor(
     private ActivatedRoute: ActivatedRoute,
     public menuCtrl: MenuController,
@@ -35,17 +36,13 @@ export class TicketDetailsPage implements OnInit {
   }
 
   CheckOrderFinished() {
+    this.ord.modifyOrderState(this.orderID).toPromise().then(data => {
+      console.log(data);
+    });
   }
 
-  ngOnInit() {
-    if (
-      this.us.get_token() === undefined ||
-      this.us.get_token() === '' ||
-      this.us.get_role() !== 1
-    ) {
-      console.log('Acces Denided');
-      this.us.logout();
-    }
+  AcRoute() {
+
     this.ActivatedRoute.paramMap.subscribe(paramMap => {
       if (!paramMap.has('orderID')) {
         // redirect
@@ -60,7 +57,9 @@ export class TicketDetailsPage implements OnInit {
           this.loadedOrder = order;
           console.log(this.loadedOrder);
           this.loadedArrayOrder = Object.values(this.loadedOrder['dishList']);
-          this.loadedArrayBevOrder = Object.values(this.loadedArrayBevOrder['beverageList']);
+          this.loadedArrayBevOrder = Object.values(this.loadedOrder['beverageList']);
+          this.loadCoverCharge = this.loadedOrder['numberPeople'] * 2;
+          console.log(this.loadCoverCharge);
           console.log(this.loadedArrayOrder);
           this.itm
             .getItems()
@@ -68,10 +67,15 @@ export class TicketDetailsPage implements OnInit {
             .then((it: Items[]) => {
               this.loadname = it;
               it.sort((itm1: Items, itm2: Items) => {
-                return itm2.requiredTime - itm1.requiredTime;
+                return itm2.price - itm1.price;
               });
               this.loadname.forEach(element => {
                 this.loadedArrayOrder.forEach(code => {
+                  if (element.code === code) {
+                    this.loadedItemsArray.push(element);
+                  }
+                });
+                this.loadedArrayBevOrder.forEach(code => {
                   if (element.code === code) {
                     this.loadedItemsArray.push(element);
                   }
@@ -86,7 +90,26 @@ export class TicketDetailsPage implements OnInit {
         .catch(err => {
           console.log(err);
         });
+      console.log(this.orderID);
+      this.ord.getTicket(this.orderID).toPromise().then(result => {
+        this.loadTotal = result;
+        console.log(this.loadTotal);
+      }).catch(err => {
+        console.log(err);
+      });
     });
+  }
+  ngOnInit() {
+    if (
+      this.us.get_token() === undefined ||
+      this.us.get_token() === '' ||
+      this.us.get_role() !== 1
+    ) {
+      console.log('Acces Denided');
+      this.us.logout();
+    }
+
+    this.AcRoute();
   }
 
 }

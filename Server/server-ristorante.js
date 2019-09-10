@@ -700,7 +700,7 @@ app.route("/api/orders/beverages/:id").patch(auth, (req, res) => {
 });
 
 // * THIS RETURNS ALL OF THE TICKETS OF THE DAY
-app.route("/api/orders/tickets/day/:date").get(auth, (req, res) => {
+app.route("/api/orders/tickets/day/:date/:type").get(auth, (req, res) => {
   if (
     !users.newUser(req.user).HisCashier() &&
     !users.newUser(req.user).HisCook() &&
@@ -712,7 +712,7 @@ app.route("/api/orders/tickets/day/:date").get(auth, (req, res) => {
     });
   orders
     .getModel()
-    .find({ date: req.params.date })
+    .find({ date: req.params.date, orderStatus: req.params.type })
     .then(data => {
       return res.status(200).json(data);
     })

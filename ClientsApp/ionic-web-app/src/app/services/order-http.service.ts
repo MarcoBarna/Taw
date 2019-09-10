@@ -22,15 +22,15 @@ export class OrderHttpService {
   }
 
   // Will return all the tickets of the given day
-  getTicketsByDate(date: number) {
-    return this.http.get<Orders[]>(this.endpoint + '/' + 'tickets' + '/' + 'day' + '/' + date);
+  getTicketsByDate(date: number, type: number) {
+    return this.http.get<Orders[]>(this.endpoint + '/' + 'tickets' + '/' + 'day' + '/' + date + '/' + type);
   }
 
   /* will return the Total, an arraylist with all the beverages and dishes
   and finally another arraylist called Result which has all the info for printing
   */
   getTicket(orderID: number) {
-    return this.http.get<Tickets[]>(this.endpoint + '/' + 'tickets' + orderID);
+    return this.http.get<Tickets[]>(this.endpoint + '/' + 'tickets' + '/' + orderID);
   }
 
   addOrder(orderNumb: number, blist: [number], dlist: [number], nPeople: number, tNumber: number, usrWaiter: string) {

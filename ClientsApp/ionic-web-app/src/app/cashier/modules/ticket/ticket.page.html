@@ -14,9 +14,9 @@
               <ion-list>
                 <ion-item
                   *ngFor="let ord of loadedOrder; let i = index"
-                  [routerLink]="(loadedOrder[i].orderStatus === 1) ?  ['./', ord.orderNumber] : removeItem(i)"
+                  [routerLink]="['./', ord.orderNumber]"
                 >
-                  <ion-text *ngIf="loadedOrder[i].orderStatus === 1"> ORDER NUMBER : {{ ord.orderNumber }} </ion-text>
+                  <ion-text> ORDER NUMBER : {{ ord.orderNumber }} </ion-text>
                 </ion-item>
               </ion-list>
             </ion-col>

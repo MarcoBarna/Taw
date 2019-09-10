@@ -9,29 +9,42 @@
 
 <ion-content>
   <ion-grid>
-    <ion-row>
+    <ion-row padding>
       <ion-col>
-        <p> </p>
+        <h3> Ticket:  {{ orderID }} </h3>
       </ion-col>
     </ion-row>
     <ion-row>
       <ion-col>
         <ion-list>
           <ion-item
-            *ngFor="let dish of loadedItemsArray; let i = index"
+            *ngFor="let item of loadedItemsArray; let i = index"
           >
             <ion-text *ngFor="let lname of loadname">
-              <span *ngIf="lname.code === dish.code">
-                {{ lname.name }} | Price: {{ lname.price }}
+              <span *ngIf="lname.code === item.code">
+                {{ lname.name }} | Price: {{ lname.price }}$
               </span>
             </ion-text>
+          </ion-item>
+          <ion-item>
+            <ion-text>
+                Cover charge: {{ loadCoverCharge }}$
+            </ion-text>
+            
           </ion-item>
         </ion-list>
       </ion-col>
     </ion-row>
+    <ion-row padding>
+      <ion-col>
+        <ion-text>
+            <h4> TOTAL: {{ loadTotal }}$ </h4>
+        </ion-text>
+      </ion-col>
+    </ion-row>
     <ion-row>
       <ion-col>
-        <ion-button (click)="CheckOrderFinished()">
+        <ion-button routerLink="/cashier/menu/ticket" (click)="CheckOrderFinished()">
           Order Finished
         </ion-button>
       </ion-col>
