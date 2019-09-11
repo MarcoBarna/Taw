@@ -13,7 +13,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { TableHttpService } from './services/table-http.service';
 import { OrderHttpService } from './services/order-http.service';
 import { ItemHttpService } from './services/item-http.service';
-import { SocketioService } from './services/socketio.service'
+import { SocketioService } from './services/socketio.service';
 
 @NgModule({
   declarations: [

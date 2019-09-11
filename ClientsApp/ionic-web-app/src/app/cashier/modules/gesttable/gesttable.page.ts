@@ -26,17 +26,6 @@ export class GesttablePage implements OnInit {
     });
   }
 
-  // processForm(event) {
-  //   event.preventDefault();
-  //   this.controller.create({
-  //     header: 'Table Created',
-  //     message: 'Created table for admin',
-  //     buttons: [{
-  //       text: 'OK'
-  //     }]
-  //   }).then(alert => alert.present());
-  // }
-
   ngOnInit() {
     if (this.us.get_token() === undefined || this.us.get_token() === '' || this.us.get_role() !== 1) {
       console.log('Acces Denided');

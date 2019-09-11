@@ -6,7 +6,7 @@ class Socket {
     this.ios = io(server);
   }
   emitEvent(eventType) {
-    socketEvents[eventType].destRole.forEach(r => {
+    socketEvents[eventType].destRole.forEach((r) => {
       this.ios.emit(r);
     });
   }

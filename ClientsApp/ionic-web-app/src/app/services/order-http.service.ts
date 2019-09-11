@@ -30,7 +30,7 @@ export class OrderHttpService {
   and finally another arraylist called Result which has all the info for printing
   */
   getTicket(orderID: number) {
-    return this.http.get<Tickets[]>(this.endpoint + '/' + 'tickets' + '/' + orderID);
+    return this.http.get<Tickets>(this.endpoint + '/' + 'tickets' + '/' + orderID);
   }
 
   addOrder(orderNumb: number, blist: [number], dlist: [number], nPeople: number, tNumber: number, usrWaiter: string) {

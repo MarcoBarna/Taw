@@ -16,6 +16,10 @@ import { Orders } from 'src/app/models/Orders';
 export class TicketPage implements OnInit {
 
   loadedOrder;
+  loadedOrdersTotal;
+  arrayOfTicketsIds: number[];
+  arrayofTotals;
+  totalDay;
   constructor(
     private us: UserHttpService,
     private router: Router,
@@ -27,13 +31,19 @@ export class TicketPage implements OnInit {
   ) {
     this.menuCRTL.enable(true);
     this.getOrders(1);
+    this.getTotal(2);
+    this.socketio.get().on('Cashier', () => {
+      this.getOrders(1);
+      // this.getTotal(2);
+      console.log('Cashier event recevied');
+    });
   }
 
   removeItem(index: number) {
     this.loadedOrder.splice(index, 1);
   }
 
-  getOrders(type: number) {
+  getOrders(type: number) { 
     const date = new Date();
     const dateStr =
       date.getDate() +
@@ -50,6 +60,45 @@ export class TicketPage implements OnInit {
             (order1.orderNumber % 1000000) - (order2.orderNumber % 1000000)
           );
         });
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
+
+  getTotal(type: number){
+    const date = new Date();
+    const dateStr =
+      date.getDate() +
+      ((date.getMonth() < 10 ? '0' : '') + `${date.getMonth() + 1}`) +
+      date.getFullYear();
+    console.log(dateStr);
+    this.ord
+      .getTicketsByDate(parseInt(dateStr, 10), type)
+      .toPromise()
+      .then(order => {
+        this.loadedOrdersTotal = order;
+        this.loadedOrdersTotal.sort((order1: Orders, order2: Orders) => {
+          return (
+            (order1.orderNumber % 1000000) - (order2.orderNumber % 1000000)
+          );
+        });
+        this.arrayOfTicketsIds = [];
+        console.log(this.loadedOrdersTotal);
+        this.loadedOrdersTotal.forEach(element => {
+          this.arrayOfTicketsIds.push(element.orderNumber);
+        });
+        this.totalDay = 0;
+        let arrayOfPromise = [];
+        this.arrayOfTicketsIds.forEach(element => {
+          arrayOfPromise.push( this.ord.getTicket(element).toPromise().then());
+        });
+        Promise.all(arrayOfPromise).then(values => {
+          this.arrayofTotals = values;
+         });
+        console.log(this.arrayofTotals);
+        console.log(this.totalDay);
+        console.log(this.arrayOfTicketsIds);
       })
       .catch(err => {
         console.log(err);

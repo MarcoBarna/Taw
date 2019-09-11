@@ -57,18 +57,18 @@ app.get("/", (req, res) => {
   res.status(200).json({
     api_version: "1.0",
     endpoints: [
-      "/api/users",
-      "/api/table",
-      "/api/items",
-      "/api/orders",
-      "/api/stats"
+      "users",
+      "table",
+      "items",
+      "orders",
+      "stats"
     ]
   }); // json method sends a JSON response (setting the correct Content-Type) to the client
 });
 
 // * LOGIN
 app.get(
-  "/api/users/login",
+  "/users/login",
   passport.authenticate("basic", {
     session: false
   }),
@@ -89,7 +89,7 @@ app.get(
   }
 );
 
-app.get("/api/renew", auth, (req, res) => {
+app.get("/renew", auth, (req, res) => {
   var tokendata = req.user;
   delete tokendata.iat;
   delete tokendata.exp;
@@ -105,7 +105,7 @@ app.get("/api/renew", auth, (req, res) => {
 
 // * GET ALL USER LIST
 app
-  .route("/api/users")
+  .route("/users")
   .get(auth, (req, res) => {
     if (!users.newUser(req.user).HisCashier())
       return res.status(401).json({
@@ -156,7 +156,7 @@ app
   });
 
 //* DELETE USER
-app.route("/api/users/:username").delete(auth, (req, res, next) => {
+app.route("/users/:username").delete(auth, (req, res, next) => {
   if (!users.newUser(req.user).HisCashier())
     return res.status(401).json({
       confirmation: "fail",
@@ -195,7 +195,7 @@ app.route("/api/users/:username").delete(auth, (req, res, next) => {
 });
 
 // * CREATE CLIENT APP
-app.route("/api/clients").post((req, res) => {
+app.route("/clients").post((req, res) => {
   const { error } = validation.validateBody(req.body);
   if (error) return res.status(400).send(error.details[0].message);
   else {
@@ -208,7 +208,7 @@ app.route("/api/clients").post((req, res) => {
   }
 });
 
-app.route("/api/clients/order").post(auth, (req, res) => {
+app.route("/clients/order").post(auth, (req, res) => {
   // * NEW ORDER
   if (!users.newUser(req.user).HisClient())
     return res.status(401).json({
@@ -240,7 +240,7 @@ app.route("/api/clients/order").post(auth, (req, res) => {
 
 // * TABLE CREATION
 app
-  .route("/api/tables")
+  .route("/tables")
   .post(auth, (req, res) => {
     if (!users.newUser(req.user).HisCashier())
       return res.status(401).json({
@@ -275,7 +275,7 @@ app
 
 //* SINGLE TABLE
 app
-  .route("/api/tables/:id")
+  .route("/tables/:id")
   .get(auth, (req, res) => {
     if (
       !users.newUser(req.user).HisCashier() &&
@@ -359,7 +359,7 @@ app
 
 //* ITEM LIST
 app
-  .route("/api/items")
+  .route("/items")
   .get(auth, (req, res) => {
     items
       .getModel()
@@ -393,7 +393,7 @@ app
 
 //* DELETE SINGLE ITEM
 app
-  .route("/api/items/:code")
+  .route("/items/:code")
   .delete(auth, (req, res) => {
     if (!users.newUser(req.user).HisCashier())
       return res.status(401).json({
@@ -437,7 +437,7 @@ app
 
 //* ORDER LIST
 app
-  .route("/api/orders")
+  .route("/orders")
   .get(auth, (req, res) => {
     if (!users.newUser(req.user).HisWaiter() &&
         !users.newUser(req.user).HisCashier()
@@ -545,7 +545,7 @@ app
 
 // * DELETE SINGLE ORDER
 app
-  .route("/api/orders/:id")
+  .route("/orders/:id")
   .delete(auth, (req, res) => {
     if (!users.newUser(req.user).HisCashier())
       return res.status(401).json({
@@ -592,7 +592,7 @@ app
       });
   });
 
-app.route("/api/orders/dishes/:id").patch(auth, (req, res) => {
+app.route("/orders/dishes/:id").patch(auth, (req, res) => {
   if (!users.newUser(req.user).HisCook())
     return res.status(401).json({
       confirmation: "fail",
@@ -666,7 +666,7 @@ app.route("/api/orders/dishes/:id").patch(auth, (req, res) => {
     });
 });
 
-app.route("/api/orders/beverages/:id").patch(auth, (req, res) => {
+app.route("/orders/beverages/:id").patch(auth, (req, res) => {
   if (!users.newUser(req.user).HisBartender())
     return res.status(401).json({
       confirmation: "fail",
@@ -700,7 +700,7 @@ app.route("/api/orders/beverages/:id").patch(auth, (req, res) => {
 });
 
 // * THIS RETURNS ALL OF THE TICKETS OF THE DAY
-app.route("/api/orders/tickets/day/:date/:type").get(auth, (req, res) => {
+app.route("/orders/tickets/day/:date/:type").get(auth, (req, res) => {
   if (
     !users.newUser(req.user).HisCashier() &&
     !users.newUser(req.user).HisCook() &&
@@ -724,7 +724,7 @@ app.route("/api/orders/tickets/day/:date/:type").get(auth, (req, res) => {
     });
 });
 
-app.route("/api/orders/tickets/:id").get(auth, (req, res) => {
+app.route("/orders/tickets/:id").get(auth, (req, res) => {
   if (!users.newUser(req.user).HisCashier())
     return res.status(401).json({
       confirmation: "fail",
@@ -753,7 +753,7 @@ app.route("/api/orders/tickets/:id").get(auth, (req, res) => {
               if (element === res.code) total += res.price;
             });
           });
-          return res.status(200).json(total, arrayList, result);
+          return res.status(200).json(total);
         })
         .catch(err => {
           return res.status(500).json({
@@ -770,7 +770,7 @@ app.route("/api/orders/tickets/:id").get(auth, (req, res) => {
     });
 });
 
-app.route("/api/stats").get(auth, (req, res) => {
+app.route("/stats").get(auth, (req, res) => {
   if (!users.newUser(req.user).HisCashier())
     return res.status(401).json({
       confirmation: "fail",
@@ -840,11 +840,12 @@ mongoose
 
       module.exports = app;
       const server = http.createServer(app);
-      server.listen(port, () =>
+      server.listen(port || 8080, () =>
         console.info(`Server has started on port: ${port}`)
       );
       socket = new io.Socket(server);
       console.log("Socket.io Server Ready");
+      console.log(socket);
 
       // * ADMIN CREATION
       var nwuser = users.newUser({
