@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { MenuController } from '@ionic/angular';
 import { TableHttpService } from '../../../services/table-http.service';
 import { Tables } from 'src/app/models/Tables';
-// import { SocketioService } from 'src/app/services/socketio.service';
+import { SocketioService } from 'src/app/services/socketio.service';
 import { UserHttpService } from 'src/app/services/user-http.service';
 
 @Component({
@@ -15,16 +15,20 @@ export class TablestatusPage implements OnInit {
 
   private tables: Tables[];
   private role;
-  // private socketio: SocketioService
-  // tslint:disable-next-line: max-line-length
+  
   constructor(private router: Router,
               public menuCtrl: MenuController,
               private table: TableHttpService,
               private us: UserHttpService,
+              private socketio: SocketioService
               ) {
     this.menuCtrl.enable(true);
     this.getTables();
     this.role = this.us.get_role();
+    this.socketio.get().on('Cashier', () => {
+      this.getTables();
+      console.log('Cashier event recived');
+    })
   }
 
   public getTables() {

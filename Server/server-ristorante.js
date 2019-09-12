@@ -845,7 +845,6 @@ mongoose
       );
       socket = new io.Socket(server);
       console.log("Socket.io Server Ready");
-      console.log(socket);
 
       // * ADMIN CREATION
       var nwuser = users.newUser({

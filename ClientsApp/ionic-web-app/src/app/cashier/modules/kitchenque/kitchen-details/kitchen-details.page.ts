@@ -35,6 +35,10 @@ export class KitchenDetailsPage implements OnInit {
     private itm: ItemHttpService
   ) {
     this.menuCRTL.enable(true);
+    this.AcRoute();
+    this.socketio.get().on('Cashier', () => {
+      this.AcRoute();
+    });
   }
 
   CheckColorStatus(value: number) {
@@ -57,15 +61,7 @@ export class KitchenDetailsPage implements OnInit {
     }
   }
 
-    ngOnInit() {
-    if (
-      this.us.get_token() === undefined ||
-      this.us.get_token() === '' ||
-      this.us.get_role() !== 1
-    ) {
-      console.log('Acces Denided');
-      this.us.logout();
-    }
+  AcRoute() {
     this.ActivatedRoute.paramMap.subscribe(paramMap => {
       if (!paramMap.has('orderID')) {
         // redirect
@@ -112,6 +108,16 @@ export class KitchenDetailsPage implements OnInit {
           console.log(err);
         });
     });
+  }
+  ngOnInit() {
+    if (
+      this.us.get_token() === undefined ||
+      this.us.get_token() === '' ||
+      this.us.get_role() !== 1
+    ) {
+      console.log('Acces Denided');
+      this.us.logout();
+    }
   }
 
 }

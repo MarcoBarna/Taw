@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { MenuController } from '@ionic/angular';
 import { TableHttpService } from '../services/table-http.service';
 import { Tables } from 'src/app/models/Tables';
+import { SocketioService } from '../services/socketio.service';
 
 @Component({
   selector: 'app-waiter',
@@ -19,11 +20,15 @@ export class WaiterPage implements OnInit {
     private us: UserHttpService,
     private router: Router,
     private menuCRTL: MenuController,
-    private table: TableHttpService
+    private table: TableHttpService,
+    private socket: SocketioService
     ) {
     this.menuCRTL.enable(false);
     this.getTables();
     this.role = this.us.get_role();
+    this.socket.get().on('Waiter', () => {
+      this.getTables();
+    })
    }
 
    public getTables() {

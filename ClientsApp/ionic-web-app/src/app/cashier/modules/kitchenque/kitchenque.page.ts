@@ -25,6 +25,10 @@ export class KitchenquePage implements OnInit {
   ) {
     this.menuCRTL.enable(true);
     this.getOrders(0);
+    this.socketio.get().on('Cashier', () => {
+      this.getOrders(0);
+      console.log('Cashier event recevied');
+    });
   }
 
   removeItem(index: number) {
