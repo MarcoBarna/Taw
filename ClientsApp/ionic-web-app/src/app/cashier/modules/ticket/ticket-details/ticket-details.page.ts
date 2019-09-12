@@ -7,6 +7,7 @@ import { OrderHttpService } from 'src/app/services/order-http.service';
 import { ItemHttpService } from 'src/app/services/item-http.service';
 import { Orders } from 'src/app/models/Orders';
 import { Items } from 'src/app/models/Items';
+import { element } from 'protractor';
 
 @Component({
   selector: 'app-ticket-details',
@@ -16,14 +17,16 @@ import { Items } from 'src/app/models/Items';
 export class TicketDetailsPage implements OnInit {
 
   orderID;
-  loadedOrder: Orders[];
+  loadedOrder: Orders;
   loadedArrayOrder;
   loadedArrayBevOrder;
   loadedItemsArray = new Array<Items>();
   loadname;
   loadTotal;
   loadCoverCharge;
+  loadTable;
   constructor(
+    // tslint:disable-next-line: no-shadowed-variable
     private ActivatedRoute: ActivatedRoute,
     public menuCtrl: MenuController,
     private table: TableHttpService,
@@ -36,10 +39,26 @@ export class TicketDetailsPage implements OnInit {
   }
 
   CheckOrderFinished() {
-    this.ord.modifyOrderState(this.orderID).toPromise().then(data => {
-      console.log(data);
+    this.ActivatedRoute.paramMap.subscribe(paraMap => {
+      if(!paraMap.has('orderID')) {
+        return;
+      }
+      this.orderID = paraMap.get('orderID');
+      this.ord.getOrder(this.orderID).toPromise().then( order => {
+        this.table.changeTableStatus(order.tableNumber, 0).toPromise().then(() => {
+          this.ord.modifyOrderState(this.orderID).toPromise().then(() => {
+            console.log('Task Completed');
+          }).catch(err => {
+            console.log(err);
+          });
+        }).catch(err => {
+          console.log(err);
+        });
+      }).catch(err => {
+        console.log(err);
+      });
     });
-  }
+}
 
   AcRoute() {
 
@@ -56,8 +75,11 @@ export class TicketDetailsPage implements OnInit {
         .then(order => {
           this.loadedOrder = order;
           console.log(this.loadedOrder);
-          this.loadedArrayOrder = Object.values(this.loadedOrder['dishList']);
-          this.loadedArrayBevOrder = Object.values(this.loadedOrder['beverageList']);
+          // tslint:disable-next-line: no-string-literal
+          this.loadedArrayOrder = Object.values(this.loadedOrder.dishList);
+          // tslint:disable-next-line: no-string-literal
+          this.loadedArrayBevOrder = Object.values(this.loadedOrder.beverageList);
+          // tslint:disable-next-line: no-string-literal
           this.loadCoverCharge = this.loadedOrder['numberPeople'] * 2;
           console.log(this.loadCoverCharge);
           console.log(this.loadedArrayOrder);

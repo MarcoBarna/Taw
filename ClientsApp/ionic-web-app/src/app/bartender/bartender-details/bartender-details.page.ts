@@ -18,14 +18,16 @@ import { SocketioService } from 'src/app/services/socketio.service';
 export class BartenderDetailsPage implements OnInit {
 
   orderID;
-  loadedOrder: Orders[];
+  loadedOrder: Orders;
   loadedArrayOrder;
   loadedItemsArray = new Array<Items>();
   loadname;
   public ionicNamedColor = 'primary';
   constructor(
+    // tslint:disable-next-line: no-shadowed-variable
     private ActivatedRoute: ActivatedRoute,
     public menuCtrl: MenuController,
+    // tslint:disable-next-line: no-shadowed-variable
     private table: TableHttpService,
     private us: UserHttpService,
     private ord: OrderHttpService,
@@ -34,7 +36,7 @@ export class BartenderDetailsPage implements OnInit {
     private socketio: SocketioService
   ) {
     this.menuCtrl.enable(false);
-    this.socketio.get().on('Batender',() => {
+    this.socketio.get().on('Batender', () => {
       this.router.navigate(['bartender']);
     });
   }
@@ -49,7 +51,7 @@ export class BartenderDetailsPage implements OnInit {
       .catch(err => {
         console.log(err);
       });
-    
+
 
   }
 
@@ -76,7 +78,7 @@ export class BartenderDetailsPage implements OnInit {
         .then(order => {
           this.loadedOrder = order;
           console.log(this.loadedOrder);
-          this.loadedArrayOrder = Object.values(this.loadedOrder['beverageList']);
+          this.loadedArrayOrder = Object.values(this.loadedOrder.beverageList);
           console.log(this.loadedArrayOrder);
           this.itm
             .getItems()

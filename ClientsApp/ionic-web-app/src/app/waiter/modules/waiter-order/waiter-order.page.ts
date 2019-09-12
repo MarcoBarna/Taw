@@ -22,6 +22,7 @@ export class WaiterOrderPage implements OnInit {
   tableID: number;
 
   constructor(
+    // tslint:disable-next-line: no-shadowed-variable
     private ActivatedRoute: ActivatedRoute,
     private table: TableHttpService,
     public menuCtrl: MenuController,
@@ -56,15 +57,7 @@ export class WaiterOrderPage implements OnInit {
       date.getMinutes() +
       (date.getSeconds() < 10 ? '0' : '') +
       date.getSeconds();
-    this.ord
-      .addOrder(
-        parseInt(value, 10),
-        arrayOutDish,
-        arrayOutBev,
-        nPeople,
-        this.tableID,
-        this.nick
-      )
+    this.ord.addOrder(parseInt(value, 10), arrayOutDish, arrayOutBev,  nPeople, this.tableID, this.nick)
       .toPromise()
       .then(or => {
         console.log(or);

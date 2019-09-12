@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-undef */
 "use strict";
 Object.defineProperty(exports, "__esModule", {
@@ -832,7 +833,8 @@ passport.use(
 
 mongoose
   .connect("mongodb://localhost/ristdb", {
-    useNewUrlParser: true
+    useNewUrlParser: true,
+    useUnifiedTopology: true
   })
   .then(
     function onconnected() {

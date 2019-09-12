@@ -18,7 +18,7 @@ export class OrderHttpService {
   }
 
   getOrder(orderID: number) {
-    return this.http.get<Orders[]>(this.endpoint + '/' + orderID);
+    return this.http.get<Orders>(this.endpoint + '/' + orderID);
   }
 
   // Will return all the tickets of the given day

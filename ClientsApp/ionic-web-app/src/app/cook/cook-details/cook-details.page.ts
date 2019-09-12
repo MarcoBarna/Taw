@@ -7,6 +7,7 @@ import { OrderHttpService } from 'src/app/services/order-http.service';
 import { ItemHttpService } from 'src/app/services/item-http.service';
 import { Orders } from 'src/app/models/Orders';
 import { Items } from 'src/app/models/Items';
+import { SocketioService } from 'src/app/services/socketio.service';
 
 @Component({
   selector: 'app-cook-details',
@@ -14,23 +15,30 @@ import { Items } from 'src/app/models/Items';
   styleUrls: ['./cook-details.page.scss']
 })
 export class CookDetailsPage implements OnInit {
-  
+
   orderID;
-  loadedOrder: Orders[];
+  loadedOrder: Orders;
   loadedArrayOrder;
   loadedItemsArray = new Array<Items>();
   loadname;
-  
+
   constructor(
+    // tslint:disable-next-line: no-shadowed-variable
     private ActivatedRoute: ActivatedRoute,
     public menuCtrl: MenuController,
     private table: TableHttpService,
     private us: UserHttpService,
     private ord: OrderHttpService,
     private itm: ItemHttpService,
-    private router: Router
+    private router: Router,
+    private socketio: SocketioService
   ) {
     this.menuCtrl.enable(false);
+    this.AcRoute();
+    this.socketio.get().on('Cook', () => {
+      this.AcRoute();
+      console.log('Cook event recived');
+    });
   }
 
   ChangeStatusDish(dishStatus: number, index: number) {
@@ -48,18 +56,10 @@ export class CookDetailsPage implements OnInit {
       console.log('Dish is already compleated');
     }
   }
-  CheckColorStatus(value: number) {
-    switch (value) {
-      case 1:
-        return 'warning';
-      case 2:
-        return 'success';
-      case 0:
-        return 'danger';
-    }
-  }
+
 
   CheckOrderFinished() {
+    // tslint:disable-next-line: no-string-literal
     const dishStatusArray = Object.values(this.loadedOrder['dishState']);
     let flag = 0;
     dishStatusArray.forEach(element => {
@@ -80,15 +80,7 @@ export class CookDetailsPage implements OnInit {
     }
   }
 
-  ngOnInit() {
-    if (
-      this.us.get_token() === undefined ||
-      this.us.get_token() === '' ||
-      this.us.get_role() !== 3
-    ) {
-      console.log('Acces Denided');
-      this.us.logout();
-    }
+  AcRoute() {
     this.ActivatedRoute.paramMap.subscribe(paramMap => {
       if (!paramMap.has('orderID')) {
         // redirect
@@ -102,6 +94,7 @@ export class CookDetailsPage implements OnInit {
         .then(order => {
           this.loadedOrder = order;
           console.log(this.loadedOrder);
+          // tslint:disable-next-line: no-string-literal
           this.loadedArrayOrder = Object.values(this.loadedOrder['dishList']);
           console.log(this.loadedArrayOrder);
           this.itm
@@ -129,5 +122,16 @@ export class CookDetailsPage implements OnInit {
           console.log(err);
         });
     });
+  }
+
+  ngOnInit() {
+    if (
+      this.us.get_token() === undefined ||
+      this.us.get_token() === '' ||
+      this.us.get_role() !== 3
+    ) {
+      console.log('Acces Denided');
+      this.us.logout();
+    }
   }
 }

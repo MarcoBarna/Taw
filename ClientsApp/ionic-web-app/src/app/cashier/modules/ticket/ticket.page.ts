@@ -43,7 +43,7 @@ export class TicketPage implements OnInit {
     this.loadedOrder.splice(index, 1);
   }
 
-  getOrders(type: number) { 
+  getOrders(type: number) {
     const date = new Date();
     const dateStr =
       date.getDate() +
@@ -66,7 +66,7 @@ export class TicketPage implements OnInit {
       });
   }
 
-  getTotal(type: number){
+  getTotal(type: number) {
     const date = new Date();
     const dateStr =
       date.getDate() +
@@ -89,7 +89,7 @@ export class TicketPage implements OnInit {
           this.arrayOfTicketsIds.push(element.orderNumber);
         });
         this.totalDay = 0;
-        let arrayOfPromise = [];
+        const arrayOfPromise = [];
         this.arrayOfTicketsIds.forEach(element => {
           arrayOfPromise.push( this.ord.getTicket(element).toPromise().then());
         });

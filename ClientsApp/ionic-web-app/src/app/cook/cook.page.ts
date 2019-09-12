@@ -25,6 +25,10 @@ export class CookPage implements OnInit {
   ) {
     this.menuCRTL.enable(false);
     this.getOrders(0);
+    this.socketio.get().on('Cook', () => {
+      this.getOrders(0);
+      console.log('Cook event recived');
+    });
   }
   removeItem(index: number) {
     this.loadedOrder.splice(index, 1);

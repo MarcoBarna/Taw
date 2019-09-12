@@ -15,7 +15,7 @@ exports.Socket = Socket;
 var role = ["Cashier", "Waiter", "Cook", "Bartender"];
 var socketEvents = {
   "send order": {
-    destRole: [role[0], role[2], role[3]]
+    destRole: [role[0], role[1], role[2], role[3]]
   },
   "dishes ready": {
     destRole: [role[0], role[1]]

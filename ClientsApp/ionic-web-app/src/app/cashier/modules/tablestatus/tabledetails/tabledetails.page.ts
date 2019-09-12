@@ -17,7 +17,7 @@ import { Items } from 'src/app/models/Items';
 })
 export class TabledetailsPage implements OnInit {
   loadedTable: Tables[];
-  loadedOrder: Orders[];
+  loadedOrder: Orders;
   loadItems: Items[];
   loadDish;
   loadBev;
@@ -25,6 +25,7 @@ export class TabledetailsPage implements OnInit {
   loadnameWaiter;
   // tslint:disable-next-line: no-shadowed-variable
   constructor(
+    // tslint:disable-next-line: no-shadowed-variable
     private ActivatedRoute: ActivatedRoute,
     public menuCtrl: MenuController,
     private table: TableHttpService,
@@ -50,10 +51,10 @@ export class TabledetailsPage implements OnInit {
         this.loadedTable = res;
         this.ord.getOrder(this.loadedTable['orderId']).toPromise().then(val => {
           this.loadedOrder = val;
-          this.loadnameWaiter = this.loadedOrder['userNameWaiter'];
+          this.loadnameWaiter = this.loadedOrder.userNameWaiter;
           console.log(this.loadedOrder);
-          this.loadDish = Object.values(this.loadedOrder['dishList']);
-          this.loadBev = Object.values(this.loadedOrder['beverageList']);
+          this.loadDish = Object.values(this.loadedOrder.dishList);
+          this.loadBev = Object.values(this.loadedOrder.beverageList);
           this.itm.getItems().toPromise().then(itmdish => {
             this.loadname = itmdish;
             console.log(this.loadname);
