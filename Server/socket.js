@@ -18,7 +18,7 @@ var socketEvents = {
     destRole: [role[0], role[1], role[2], role[3]]
   },
   "dishes ready": {
-    destRole: [role[0], role[1]]
+    destRole: [role[0], role[1], role[2]]
   },
   "beverages ready": {
     destRole: [role[0], role[1], role[3]]

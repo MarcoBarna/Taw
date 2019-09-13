@@ -2,8 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Orders } from 'src/app/models/Orders';
 import { Items } from 'src/app/models/Items';
 import { MenuController } from '@ionic/angular';
-import { TableHttpService } from 'src/app/services/table-http.service';
-import { table } from 'console';
 import { OrderHttpService } from 'src/app/services/order-http.service';
 import { ItemHttpService } from 'src/app/services/item-http.service';
 import { UserHttpService } from 'src/app/services/user-http.service';
@@ -13,10 +11,9 @@ import { SocketioService } from 'src/app/services/socketio.service';
 @Component({
   selector: 'app-bartender-details',
   templateUrl: './bartender-details.page.html',
-  styleUrls: ['./bartender-details.page.scss'],
+  styleUrls: ['./bartender-details.page.scss']
 })
 export class BartenderDetailsPage implements OnInit {
-
   orderID;
   loadedOrder: Orders;
   loadedArrayOrder;
@@ -24,11 +21,8 @@ export class BartenderDetailsPage implements OnInit {
   loadname;
   public ionicNamedColor = 'primary';
   constructor(
-    // tslint:disable-next-line: no-shadowed-variable
     private ActivatedRoute: ActivatedRoute,
     public menuCtrl: MenuController,
-    // tslint:disable-next-line: no-shadowed-variable
-    private table: TableHttpService,
     private us: UserHttpService,
     private ord: OrderHttpService,
     private itm: ItemHttpService,
@@ -36,8 +30,9 @@ export class BartenderDetailsPage implements OnInit {
     private socketio: SocketioService
   ) {
     this.menuCtrl.enable(false);
+    this.AcRoute();
     this.socketio.get().on('Batender', () => {
-      this.router.navigate(['bartender']);
+      this.AcRoute();
     });
   }
 
@@ -46,25 +41,14 @@ export class BartenderDetailsPage implements OnInit {
       .modifyBevState(this.orderID)
       .toPromise()
       .then(data => {
-        console.log('Order Completed');
+        this.router.navigate(['bartender']);
       })
       .catch(err => {
         console.log(err);
       });
-
-
   }
 
-
-  ngOnInit() {
-    if (
-      this.us.get_token() === undefined ||
-      this.us.get_token() === '' ||
-      this.us.get_role() !== 4
-    ) {
-      console.log('Acces Denided');
-      this.us.logout();
-    }
+  AcRoute() {
     this.ActivatedRoute.paramMap.subscribe(paramMap => {
       if (!paramMap.has('orderID')) {
         // redirect
@@ -107,4 +91,14 @@ export class BartenderDetailsPage implements OnInit {
     });
   }
 
+  ngOnInit() {
+    if (
+      this.us.get_token() === undefined ||
+      this.us.get_token() === '' ||
+      this.us.get_role() !== 4
+    ) {
+      console.log('Acces Denided');
+      this.us.logout();
+    }
+  }
 }

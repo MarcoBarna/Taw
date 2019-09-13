@@ -76,8 +76,8 @@ export class KitchenDetailsPage implements OnInit {
         .then(order => {
           this.loadedOrder = order;
           console.log(this.loadedOrder);
-          this.loadedArrayOrder = Object.values(this.loadedOrder.dishList);
-          this.loadedArrayOrderBev = Object.values(this.loadedOrder.beverageList);
+          this.loadedArrayOrder = this.loadedOrder.dishList;
+          this.loadedArrayOrderBev = this.loadedOrder.beverageList;
           console.log(this.loadedArrayOrder);
           this.itm
             .getItems()
@@ -87,6 +87,8 @@ export class KitchenDetailsPage implements OnInit {
               it.sort((itm1: Items, itm2: Items) => {
                 return itm2.requiredTime - itm1.requiredTime;
               });
+              this.loadedItemsArray = [];
+              this.loadedItemsArrayBev = [];
               this.loadname.forEach(element => {
                 this.loadedArrayOrder.forEach(code => {
                   if (element.code === code) {

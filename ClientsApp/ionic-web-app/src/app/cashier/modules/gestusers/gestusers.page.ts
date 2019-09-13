@@ -10,6 +10,10 @@ import { UserHttpService } from 'src/app/services/user-http.service';
 })
 export class GestusersPage implements OnInit {
 
+  userName: string;
+  passUser: string;
+  roleUser: string;
+
   constructor(private router: Router,  public menuCtrl: MenuController, private us: UserHttpService) {
     this.menuCtrl.enable(true);
   }
@@ -33,6 +37,9 @@ export class GestusersPage implements OnInit {
     .catch(err => {
       console.log(err);
     });
+    this.userName = '';
+    this.passUser = '';
+    this.roleUser = '';
   }
 
 }

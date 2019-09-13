@@ -57,6 +57,16 @@ export class CookDetailsPage implements OnInit {
     }
   }
 
+  CheckColorStatus(value: number) {
+    switch (value) {
+      case 1:
+        return 'warning';
+      case 2:
+        return 'success';
+      case 0:
+        return 'danger';
+    }
+  }
 
   CheckOrderFinished() {
     // tslint:disable-next-line: no-string-literal
@@ -94,9 +104,7 @@ export class CookDetailsPage implements OnInit {
         .then(order => {
           this.loadedOrder = order;
           console.log(this.loadedOrder);
-          // tslint:disable-next-line: no-string-literal
-          this.loadedArrayOrder = Object.values(this.loadedOrder['dishList']);
-          console.log(this.loadedArrayOrder);
+          this.loadedArrayOrder = this.loadedOrder.dishList;
           this.itm
             .getItems()
             .toPromise()
@@ -105,12 +113,17 @@ export class CookDetailsPage implements OnInit {
               it.sort((itm1: Items, itm2: Items) => {
                 return itm2.requiredTime - itm1.requiredTime;
               });
-              this.loadname.forEach(element => {
-                this.loadedArrayOrder.forEach(code => {
-                  if (element.code === code) {
-                    this.loadedItemsArray.push(element);
+              this.loadedItemsArray = [];
+              this.loadedArrayOrder.forEach(element => {
+                console.log(element);
+                this.loadname.forEach(item => {
+                  if (element === item.code){
+                    this.loadedItemsArray.push(item);
                   }
                 });
+              });
+              this.loadedItemsArray.sort((it1: Items, it2: Items) => {
+                return it2.requiredTime - it1.requiredTime;
               });
               console.log(this.loadedItemsArray);
             })

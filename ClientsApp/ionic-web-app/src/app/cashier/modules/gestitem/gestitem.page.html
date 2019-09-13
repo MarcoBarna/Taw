@@ -23,6 +23,8 @@
                   Code
                 </ion-label>
                 <ion-input
+                  [(ngModel)]="code"
+                  [ngModelOptions]="{standalone: true}"
                   clearInput
                   type="text"
                   #Codetxt
@@ -37,6 +39,8 @@
                   Item Name
                 </ion-label>
                 <ion-input
+                  [(ngModel)]="itemName"
+                  [ngModelOptions]="{standalone: true}"
                   clearInput
                   type="text"
                   #nametxt
@@ -49,6 +53,8 @@
                   Required time to prepare
                 </ion-label>
                 <ion-input
+                  [(ngModel)]="reqTime"
+                  [ngModelOptions]="{standalone: true}"
                   clearInput
                   type="text"
                   #ttptxt
@@ -61,6 +67,8 @@
                   Price
                 </ion-label>
                 <ion-input
+                  [(ngModel)]="price"
+                  [ngModelOptions]="{standalone: true}"
                   clearInput
                   type="text"
                   #pricetxt

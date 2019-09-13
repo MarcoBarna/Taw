@@ -13,10 +13,14 @@ export class GestitemPage implements OnInit {
 
   item = {};
   items = [];
+  code: string;
+  itemName: string;
+  reqTime: string;
+  price: string;
 
   constructor(private router: Router,  public menuCtrl: MenuController, private itm: ItemHttpService, private us: UserHttpService) {
     this.menuCtrl.enable(true);
-    this.getAllItems();
+    // this.getAllItems();
   }
 
   ngOnInit() {
@@ -51,5 +55,9 @@ export class GestitemPage implements OnInit {
     }).catch(err => {
       console.log(err);
     });
+    this.code = '';
+    this.itemName = '';
+    this.reqTime = '';
+    this.price = '';
   }
 }

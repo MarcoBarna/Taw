@@ -22,6 +22,8 @@
                              >Username</ion-label
               >
               <ion-input
+              [(ngModel)]="userName"
+              [ngModelOptions]="{standalone: true}" 
                 clearInput
                 type="email"
                 #mailtxt
@@ -36,6 +38,8 @@
                 >Password</ion-label
               >
               <ion-input
+              [(ngModel)]="passUser"
+              [ngModelOptions]="{standalone: true}"
                 clearInput
                 type="password"
                 #passwdtxt
@@ -48,6 +52,8 @@
                 Role</ion-label
               >
               <ion-input
+              [(ngModel)]="roleUser"
+              [ngModelOptions]="{standalone: true}"
                 clearInput
                 type="role"
                 #roletxt

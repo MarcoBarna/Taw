@@ -37,11 +37,11 @@ export class WaiterOrderPage implements OnInit {
   }
 
   sendOrder(nPeople: number, dishStr, beverageStr) {
-    const arrayOutBev = dishStr.split(' ').map(item => {
+    const arrayOutDish = dishStr.split(' ').map(item => {
       return parseInt(item, 10);
     });
 
-    const arrayOutDish = beverageStr.split(' ').map(item => {
+    const arrayOutBev = beverageStr.split(' ').map(item => {
       return parseInt(item, 10);
     });
     const date = new Date();
@@ -57,7 +57,7 @@ export class WaiterOrderPage implements OnInit {
       date.getMinutes() +
       (date.getSeconds() < 10 ? '0' : '') +
       date.getSeconds();
-    this.ord.addOrder(parseInt(value, 10), arrayOutDish, arrayOutBev,  nPeople, this.tableID, this.nick)
+    this.ord.addOrder(parseInt(value, 10), arrayOutBev, arrayOutDish, nPeople, this.tableID, this.nick)
       .toPromise()
       .then(or => {
         console.log(or);

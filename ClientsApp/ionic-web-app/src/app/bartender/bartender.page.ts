@@ -17,9 +17,7 @@ export class BartenderPage implements OnInit {
   loadedOrder: Orders[];
   constructor(
     private us: UserHttpService,
-    private router: Router,
     private menuCRTL: MenuController,
-    private table: TableHttpService,
     private ord: OrderHttpService,
     private socketio: SocketioService
   ) {

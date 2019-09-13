@@ -11,8 +11,8 @@ import { UserHttpService } from 'src/app/services/user-http.service';
 })
 export class GesttablePage implements OnInit {
 
-  controller = document.querySelector('ion-alert-controller');
-  username;
+  tableNumber: string;
+  seatsNumber: string;
 
   constructor(private router: Router,  public menuCtrl: MenuController, private table: TableHttpService, private us: UserHttpService) {
     this.menuCtrl.enable(true);
@@ -24,6 +24,8 @@ export class GesttablePage implements OnInit {
     }).catch(err => {
       console.log(err);
     });
+    this.tableNumber = '';
+    this.seatsNumber = '';
   }
 
   ngOnInit() {

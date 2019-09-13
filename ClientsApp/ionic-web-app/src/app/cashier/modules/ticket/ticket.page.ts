@@ -11,15 +11,15 @@ import { Orders } from 'src/app/models/Orders';
 @Component({
   selector: 'app-ticket',
   templateUrl: './ticket.page.html',
-  styleUrls: ['./ticket.page.scss'],
+  styleUrls: ['./ticket.page.scss']
 })
 export class TicketPage implements OnInit {
-
   loadedOrder;
   loadedOrdersTotal;
   arrayOfTicketsIds: number[];
-  arrayofTotals;
-  totalDay;
+  arrayofTotals: number[];
+  totalDay: number;
+
   constructor(
     private us: UserHttpService,
     private router: Router,
@@ -30,11 +30,12 @@ export class TicketPage implements OnInit {
     private itm: ItemHttpService
   ) {
     this.menuCRTL.enable(true);
+    this.totalDay = 0;
     this.getOrders(1);
     this.getTotal(2);
     this.socketio.get().on('Cashier', () => {
       this.getOrders(1);
-      // this.getTotal(2);
+      this.getTotal(2);
       console.log('Cashier event recevied');
     });
   }
@@ -49,7 +50,6 @@ export class TicketPage implements OnInit {
       date.getDate() +
       ((date.getMonth() < 10 ? '0' : '') + `${date.getMonth() + 1}`) +
       date.getFullYear();
-    console.log(dateStr);
     this.ord
       .getTicketsByDate(parseInt(dateStr, 10), type)
       .toPromise()
@@ -72,7 +72,6 @@ export class TicketPage implements OnInit {
       date.getDate() +
       ((date.getMonth() < 10 ? '0' : '') + `${date.getMonth() + 1}`) +
       date.getFullYear();
-    console.log(dateStr);
     this.ord
       .getTicketsByDate(parseInt(dateStr, 10), type)
       .toPromise()
@@ -88,17 +87,26 @@ export class TicketPage implements OnInit {
         this.loadedOrdersTotal.forEach(element => {
           this.arrayOfTicketsIds.push(element.orderNumber);
         });
-        this.totalDay = 0;
+        this.totalDay = 9999;
         const arrayOfPromise = [];
         this.arrayOfTicketsIds.forEach(element => {
-          arrayOfPromise.push( this.ord.getTicket(element).toPromise().then());
+          arrayOfPromise.push(
+            this.ord
+              .getTicket(element)
+              .toPromise()
+              .then()
+          );
+          console.log(arrayOfPromise);
         });
+        this.totalDay = 0;
         Promise.all(arrayOfPromise).then(values => {
           this.arrayofTotals = values;
-         });
-        console.log(this.arrayofTotals);
-        console.log(this.totalDay);
-        console.log(this.arrayOfTicketsIds);
+          console.log(this.arrayofTotals);
+          this.arrayofTotals.forEach(element => {
+            this.totalDay += element;
+          });
+          console.log(this.totalDay);
+        });
       })
       .catch(err => {
         console.log(err);
@@ -106,10 +114,13 @@ export class TicketPage implements OnInit {
   }
 
   ngOnInit() {
-    if (this.us.get_token() === undefined || this.us.get_token() === '' || this.us.get_role() !== 1) {
+    if (
+      this.us.get_token() === undefined ||
+      this.us.get_token() === '' ||
+      this.us.get_role() !== 1
+    ) {
       console.log('Acces Denided');
       this.us.logout();
     }
   }
-
 }
