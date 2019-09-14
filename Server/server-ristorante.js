@@ -836,7 +836,7 @@ passport.use(
 );
 
 mongoose
-  .connect("mongodb+srv://admin:admin@pleasework-apavp.mongodb.net/test?retryWrites=true&w=majority", {
+  .connect("mongodb+srv://admin:admin@pleasework-apavp.mongodb.net/ristdb?retryWrites=true&w=majority", {
     useNewUrlParser: true,
     useUnifiedTopology: true
   })
@@ -846,9 +846,7 @@ mongoose
 
       module.exports = app;
       const server = http.createServer(app);
-      server.listen(port || 8080, () =>
-        console.info(`Server has started on port: ${port}`)
-      );
+      server.listen(process.env.PORT || 8080, () => console.log("HTTP Server started on port " + process.env.PORT || 8080));
       socket = new io.Socket(server);
       console.log("Socket.io Server Ready");
 
