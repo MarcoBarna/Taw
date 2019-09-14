@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  base_url: 'http://localhost:3000/'
+  base_url: 'https://mighty-headland-86419.herokuapp.com/'
 };
 /*
  * For easier debugging in development mode, you can import the following file
