@@ -836,7 +836,7 @@ passport.use(
 );
 
 mongoose
-  .connect("mongodb://localhost/ristdb", {
+  .connect("mongodb+srv://admin:admin@pleasework-apavp.mongodb.net/test?retryWrites=true&w=majority", {
     useNewUrlParser: true,
     useUnifiedTopology: true
   })
