@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { OrderHttpService } from '../services/order-http.service';
 import { Orders } from '../models/Orders';
 import { SocketioService } from '../services/socketio.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-cook',
@@ -21,13 +22,18 @@ export class CookPage implements OnInit {
     private menuCRTL: MenuController,
     private table: TableHttpService,
     private ord: OrderHttpService,
-    private socketio: SocketioService
+    private socketio: SocketioService,
+    private toast: ToastrService
   ) {
     this.menuCRTL.enable(false);
     this.getOrders(0);
     this.socketio.get().on('Cook', () => {
       this.getOrders(0);
       console.log('Cook event recived');
+    });
+    this.socketio.get().on('Order Added', () => {
+      this.getOrders(0);
+      this.toast.info('New order added');
     });
   }
   removeItem(index: number) {

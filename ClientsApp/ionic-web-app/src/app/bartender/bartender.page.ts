@@ -6,6 +6,7 @@ import { TableHttpService } from '../services/table-http.service';
 import { OrderHttpService } from '../services/order-http.service';
 import { SocketioService } from '../services/socketio.service';
 import { Orders } from '../models/Orders';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-bartender',
@@ -19,13 +20,18 @@ export class BartenderPage implements OnInit {
     private us: UserHttpService,
     private menuCRTL: MenuController,
     private ord: OrderHttpService,
-    private socketio: SocketioService
+    private socketio: SocketioService,
+    private toast: ToastrService
   ) {
     this.menuCRTL.enable(false);
+    this.getOrders(0);
     this.socketio.get().on('Bartender', () => {
       this.getOrders(0);
     });
-    this.getOrders(0);
+    this.socketio.get().on('Order Added', () => {
+      this.getOrders(0);
+      this.toast.info('New order added');
+    });
   }
   removeItem(index: number) {
     this.loadedOrder.splice(index, 1);

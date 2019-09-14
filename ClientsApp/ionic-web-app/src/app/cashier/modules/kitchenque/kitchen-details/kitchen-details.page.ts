@@ -8,6 +8,7 @@ import { TableHttpService } from 'src/app/services/table-http.service';
 import { Orders } from 'src/app/models/Orders';
 import { Items } from 'src/app/models/Items';
 import { ItemHttpService } from 'src/app/services/item-http.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-kitchen-details',
@@ -33,7 +34,8 @@ export class KitchenDetailsPage implements OnInit {
     private table: TableHttpService,
     private ord: OrderHttpService,
     private socketio: SocketioService,
-    private itm: ItemHttpService
+    private itm: ItemHttpService,
+    private toast: ToastrService
   ) {
     this.menuCRTL.enable(true);
     this.AcRoute();

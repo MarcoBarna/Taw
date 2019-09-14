@@ -7,6 +7,7 @@ import { ItemHttpService } from 'src/app/services/item-http.service';
 import { UserHttpService } from 'src/app/services/user-http.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { SocketioService } from 'src/app/services/socketio.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-bartender-details',
@@ -27,13 +28,17 @@ export class BartenderDetailsPage implements OnInit {
     private ord: OrderHttpService,
     private itm: ItemHttpService,
     private router: Router,
-    private socketio: SocketioService
+    private socketio: SocketioService,
+    private toast: ToastrService
   ) {
     this.menuCtrl.enable(false);
     this.AcRoute();
     this.socketio.get().on('Batender', () => {
       this.AcRoute();
     });
+    this.socketio.get().on('Order Added', () => {
+      this.toast.info('New order added');
+    })
   }
 
   OrderFinished() {

@@ -9,6 +9,8 @@ import { MenuController } from '@ionic/angular';
 import { ItemHttpService } from 'src/app/services/item-http.service';
 import { Items } from 'src/app/models/Items';
 import { element } from 'protractor';
+import { ToastrService } from 'ngx-toastr';
+import { SocketioService } from 'src/app/services/socketio.service';
 
 @Component({
   selector: 'app-waiter-order',
@@ -29,11 +31,33 @@ export class WaiterOrderPage implements OnInit {
     private us: UserHttpService,
     private ord: OrderHttpService,
     private itm: ItemHttpService,
-    private router: Router
+    private router: Router,
+    private socket: SocketioService,
+    private toast: ToastrService
   ) {
     this.menuCtrl.enable(false);
     this.nick = this.us.get_nick();
     this.role = this.us.get_role();
+    this.socket.get().on('Dishes Ready', (data) => {
+      const nick = this.us.get_nick();
+      const usr = data.username;
+      const table = data.table;
+      console.log(nick);
+      console.log(usr);
+      if( nick === usr) {
+        this.toast.info('Dishes Ready table: ' + table);
+      }
+    });
+    this.socket.get().on('Beverages Ready', (data) => {
+      const nick = this.us.get_nick();
+      const usr = data.username;
+      const table = data.table;
+      console.log(nick);
+      console.log(usr);
+      if( nick === usr) {
+        this.toast.info('Beverages Ready table: ' + table);
+      }
+    });
   }
 
   sendOrder(nPeople: number, dishStr, beverageStr) {

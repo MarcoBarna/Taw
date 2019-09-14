@@ -5,6 +5,7 @@ import { MenuController } from '@ionic/angular';
 import { TableHttpService } from '../services/table-http.service';
 import { Tables } from 'src/app/models/Tables';
 import { SocketioService } from '../services/socketio.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-waiter',
@@ -15,20 +16,41 @@ export class WaiterPage implements OnInit {
 
   private role;
   private tables: Tables[];
-
+  private nick;
   constructor(
     private us: UserHttpService,
     private router: Router,
     private menuCRTL: MenuController,
     private table: TableHttpService,
-    private socket: SocketioService
+    private socket: SocketioService,
+    private toast: ToastrService
     ) {
     this.menuCRTL.enable(false);
     this.getTables();
     this.role = this.us.get_role();
     this.socket.get().on('Waiter', () => {
       this.getTables();
-    })
+    });
+    this.socket.get().on('Dishes Ready', (data) => {
+      const nick = this.us.get_nick();
+      const usr = data.username;
+      const table = data.table;
+      console.log(nick);
+      console.log(usr);
+      if( nick === usr) {
+        this.toast.info('Dishes Ready table: ' + table);
+      }
+    });
+    this.socket.get().on('Beverages Ready', (data) => {
+      const nick = this.us.get_nick();
+      const usr = data.username;
+      const table = data.table;
+      console.log(nick);
+      console.log(usr);
+      if( nick === usr) {
+        this.toast.info('Beverages Ready table: ' + table);
+      }
+    });
    }
 
    public getTables() {

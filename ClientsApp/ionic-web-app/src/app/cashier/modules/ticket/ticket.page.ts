@@ -87,7 +87,6 @@ export class TicketPage implements OnInit {
         this.loadedOrdersTotal.forEach(element => {
           this.arrayOfTicketsIds.push(element.orderNumber);
         });
-        this.totalDay = 9999;
         const arrayOfPromise = [];
         this.arrayOfTicketsIds.forEach(element => {
           arrayOfPromise.push(

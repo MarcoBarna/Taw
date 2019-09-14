@@ -1,4 +1,7 @@
 import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ToastrModule } from 'ngx-toastr';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
 import { UserHttpService } from './services/user-http.service';
@@ -25,6 +28,12 @@ import { SocketioService } from './services/socketio.service';
     IonicModule.forRoot(),
     AppRoutingModule,
     HttpClientModule,
+    CommonModule,
+    BrowserAnimationsModule,
+    ToastrModule.forRoot({
+      timeOut: 5000,
+      preventDuplicates: true
+    })
   ],
   providers: [
     StatusBar,
@@ -38,6 +47,6 @@ import { SocketioService } from './services/socketio.service';
     { provide: SocketioService, useClass: SocketioService }
 
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule {}

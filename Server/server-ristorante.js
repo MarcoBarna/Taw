@@ -509,9 +509,12 @@ app
           });
         });
     }
-  })
+  });
+
+app
+  .route("/orders/status/:id")
   .patch(auth, (req, res) => {
-    //! CLOSE AN ORDER AFTER ALL OF THE DISHES ARE PREPARED  || 0 = new order , 1 = order prepared, 2 = order paid | SOCKET IO DA AGGIUNGERE
+    // * CLOSE AN ORDER AFTER ALL OF THE DISHES ARE PREPARED  || 0 = new order , 1 = order prepared, 2 = order paid |
     if (
       !users.newUser(req.user).HisCook() &&
       !users.newUser(req.user).HisCashier()
@@ -523,7 +526,7 @@ app
     orders
       .getModel()
       .findOne({
-        orderNumber: req.body.orderNumber
+        orderNumber: req.params.id
       })
       .then(data => {
         data.orderStatus = data.orderStatus + 1;
@@ -645,7 +648,7 @@ app.route("/orders/dishes/:id").patch(auth, (req, res) => {
         data.dishState.forEach(element => {
           if (element !== 2) flag = 1;
         });
-        if (flag === 0) socket.emitEvent("dishes ready"); // * call to the  waiter.
+        if (flag === 0) socket.emitEvent("dishes ready", {username: data.userNameWaiter, table: data.tableNumber}); // * call to the  waiter.
       }
       data
         .save()
@@ -679,10 +682,11 @@ app.route("/orders/beverages/:id").patch(auth, (req, res) => {
     .then(data => {
       data.beverageState = true;
       data.markModified("beverageState");
-      socket.emitEvent("beverages ready");
       data
         .save()
         .then(() => {
+          socket.emitEvent("beverages ready", {username: data.userNameWaiter, table: data.tableNumber});
+          console.log(data.userNameWaiter, data.tableNumber);
           return res.status(200).json(data.beverageState);
         })
         .catch(err => {

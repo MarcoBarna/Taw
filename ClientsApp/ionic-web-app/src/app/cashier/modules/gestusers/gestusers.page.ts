@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MenuController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { UserHttpService } from 'src/app/services/user-http.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-gestusers',
@@ -14,7 +15,7 @@ export class GestusersPage implements OnInit {
   passUser: string;
   roleUser: string;
 
-  constructor(private router: Router,  public menuCtrl: MenuController, private us: UserHttpService) {
+  constructor(private router: Router,  public menuCtrl: MenuController, private us: UserHttpService, private toast: ToastrService) {
     this.menuCtrl.enable(true);
   }
 
@@ -36,10 +37,12 @@ export class GestusersPage implements OnInit {
     })
     .catch(err => {
       console.log(err);
+      this.toast.error(err.error);
     });
     this.userName = '';
     this.passUser = '';
     this.roleUser = '';
+    this.toast.success('User added successfully');
   }
 
 }

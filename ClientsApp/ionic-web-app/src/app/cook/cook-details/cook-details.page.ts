@@ -8,6 +8,7 @@ import { ItemHttpService } from 'src/app/services/item-http.service';
 import { Orders } from 'src/app/models/Orders';
 import { Items } from 'src/app/models/Items';
 import { SocketioService } from 'src/app/services/socketio.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-cook-details',
@@ -31,13 +32,17 @@ export class CookDetailsPage implements OnInit {
     private ord: OrderHttpService,
     private itm: ItemHttpService,
     private router: Router,
-    private socketio: SocketioService
+    private socketio: SocketioService,
+    private toast: ToastrService
   ) {
     this.menuCtrl.enable(false);
     this.AcRoute();
     this.socketio.get().on('Cook', () => {
       this.AcRoute();
       console.log('Cook event recived');
+    });
+    this.socketio.get().on('Order Added', () => {
+      this.toast.info('New order added');
     });
   }
 
@@ -70,7 +75,7 @@ export class CookDetailsPage implements OnInit {
 
   CheckOrderFinished() {
     // tslint:disable-next-line: no-string-literal
-    const dishStatusArray = Object.values(this.loadedOrder['dishState']);
+    const dishStatusArray = this.loadedOrder.dishState;
     let flag = 0;
     dishStatusArray.forEach(element => {
       if (element === 0 || element === 1) {
@@ -83,6 +88,8 @@ export class CookDetailsPage implements OnInit {
         .toPromise()
         .then(data => {
           console.log('Order Completed');
+        }).catch(err => {
+          console.log(err);
         });
       this.router.navigate(['cook']);
     } else {
