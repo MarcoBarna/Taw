@@ -97,9 +97,9 @@ export class TicketPage implements OnInit {
           );
           console.log(arrayOfPromise);
         });
-        this.totalDay = 0;
         Promise.all(arrayOfPromise).then(values => {
           this.arrayofTotals = values;
+          this.totalDay = 0;
           console.log(this.arrayofTotals);
           this.arrayofTotals.forEach(element => {
             this.totalDay += element;
