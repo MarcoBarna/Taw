@@ -34,6 +34,7 @@ export class GestusersPage implements OnInit {
     };
     this.us.register(user).toPromise().then(data => {
       console.log(data);
+      this.toast.success('User added successfully');
     })
     .catch(err => {
       console.log(err);
@@ -42,7 +43,6 @@ export class GestusersPage implements OnInit {
     this.userName = '';
     this.passUser = '';
     this.roleUser = '';
-    this.toast.success('User added successfully');
   }
 
 }

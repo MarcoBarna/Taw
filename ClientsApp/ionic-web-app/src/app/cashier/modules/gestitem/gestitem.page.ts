@@ -72,6 +72,7 @@ export class GestitemPage implements OnInit {
       .toPromise()
       .then(data => {
         console.log(code, name, requiredTime, price);
+        this.toast.success('Item added successfully');
       })
       .catch(err => {
         console.log(err);
@@ -81,6 +82,5 @@ export class GestitemPage implements OnInit {
     this.itemName = "";
     this.reqTime = "";
     this.price = "";
-    this.toast.success('Item added successfully');
   }
 }

@@ -30,6 +30,7 @@ export class GesttablePage implements OnInit {
       .toPromise()
       .then(data => {
         console.log(data);
+        this.toast.success('Table added successfully');
       })
       .catch(err => {
         console.log(err);
@@ -37,7 +38,6 @@ export class GesttablePage implements OnInit {
       });
     this.tableNumber = "";
     this.seatsNumber = "";
-    this.toast.success('Table added successfully');
   }
 
   ngOnInit() {
