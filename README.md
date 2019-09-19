@@ -7,6 +7,7 @@ For DBMS and Web Server, they are hosted online on heroku and Mongo Atlas so you
 ## FIRST THING TO DO
 
  - $ npm install
+ - $ npm install -g ionic cordova electron (to remove do npm uninstall -g ionic cordova electron )
  - $ ionic build
 
 
