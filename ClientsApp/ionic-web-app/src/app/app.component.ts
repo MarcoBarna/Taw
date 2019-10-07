@@ -66,7 +66,6 @@ export class AppComponent implements OnInit  {
       this.splashScreen.hide();
     });
   }
-  ngOnInit(): void {
-    throw new Error('Method not implemented.');
+  ngOnInit(){
   }
 }

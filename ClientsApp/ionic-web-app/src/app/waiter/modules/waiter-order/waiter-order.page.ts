@@ -11,6 +11,7 @@ import { Items } from 'src/app/models/Items';
 import { element } from 'protractor';
 import { ToastrService } from 'ngx-toastr';
 import { SocketioService } from 'src/app/services/socketio.service';
+import { distinct } from 'rxjs/operators';
 
 @Component({
   selector: 'app-waiter-order',
@@ -20,8 +21,15 @@ import { SocketioService } from 'src/app/services/socketio.service';
 export class WaiterOrderPage implements OnInit {
   private role;
   private nick;
-  loadedTable: Tables[];
+  loadedTable: Tables;
   tableID: number;
+  peopleArray: number[];
+  loadedDish: Items[];
+  loadedBev: Items[];
+  NpeopleSeated: number;
+  NumOrder: number[];
+  dishList: string[];
+  beverageList: string[];
 
   constructor(
     // tslint:disable-next-line: no-shadowed-variable
@@ -60,16 +68,39 @@ export class WaiterOrderPage implements OnInit {
     });
   }
 
-  sendOrder(nPeople: number, dishStr, beverageStr) {
-    const arrayOutDish = dishStr.split(' ').map(item => {
-      return parseInt(item, 10);
+  SendPeopleData(nPeople: number) {
+    this.NpeopleSeated = nPeople;
+    console.log(this.NpeopleSeated);
+
+    if(nPeople !== undefined) {
+      this.NumOrder = [];
+      for(let i = 0; i < nPeople; i++) {
+        this.NumOrder.push(i);
+      }
+    }
+  }
+
+  BuildDishList(dish, index) {
+    this.dishList.splice(index, 1 , dish);
+    console.log(this.dishList);
+  }
+
+  BuildBeverageList(beverage, index) {
+    this.beverageList.splice(index, 1 , beverage);
+    console.log(this.beverageList);
+  }
+  sendOrder() {
+    const arrayOutDish: number[] = [];
+    this.dishList.forEach(item => {
+      arrayOutDish.push(parseInt(item, 10));
     });
 
-    const arrayOutBev = beverageStr.split(' ').map(item => {
-      return parseInt(item, 10);
+    const arrayOutBev: number[] = [];
+    this.beverageList.forEach(item => {
+      arrayOutBev.push(parseInt(item, 10));
     });
     const date = new Date();
-
+    console.log(this.NpeopleSeated, arrayOutDish, arrayOutBev);
     const value =
       `${this.tableID}` +
       date.getDate() +
@@ -81,7 +112,7 @@ export class WaiterOrderPage implements OnInit {
       date.getMinutes() +
       (date.getSeconds() < 10 ? '0' : '') +
       date.getSeconds();
-    this.ord.addOrder(parseInt(value, 10), arrayOutBev, arrayOutDish, nPeople, this.tableID, this.nick)
+    this.ord.addOrder(parseInt(value, 10), arrayOutBev, arrayOutDish, this.NpeopleSeated, this.tableID, this.nick)
       .toPromise()
       .then(or => {
         console.log(or);
@@ -120,14 +151,31 @@ export class WaiterOrderPage implements OnInit {
         .getSingleTable(this.tableID)
         .toPromise()
         .then(tab => {
+          this.peopleArray = [];
           this.loadedTable = tab;
-          this.ord
-            .getOrders()
-            .toPromise()
-            .then(orders => {
-              console.log(orders);
-            });
+          for(let i = 0; i < this.loadedTable.seats; i++){
+            this.peopleArray.push(i + 1);
+          }
+          console.log(this.loadedTable);
         });
+      this.itm
+      .getItems()
+      .toPromise()
+      .then(it => {
+        this.loadedDish = [];
+        this.loadedBev = [];
+        it.forEach(element => {
+          if (element.code >= 100 && element.code <= 199 ) {
+            this.loadedBev.push(element);
+          } else {
+            this.loadedDish.push(element);
+          }
+        });
+        console.log(this.loadedDish);
+        console.log(this.loadedBev);
+        this.dishList = [];
+        this.beverageList = [];
+      });
     });
   }
 }

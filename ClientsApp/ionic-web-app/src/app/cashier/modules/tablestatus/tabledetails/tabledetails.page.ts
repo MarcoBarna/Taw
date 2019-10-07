@@ -16,7 +16,7 @@ import { Items } from 'src/app/models/Items';
   styleUrls: ['./tabledetails.page.scss']
 })
 export class TabledetailsPage implements OnInit {
-  loadedTable: Tables[];
+  loadedTable: Tables;
   loadedOrder: Orders;
   loadItems: Items[];
   loadDish;

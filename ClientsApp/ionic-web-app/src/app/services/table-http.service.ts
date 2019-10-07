@@ -16,7 +16,7 @@ export class TableHttpService {
     return this.http.get<Tables[]>(this.endpoint);
   }
   getSingleTable(tableId: number) {
-    return this.http.get<Tables[]>(this.endpoint + '/' + tableId);
+    return this.http.get<Tables>(this.endpoint + '/' + tableId);
   }
 
   changeTableStatus(tableId: number, orderId: number) {
