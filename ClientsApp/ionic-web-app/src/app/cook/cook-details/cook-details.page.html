@@ -3,7 +3,6 @@
     <ion-title>DISHES</ion-title>
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
-      
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -29,7 +28,9 @@
       </ion-col>
     </ion-row>
     <ion-row>
-      <ion-col>
+      <ion-col
+        *ngIf="loadedBavarageState === true || loadedBeverageList === []"
+      >
         <ion-button (click)="CheckOrderFinished()">
           Order Finished
         </ion-button>
