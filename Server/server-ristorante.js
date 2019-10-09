@@ -57,13 +57,7 @@ var socket;
 app.get("/", (req, res) => {
   res.status(200).json({
     api_version: "1.0",
-    endpoints: [
-      "users",
-      "table",
-      "items",
-      "orders",
-      "stats"
-    ]
+    endpoints: ["users", "table", "items", "orders", "stats"]
   }); // json method sends a JSON response (setting the correct Content-Type) to the client
 });
 
@@ -155,45 +149,6 @@ app
       });
     }
   });
-
-//* DELETE USER
-app.route("/users/:username").delete(auth, (req, res, next) => {
-  if (!users.newUser(req.user).HisCashier())
-    return res.status(401).json({
-      confirmation: "fail",
-      message: "Unauthorized user"
-    });
-  users
-    .getModel()
-    .deleteOne({
-      username: req.params.username
-    })
-    .then(() => {
-      stats
-        .getModel()
-        .deleteOne({
-          username: req.params.username
-        })
-        .then(() => {
-          socket.emitEvent("modified user");
-          return res.status(200).json({
-            confirmation: "successfully deleted"
-          });
-        })
-        .catch(err => {
-          return next.status(500).json({
-            confirmation: "fail",
-            message: err.message
-          });
-        });
-    })
-    .catch(err => {
-      return next.status(500).json({
-        confirmation: "fail",
-        message: err.message
-      });
-    });
-});
 
 // * CREATE CLIENT APP
 app.route("/clients").post((req, res) => {
@@ -332,30 +287,6 @@ app
           message: err.message
         });
       });
-  })
-  .delete(auth, (req, res) => {
-    if (!users.newUser(req.user).HisCashier())
-      return res.status(401).json({
-        confirmation: "fail",
-        message: "Unauthorized user"
-      });
-    tables
-      .getModel()
-      .deleteOne({
-        tableNumber: req.params.id
-      })
-      .then(() => {
-        socket.emitEvent("modified table");
-        return res.status(200).json({
-          confirmation: "successfully deleted"
-        });
-      })
-      .catch(err => {
-        return res.status(500).json({
-          confirmation: "fail",
-          message: err.message
-        });
-      });
   });
 
 //* ITEM LIST
@@ -392,56 +323,31 @@ app
     }
   });
 
-//* DELETE SINGLE ITEM
-app
-  .route("/items/:code")
-  .delete(auth, (req, res) => {
-    if (!users.newUser(req.user).HisCashier())
-      return res.status(401).json({
+app.route("/items/:code").get(auth, (req, res) => {
+  //* SEARCH ITEM
+  items
+    .getModel()
+    .findOne({
+      code: req.params.code
+    })
+    .then(singleItem => {
+      return res.status(200).json(singleItem);
+    })
+    .catch(err => {
+      return res.status(500).json({
         confirmation: "fail",
-        message: "Unauthorized user"
+        message: err.message
       });
-    items
-      .getModel()
-      .deleteOne({
-        code: req.params.code
-      })
-      .then(() => {
-        return res.status(200).json({
-          confirmation: "successfully deleted"
-        });
-      })
-      .catch(err => {
-        return res.status(500).json({
-          confirmation: "fail",
-          message: err.message
-        });
-      });
-  })
-  .get(auth, (req, res) => {
-    //* SEARCH ITEM
-    items
-      .getModel()
-      .findOne({
-        code: req.params.code
-      })
-      .then(singleItem => {
-        return res.status(200).json(singleItem);
-      })
-      .catch(err => {
-        return res.status(500).json({
-          confirmation: "fail",
-          message: err.message
-        });
-      });
-  });
+    });
+});
 
 //* ORDER LIST
 app
   .route("/orders")
   .get(auth, (req, res) => {
-    if (!users.newUser(req.user).HisWaiter() &&
-        !users.newUser(req.user).HisCashier()
+    if (
+      !users.newUser(req.user).HisWaiter() &&
+      !users.newUser(req.user).HisCashier()
     )
       return res.status(401).json({
         confirmation: "fail",
@@ -511,91 +417,64 @@ app
     }
   });
 
-app
-  .route("/orders/status/:id")
-  .patch(auth, (req, res) => {
-    // * CLOSE AN ORDER AFTER ALL OF THE DISHES ARE PREPARED  || 0 = new order , 1 = order prepared, 2 = order paid |
-    if (
-      !users.newUser(req.user).HisCook() &&
-      !users.newUser(req.user).HisCashier()
-    )
-      return res.status(401).json({
-        confirmation: "fail",
-        message: "Unauthorized user"
-      });
-    orders
-      .getModel()
-      .findOne({
-        orderNumber: req.params.id
-      })
-      .then(data => {
-        data.orderStatus = data.orderStatus + 1;
-        data.markModified("orderStatus");
-        socket.emitEvent("order prepared");
-        data.save().catch(err => {
-          return res.status(500).json({
-            confirmation: "fail",
-            message: err.message
-          });
-        });
-      })
-      .catch(err => {
+app.route("/orders/status/:id").patch(auth, (req, res) => {
+  // * CLOSE AN ORDER AFTER ALL OF THE DISHES ARE PREPARED  || 0 = new order , 1 = order prepared, 2 = order paid |
+  if (
+    !users.newUser(req.user).HisCook() &&
+    !users.newUser(req.user).HisCashier()
+  )
+    return res.status(401).json({
+      confirmation: "fail",
+      message: "Unauthorized user"
+    });
+  orders
+    .getModel()
+    .findOne({
+      orderNumber: req.params.id
+    })
+    .then(data => {
+      data.orderStatus = data.orderStatus + 1;
+      data.markModified("orderStatus");
+      socket.emitEvent("order prepared");
+      data.save().catch(err => {
         return res.status(500).json({
           confirmation: "fail",
           message: err.message
         });
       });
-  });
+    })
+    .catch(err => {
+      return res.status(500).json({
+        confirmation: "fail",
+        message: err.message
+      });
+    });
+});
 
-// * DELETE SINGLE ORDER
-app
-  .route("/orders/:id")
-  .delete(auth, (req, res) => {
-    if (!users.newUser(req.user).HisCashier())
-      return res.status(401).json({
+app.route("/orders/:id").get(auth, (req, res) => {
+  // * FIND SINGLE ORDER
+  if (users.newUser(req.user).HisWaiter())
+    return res.json({
+      confirmation: "fail",
+      message: "Unauthorized user"
+    });
+  orders
+    .getModel()
+    .findOne({
+      orderNumber: req.params.id
+    })
+    .then(singleOrder => {
+      return res.status(200).json(singleOrder);
+    })
+    .catch(err => {
+      return res.status(500).json({
         confirmation: "fail",
-        message: "Unauthorized user"
+        message: err.message
       });
-    orders
-      .getModel()
-      .deleteOne({
-        orderNumber: req.params.id
-      })
-      .then(() => {
-        return res.status(200).json({
-          confirmation: "successfully deleted"
-        });
-      })
-      .catch(err => {
-        return res.status(500).json({
-          confirmation: "fail",
-          message: err.message
-        });
-      });
-  })
-  .get(auth, (req, res) => {
-    // * FIND SINGLE ORDER
-    if (users.newUser(req.user).HisWaiter())
-      return res.json({
-        confirmation: "fail",
-        message: "Unauthorized user"
-      });
-    orders
-      .getModel()
-      .findOne({
-        orderNumber: req.params.id
-      })
-      .then(singleOrder => {
-        return res.status(200).json(singleOrder);
-      })
-      .catch(err => {
-        return res.status(500).json({
-          confirmation: "fail",
-          message: err.message
-        });
-      });
-  });
+    });
+});
 
+//* THIS MODIFIES THE SATE OF THE DISHES
 app.route("/orders/dishes/:id").patch(auth, (req, res) => {
   if (!users.newUser(req.user).HisCook())
     return res.status(401).json({
@@ -648,7 +527,11 @@ app.route("/orders/dishes/:id").patch(auth, (req, res) => {
         data.dishState.forEach(element => {
           if (element !== 2) flag = 1;
         });
-        if (flag === 0) socket.emitEvent("dishes ready", {username: data.userNameWaiter, table: data.tableNumber}); // * call to the  waiter.
+        if (flag === 0)
+          socket.emitEvent("dishes ready", {
+            username: data.userNameWaiter,
+            table: data.tableNumber
+          }); // * call to the  waiter.
       }
       data
         .save()
@@ -670,6 +553,7 @@ app.route("/orders/dishes/:id").patch(auth, (req, res) => {
     });
 });
 
+//* THIS MODIFIES THE STATE OF PREPARATION OF THE BEVERAGES
 app.route("/orders/beverages/:id").patch(auth, (req, res) => {
   if (!users.newUser(req.user).HisBartender())
     return res.status(401).json({
@@ -685,7 +569,10 @@ app.route("/orders/beverages/:id").patch(auth, (req, res) => {
       data
         .save()
         .then(() => {
-          socket.emitEvent("beverages ready", {username: data.userNameWaiter, table: data.tableNumber});
+          socket.emitEvent("beverages ready", {
+            username: data.userNameWaiter,
+            table: data.tableNumber
+          });
           console.log(data.userNameWaiter, data.tableNumber);
           return res.status(200).json(data.beverageState);
         })
@@ -836,17 +723,22 @@ passport.use(
 );
 
 mongoose
-  .connect("mongodb+srv://admin:admin@pleasework-apavp.mongodb.net/ristdb?retryWrites=true&w=majority", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-  })
+  .connect(
+    "mongodb+srv://admin:admin@pleasework-apavp.mongodb.net/ristdb?retryWrites=true&w=majority",
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true
+    }
+  )
   .then(
     function onconnected() {
       console.log("Connected to MongoDB");
 
       module.exports = app;
       const server = http.createServer(app);
-      server.listen(process.env.PORT || 8080, () => console.log("HTTP Server started on port " + process.env.PORT || 8080));
+      server.listen(process.env.PORT || 8080, () =>
+        console.log("HTTP Server started on port " + process.env.PORT || 8080)
+      );
       socket = new io.Socket(server);
       console.log("Socket.io Server Ready");
 
