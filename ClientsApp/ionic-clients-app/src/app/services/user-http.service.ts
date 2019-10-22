@@ -18,6 +18,7 @@ export class UserHttpService {
   private renew_clock;
   private renew_clock_interval;
 
+  // 1 - CASHIER, 2 - WAITER , 3 - COOK, 4 - BARTENDER, 5  - CLIENT
   constructor(private http: HttpClient, private router: Router) {
     console.log('User service instantiated');
     // console.log(sessionStorage.getItem("restaurant_token"));
@@ -123,8 +124,6 @@ export class UserHttpService {
   }
 
   get_role() {
-    // console.log('lollo cazzaro: ' + jwt_decode(this.token).roles[0]);
-    // console.log('lollo cazzaro: ' + (this.token));
     console.log(this.token);
     // console.log(jwt_decode(this.token).role);
     return jwt_decode(this.token).role;

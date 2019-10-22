@@ -56,7 +56,6 @@ const routes: Routes = [
           )
       }
     ]
-    
   },
   {
     path: 'kitchenque',

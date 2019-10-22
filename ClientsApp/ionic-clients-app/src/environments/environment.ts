@@ -4,7 +4,17 @@
 
 export const environment = {
   production: false,
-  base_url: 'http://localhost:3000/api/'
+  base_url: 'https://mighty-headland-86419.herokuapp.com/',
+  firebase: {
+    apiKey: 'AIzaSyDN8SJ8uPZXMmIkZwoTwJfILxg4_2gQevw',
+    authDomain: 'test-client-unive.firebaseapp.com',
+    databaseURL: 'https://test-client-unive.firebaseio.com',
+    projectId: 'test-client-unive',
+    storageBucket: 'test-client-unive.appspot.com',
+    messagingSenderId: '1030346785602',
+    appId: '1:1030346785602:web:6efb1cbaf98848d37e7edb',
+    measurementId: 'G-VFL3EDZKCF'
+  }
 };
 
 /*

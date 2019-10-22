@@ -4,6 +4,7 @@ import { Platform, MenuController } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { Router, RouterEvent, NavigationEnd } from '@angular/router';
+import { AngularFireAuth } from '@angular/fire/auth';
 
 @Component({
   selector: 'app-root',
@@ -14,12 +15,17 @@ export class AppComponent implements OnInit {
   public appPages = [
     {
       title: 'Home',
-      url: '/home',
+      url: 'login',
       icon: 'home'
     },
     {
-      title: 'List',
-      url: '/list',
+      title: 'Terms',
+      url: 'terms',
+      icon: 'list'
+    },
+    {
+      title: 'Privacy',
+      url: 'privacy',
       icon: 'list'
     }
   ];
@@ -29,9 +35,16 @@ export class AppComponent implements OnInit {
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
     private menuCtrl: MenuController,
-    private router: Router
+    private router: Router,
+    private afAuth: AngularFireAuth
   ) {
     this.initializeApp();
+  }
+
+  Logout(){
+    this.afAuth.auth.signOut().then(() => {
+      this.router.navigate(['login']);
+    })
   }
 
   initializeApp() {
