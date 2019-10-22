@@ -48,7 +48,6 @@ userSchema.methods.validatePassword = function(pwd) {
   var digest = hmac.digest("hex");
   return this.digest === digest;
 };
-
 userSchema.methods.HisClient = function() {
   return this.role === 5;
 };
