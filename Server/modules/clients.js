@@ -13,7 +13,7 @@ let userSchema = new Schema({
     trim: true,
     required: true
   },
-  userIdentityName: {
+  password: {
     type: mongoose.SchemaTypes.String,
     trim: true,
     required: true
@@ -61,7 +61,7 @@ var userModel;
 
 function getModel() {
   if (!userModel) {
-    userModel = mongoose.model("users", getSchema());
+    userModel = mongoose.model("clients", getSchema());
   }
   return userModel;
 }
