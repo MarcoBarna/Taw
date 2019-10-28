@@ -23,7 +23,19 @@ const routes: Routes = [
     path: 'privacy',
     loadChildren: () =>
       import('./privacy/privacy.module').then(m => m.PrivacyPageModule)
-  }
+  },
+  {
+    path: 'qr-code-order',
+    loadChildren: () =>
+      import('./qr-code-order/qr-code-order.module').then(m => m.QrCodeOrderPageModule)
+  },
+  {
+    path: 'list-order',
+    loadChildren: () =>
+      import('./list-order/list-order.module').then(m => m.ListOrderPageModule)
+  },  { path: 'newlist-order', loadChildren: './list-order/newlist-order/newlist-order.module#NewlistOrderPageModule' }
+
+
 ];
 
 @NgModule({

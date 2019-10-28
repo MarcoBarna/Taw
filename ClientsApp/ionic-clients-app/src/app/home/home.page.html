@@ -1,26 +1,39 @@
 <ion-header>
-  <ion-toolbar color='primary'>
+  <ion-toolbar color="primary">
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title>
-      Home
+      HOME
     </ion-title>
   </ion-toolbar>
 </ion-header>
-
 <ion-content class="ion-padding">
-    <firebase-ui></firebase-ui>
+  <firebase-ui></firebase-ui>
 
-    <h1 *ngIf="afAuth.auth.currentUser">
-      Welcome back, {{ afAuth.auth.currentUser.displayName }}
-    </h1>
-    <ng-container *ngIf="usr !== undefined; then thenTemplate; else elseTemplate"></ng-container>
-    <ng-template #thenTemplate>
-      <h2> IF TEMPLATE </h2>
-    </ng-template>
-    <ng-template #elseTemplate>
-      <h2> ELSE TEMPLATE</h2>
-    </ng-template>
-    
+  <ion-grid>
+    <ion-row>
+       
+      <ion-col size="12">
+          <h1 *ngIf="afAuth.auth.currentUser">
+              Welcome, {{ afAuth.auth.currentUser.displayName }}
+            </h1>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <ng-container *ngIf="usr !== undefined; then thenTemplate"></ng-container>
+  <ng-template #thenTemplate>
+    <ion-grid>
+      <ion-row class="ion-align-items-center ion-justify-content-center">
+        <ion-col size="3" offset="-3">
+            <ion-button [routerLink]="['../qr-code-order']">
+                QR CODE ORDER
+              </ion-button>
+              <ion-button [routerLink]="['../list-order']">
+                LIST ORDER
+              </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ng-template>
 </ion-content>

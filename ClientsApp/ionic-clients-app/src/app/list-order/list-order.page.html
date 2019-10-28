@@ -1,0 +1,30 @@
+<ion-header>
+    <ion-toolbar color="primary">
+      <ion-buttons slot="start">
+          <ion-back-button defaultHref="/login"></ion-back-button>
+      </ion-buttons>
+      <ion-title>
+        LIST ORDER
+      </ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+<ion-content>
+<ion-text color="primary" class="ion-text-center">
+  <h2> Please choose the correct table </h2>
+</ion-text>
+<ion-list>
+    
+    <!-- USE THIS TO COLOR THE ITEM [color]="table.occupied === true ? 'danger' : 'success'" -->
+  <ion-item *ngFor="let table of listTables" [routerLink]="['./', table.tableNumber]" >
+    <ion-thumbnail slot="start">
+       <img src="https://cdn.pixabay.com/photo/2016/12/24/07/45/table-1928456_640.png">    
+    </ion-thumbnail>
+    <ion-text>
+      number: {{ table.tableNumber }}
+      capacity: {{ table.seats }}
+    </ion-text>
+    
+  </ion-item>
+</ion-list>
+</ion-content>
