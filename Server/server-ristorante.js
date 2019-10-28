@@ -27,7 +27,6 @@ const orders = require("./modules/orders"); // collection db of orders
 const tables = require("./modules/tables"); // collection db of tables
 const users = require("./modules/users"); // collection db of users
 const stats = require("./modules/stats"); // collection db of stats for each special user ("Cooks and Waiters")
-const clients = require("./modules/clients");
 const io = require("./socket");
 
 var auth = jwt({
@@ -156,7 +155,7 @@ app.route("/clients").post((req, res) => {
   const { error } = validation.validateBody(req.body);
   if (error) return res.status(400).send(error.details[0].message);
   else {
-    var nwuser = clients.newUser(req.body);
+    var nwuser = users.newUser(req.body);
     nwuser.setPassword(req.body.password);
     nwuser.save(function(err) {
       if (err) return res.send("Error, username already exist");
@@ -167,7 +166,7 @@ app.route("/clients").post((req, res) => {
 
 app.route("/clients/order").post(auth, (req, res) => {
   // * NEW ORDER
-  if (!clients.newUser(req.user).HisClient())
+  if (!users.newUser(req.user).HisClient())
     return res.status(401).json({
       confirmation: "fail",
       message: "Unauthorized user"
@@ -237,7 +236,7 @@ app
     if (
       !users.newUser(req.user).HisCashier() &&
       !users.newUser(req.user).HisWaiter() &&
-      !clients.newUser(req.user).HisClient()
+      !users.newUser(req.user).HisClient()
     )
       return res.status(401).json({
         confirmation: "fail",
@@ -262,7 +261,7 @@ app
     if (
       !users.newUser(req.user).HisCashier() &&
       !users.newUser(req.user).HisWaiter() &&
-      !clients.newUser(req.user).HisClient()
+      !users.newUser(req.user).HisClient()
     )
       return res.status(401).json({
         confirmation: "fail",

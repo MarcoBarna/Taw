@@ -2,6 +2,8 @@
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
+// const baseurl = (weburl === undefined) ? 'localhost:/'
+
 export const environment = {
   production: false,
   base_url: 'https://mighty-headland-86419.herokuapp.com/'
