@@ -31,9 +31,21 @@ const routes: Routes = [
   },
   {
     path: 'list-order',
-    loadChildren: () =>
-      import('./list-order/list-order.module').then(m => m.ListOrderPageModule)
-  },  { path: 'newlist-order', loadChildren: './list-order/newlist-order/newlist-order.module#NewlistOrderPageModule' }
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        loadChildren: () =>
+          import('./list-order/list-order.module').then(m => m.ListOrderPageModule)
+      },
+      {
+        path: ':tableID',
+        loadChildren: () =>
+          import('./list-order/newlist-order/newlist-order.module').then(m => m.NewlistOrderPageModule)
+      }
+    ]
+  },  { path: 'prepay', loadChildren: './prepay/prepay.module#PrepayPageModule' }
+
 
 
 ];

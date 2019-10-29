@@ -1,30 +1,51 @@
 <ion-header>
-    <ion-toolbar color="primary">
-      <ion-buttons slot="start">
-          <ion-back-button defaultHref="/login"></ion-back-button>
-      </ion-buttons>
-      <ion-title>
-        LIST ORDER
-      </ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/list-order"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      LIST ORDER
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
 
 <ion-content>
-<ion-text color="primary" class="ion-text-center">
-  <h2> Please choose the correct table </h2>
-</ion-text>
-<ion-list>
-    
-    <!-- USE THIS TO COLOR THE ITEM [color]="table.occupied === true ? 'danger' : 'success'" -->
-  <ion-item *ngFor="let table of listTables" [routerLink]="['./', table.tableNumber]" >
-    <ion-thumbnail slot="start">
-       <img src="https://cdn.pixabay.com/photo/2016/12/24/07/45/table-1928456_640.png">    
-    </ion-thumbnail>
-    <ion-text>
-      number: {{ table.tableNumber }}
-      capacity: {{ table.seats }}
-    </ion-text>
-    
-  </ion-item>
-</ion-list>
+  <ion-text color="primary" class="ion-text-center">
+    <h2>Please choose the correct table</h2>
+  </ion-text>
+
+  <ion-grid fixed>
+    <ion-row>
+      <ion-col size="12" *ngFor="let table of listTables">
+        <ng-container
+          *ngIf="table.occupied; then thenTemplate; else elseTemplate"
+        ></ng-container>
+        <ng-template #thenTemplate>
+          <ion-card [color]="table.occupied === true ? 'danger' : 'primary'">
+            <ion-card-header>
+              <ion-card-title>TABLE: {{ table.tableNumber }}</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              <ion-text> capacity: {{ table.seats }} </ion-text> <br />
+              <ion-text> occupied: {{ table.occupied }} </ion-text>
+            </ion-card-content>
+          </ion-card>
+        </ng-template>
+        <ng-template #elseTemplate>
+          <ion-card
+            [color]="table.occupied === true ? 'danger' : 'primary'"
+            [routerLink]="['./', table.tableNumber]"
+          >
+            <ion-card-header>
+              <ion-card-title>TABLE: {{ table.tableNumber }}</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              <ion-text> capacity: {{ table.seats }} </ion-text> <br />
+              <ion-text> occupied: {{ table.occupied }} </ion-text>
+            </ion-card-content>
+          </ion-card>
+        </ng-template>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>

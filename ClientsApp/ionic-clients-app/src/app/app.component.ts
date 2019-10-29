@@ -43,8 +43,10 @@ export class AppComponent implements OnInit {
 
   Logout(){
     this.afAuth.auth.signOut().then(() => {
-      this.router.navigate(['login']);
-    })
+      this.router.navigate(['login']).then(() => {
+        location.reload();
+      });
+    });
   }
 
   initializeApp() {

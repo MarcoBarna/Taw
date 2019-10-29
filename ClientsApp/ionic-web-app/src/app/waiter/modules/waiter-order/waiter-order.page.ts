@@ -4,14 +4,11 @@ import { UserHttpService } from 'src/app/services/user-http.service';
 import { TableHttpService } from 'src/app/services/table-http.service';
 import { OrderHttpService } from 'src/app/services/order-http.service';
 import { Tables } from '../../../models/Tables';
-import { Orders } from '../../../models/Orders';
 import { MenuController } from '@ionic/angular';
 import { ItemHttpService } from 'src/app/services/item-http.service';
 import { Items } from 'src/app/models/Items';
-import { element } from 'protractor';
 import { ToastrService } from 'ngx-toastr';
 import { SocketioService } from 'src/app/services/socketio.service';
-import { distinct } from 'rxjs/operators';
 
 @Component({
   selector: 'app-waiter-order',
