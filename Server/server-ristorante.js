@@ -150,50 +150,6 @@ app
     }
   });
 
-// * CREATE CLIENT APP
-app.route("/clients").post((req, res) => {
-  const { error } = validation.validateBody(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
-  else {
-    var nwuser = users.newUser(req.body);
-    nwuser.setPassword(req.body.password);
-    nwuser.save(function(err) {
-      if (err) return res.send("Error, username already exist");
-    });
-    return res.status(200).json(req.body);
-  }
-});
-
-app.route("/clients/order").post(auth, (req, res) => {
-  // * NEW ORDER
-  if (!users.newUser(req.user).HisClient())
-    return res.status(401).json({
-      confirmation: "fail",
-      message: "Unauthorized user"
-    });
-  const { error } = validation.validateOrder(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
-  else {
-    var neworder = orders.newOrder(req.body);
-    neworder.date = new Date();
-    neworder.dishList.forEach(element => {
-      neworder.dishState.push(0);
-    });
-    neworder
-      .save()
-      .then(data => {
-        socket.emitEvent("send order");
-        return res.status(200).json(data);
-      })
-      .catch(err => {
-        return res.status(500).json({
-          confirmation: "fail",
-          message: err.message
-        });
-      });
-  }
-});
-
 // * TABLE CREATION
 app
   .route("/tables")
@@ -472,6 +428,36 @@ app.route("/orders/:id").get(auth, (req, res) => {
         message: err.message
       });
     });
+});
+
+app.route("/orders/clients").post(auth, (req, res) => {
+  // * NEW ORDER
+  if (!users.newUser(req.user).HisClient())
+    return res.status(401).json({
+      confirmation: "fail",
+      message: "Unauthorized user"
+    });
+  const { error } = validation.validateOrder(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
+  else {
+    var neworder = orders.newOrder(req.body);
+    neworder.date = new Date();
+    neworder.dishList.forEach(element => {
+      neworder.dishState.push(0);
+    });
+    neworder
+      .save()
+      .then(data => {
+        socket.emitEvent("send order");
+        return res.status(200).json(data);
+      })
+      .catch(err => {
+        return res.status(500).json({
+          confirmation: "fail",
+          message: err.message
+        });
+      });
+  }
 });
 
 //* THIS MODIFIES THE SATE OF THE DISHES
