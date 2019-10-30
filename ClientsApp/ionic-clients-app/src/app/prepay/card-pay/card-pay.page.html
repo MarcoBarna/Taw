@@ -1,0 +1,48 @@
+<ion-header>
+  <ion-toolbar color="primary" class="ion-align-items-center">
+      <ion-buttons slot="start">
+          <ion-back-button defaultHref="/prepay"></ion-back-button>
+        </ion-buttons>
+      <ion-title>
+          PAYMENT
+        </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-grid>
+    <ion-card class="welcome-card" color="primary">
+      <ion-card-header>
+        <ion-card-subtitle>CARD PAYMENT</ion-card-subtitle>
+        <ion-card-title>Ticket:  {{ orderID }} </ion-card-title>
+        <ion-row *ngFor="let item of loadedItemsArray; let i = index">
+          <span *ngFor="let lname of loadname">
+          <span *ngIf="lname.code === item.code">
+            <ion-col>
+                {{ lname.name }}
+            </ion-col>
+            <ion-col>
+                Price: ${{ lname.price }}
+            </ion-col>
+          </span>
+        </span>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+              Cover charge: {{ loadCoverCharge }}$
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="12">
+              <ion-text>
+                  <h4> TOTAL: ${{ loadTotal }} </h4>
+              </ion-text>
+          </ion-col>
+        </ion-row>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-button expand="full" color="success" (click)="payWithPaypal()">Pay with PayPal</ion-button>
+      </ion-card-content>
+    </ion-card>
+  </ion-grid>
+  </ion-content>

@@ -36,9 +36,6 @@ export class HomePage implements OnInit {
         this.us.login('client', 'client').toPromise().then(data => {
           this.loggedin = true;
           console.log(data);
-          this.table.getTables().toPromise().then(tables => {
-            console.log(tables);
-          })
         });
       } else {
         this.loggedin = false;

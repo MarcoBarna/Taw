@@ -46,7 +46,7 @@ export class OrderHttpService {
     return this.http.post(this.endpoint, sOrder);
   }
 
-  addOrderClient(orderNumb: number, blist: any, dlist: any, nPeople: number, tNumber: number) {
+  addOrderClient(orderNumb: number, blist: any, dlist: any, nPeople: number, tNumber: number, usrWaiter: string) {
     let sOrder: SendOrder;
     sOrder = {
       orderNumber: orderNumb,
@@ -54,7 +54,7 @@ export class OrderHttpService {
       dishList: dlist,
       numberPeople: nPeople,
       tableNumber: tNumber,
-      userNameWaiter: 'waiter'
+      userNameWaiter: usrWaiter
     };
     return this.http.post(this.endpoint + '/' + 'clients', sOrder);
   }

@@ -18,6 +18,8 @@ import { ItemHttpService } from './services/item-http.service';
 import { SocketioService } from './services/socketio.service';
 import { CommonModule } from '@angular/common';
 import { FirebaseUIModule, firebase, firebaseui } from 'firebaseui-angular';
+import { PayPal } from '@ionic-native/paypal/ngx';
+
 
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
@@ -57,6 +59,7 @@ const firebaseUiAuthConfig: firebaseui.auth.Config = {
   providers: [
     StatusBar,
     SplashScreen,
+    PayPal,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     { provide: UserHttpService, useClass: UserHttpService },

@@ -44,7 +44,22 @@ const routes: Routes = [
           import('./list-order/newlist-order/newlist-order.module').then(m => m.NewlistOrderPageModule)
       }
     ]
-  },  { path: 'prepay', loadChildren: './prepay/prepay.module#PrepayPageModule' }
+  },
+  {
+    path: 'prepay',
+    children: [
+      {
+        path: '',
+        loadChildren: () =>
+          import('./prepay/prepay.module').then(m => m.PrepayPageModule)
+      },
+      {
+        path: ':card',
+        loadChildren: () =>
+          import('./prepay/card-pay/card-pay.module').then(m => m.CardPayPageModule)
+      }
+    ]
+  }
 
 
 

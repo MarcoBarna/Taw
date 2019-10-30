@@ -7,6 +7,7 @@ import { OrderHttpService } from 'src/app/services/order-http.service';
 import { UserHttpService } from 'src/app/services/user-http.service';
 import { MenuController } from '@ionic/angular';
 import { TableHttpService } from 'src/app/services/table-http.service';
+import { AngularFireAuth } from '@angular/fire/auth';
 
 @Component({
   selector: 'app-newlist-order',
@@ -25,6 +26,8 @@ export class NewlistOrderPage implements OnInit {
   NumOrder: number[];
   dishList: string[];
   beverageList: string[];
+  usr;
+
 
   constructor(
     private ActivatedRoute: ActivatedRoute,
@@ -34,6 +37,7 @@ export class NewlistOrderPage implements OnInit {
     private ord: OrderHttpService,
     private itm: ItemHttpService,
     private router: Router,
+    private afAuth: AngularFireAuth,
     // private socket: SocketioService,
   ) { }
   SendPeopleData(nPeople: number) {
@@ -80,23 +84,32 @@ export class NewlistOrderPage implements OnInit {
       date.getMinutes() +
       (date.getSeconds() < 10 ? '0' : '') +
       date.getSeconds();
-    this.ord.addOrderClient(parseInt(value, 10), arrayOutBev, arrayOutDish, this.NpeopleSeated, this.tableID)
-      .toPromise()
-      .then(or => {
-        console.log(or);
+    this.afAuth.user.subscribe(data => {
+        if (data !== null) {
+          this.usr = {
+            username : data.email,
+            uid : data.uid
+          };
+         }
+        this.ord.addOrderClient(parseInt(value, 10), arrayOutBev, arrayOutDish, this.NpeopleSeated, this.tableID, this.usr.uid)
+         .toPromise()
+         .then(or => {
+           console.log(or);
+         })
+         .catch(err => {
+           console.log(err);
+         });
+        this.table
+         .changeTableStatus(this.tableID, parseInt(value, 10))
+         .toPromise()
+         .then(tb => {
+           console.log(tb);
+         })
+         .catch(err => {
+           console.log(err);
+         });
       })
-      .catch(err => {
-        console.log(err);
-      });
-    this.table
-      .changeTableStatus(this.tableID, parseInt(value, 10))
-      .toPromise()
-      .then(tb => {
-        console.log(tb);
-      })
-      .catch(err => {
-        console.log(err);
-      });
+    
     this.router.navigate(['prepay']);
   }
   ngOnInit() {
