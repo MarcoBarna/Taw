@@ -94,23 +94,24 @@ export class NewlistOrderPage implements OnInit {
         this.ord.addOrderClient(parseInt(value, 10), arrayOutBev, arrayOutDish, this.NpeopleSeated, this.tableID, this.usr.uid)
          .toPromise()
          .then(or => {
-           console.log(or);
+            this.table
+          .changeTableStatus(this.tableID, parseInt(value, 10))
+          .toPromise()
+          .then(tb => {
+            console.log(tb);
+          })
+          .catch(err => {
+            console.log(err);
+          });
+            this.router.navigate(['prepay', or.orderNumber]);
          })
          .catch(err => {
            console.log(err);
          });
-        this.table
-         .changeTableStatus(this.tableID, parseInt(value, 10))
-         .toPromise()
-         .then(tb => {
-           console.log(tb);
-         })
-         .catch(err => {
-           console.log(err);
-         });
+        
       })
     
-    this.router.navigate(['prepay']);
+
   }
   ngOnInit() {
     this.ActivatedRoute.paramMap.subscribe(paramMap => {

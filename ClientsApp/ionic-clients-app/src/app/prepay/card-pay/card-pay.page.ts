@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { PayPal, PayPalPayment, PayPalConfiguration } from '@ionic-native/paypal/ngx';
 import { Orders } from 'src/app/models/Orders';
 import { Items } from 'src/app/models/Items';
-import { MenuController } from '@ionic/angular';
+import { MenuController, AlertController } from '@ionic/angular';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TableHttpService } from 'src/app/services/table-http.service';
 import { UserHttpService } from 'src/app/services/user-http.service';
@@ -16,9 +16,8 @@ import { ItemHttpService } from 'src/app/services/item-http.service';
 })
 export class CardPayPage implements OnInit {
  
-  paymentAmount = '3.33';
-  currency = 'USD';
-  currencyIcon = '$';
+  currency = 'EUR';
+  currencyIcon = '€';
   orderID;
   loadedOrder: Orders;
   loadedArrayOrder;
@@ -36,11 +35,25 @@ export class CardPayPage implements OnInit {
     private us: UserHttpService,
     private ord: OrderHttpService,
     private itm: ItemHttpService,
-    private router: Router
-    
-    ) { 
+    private router: Router,
+    private alertController: AlertController
+    ) {
   }
-  payWithPaypal() {
+
+  async presentAlert() {
+    const alert = await this.alertController.create({
+      header: 'Successfull',
+      subHeader: 'Information',
+      message: 'Your order has been processed and paid, Thank you',
+      buttons: ['OK']
+    });
+
+    await alert.present().then( () => {
+      this.router.navigate(['login']);
+    });
+  }
+
+  payWithPaypal(value: number) {
     this.payPal.init({
       PayPalEnvironmentProduction: 'YOUR_PRODUCTION_CLIENT_ID',
       PayPalEnvironmentSandbox: 'AXXhJjtppcr5GwTDCg4J08eJ_a3SBhDhy3VT5-O4-nNNB5Fm2y-tGWIWgVCgmVSoPzfLnoUtjA_MWevb'
@@ -50,27 +63,9 @@ export class CardPayPage implements OnInit {
         // Only needed if you get an "Internal Service Error" after PayPal login!
         //payPalShippingAddressOption: 2 // PayPalShippingAddressOptionPayPal
       })).then(() => {
-        let payment = new PayPalPayment('3.33', 'USD', 'Description', 'sale');
+        const payment = new PayPalPayment(value.toString(), 'EUR', 'Description', 'sale');
         this.payPal.renderSinglePaymentUI(payment).then(() => {
-          // Successfully paid
-    
-          // Example sandbox response
-          //
-          // {
-          //   "client": {
-          //     "environment": "sandbox",
-          //     "product_name": "PayPal iOS SDK",
-          //     "paypal_sdk_version": "2.16.0",
-          //     "platform": "iOS"
-          //   },
-          //   "response_type": "payment",
-          //   "response": {
-          //     "id": "PAY-1AB23456CD789012EF34GHIJ",
-          //     "state": "approved",
-          //     "create_time": "2016-10-03T13:33:33Z",
-          //     "intent": "sale"
-          //   }
-          // }
+          this.presentAlert();
         }, (err) => {
           console.log(err)
           // Error or render dialog closed without being successful
@@ -85,35 +80,13 @@ export class CardPayPage implements OnInit {
     });
   }
 
-//   CheckOrderFinished() {
-//     this.ActivatedRoute.paramMap.subscribe(paraMap => {
-//       if(!paraMap.has('orderID')) {
-//         return;
-//       }
-//       this.orderID = paraMap.get('orderID');
-//       this.ord.getOrder(this.orderID).toPromise().then( order => {
-//         this.table.changeTableStatus(order.tableNumber, 0).toPromise().then(() => {
-//           this.ord.modifyOrderState(this.orderID).toPromise().then(() => {
-//             console.log('Task Completed');
-//           }).catch(err => {
-//             console.log(err);
-//           });
-//         }).catch(err => {
-//           console.log(err);
-//         });
-//       }).catch(err => {
-//         console.log(err);
-//       });
-//     });
-// }
-
   AcRoute() {
     this.ActivatedRoute.paramMap.subscribe(paramMap => {
-      if (!paramMap.has('orderID')) {
+      if (!paramMap.has('orderid')) {
         // redirect
         return;
       }
-      this.orderID = paramMap.get('orderID');
+      this.orderID = paramMap.get('orderid');
       console.log(this.orderID);
       this.ord
         .getOrder(parseInt(this.orderID, 10))

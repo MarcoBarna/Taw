@@ -14,7 +14,7 @@
     <ion-card class="welcome-card" color="primary">
       <ion-card-header>
         <ion-card-subtitle>CARD PAYMENT</ion-card-subtitle>
-        <ion-card-title>Ticket:  {{ orderID }} </ion-card-title>
+        <ion-card-title>Ticket</ion-card-title>
         <ion-row *ngFor="let item of loadedItemsArray; let i = index">
           <span *ngFor="let lname of loadname">
           <span *ngIf="lname.code === item.code">
@@ -41,7 +41,7 @@
         </ion-row>
       </ion-card-header>
       <ion-card-content>
-        <ion-button expand="full" color="success" (click)="payWithPaypal()">Pay with PayPal</ion-button>
+        <ion-button expand="full" color="success" (click)="payWithPaypal(loadTotal)">Pay with PayPal</ion-button>
       </ion-card-content>
     </ion-card>
   </ion-grid>

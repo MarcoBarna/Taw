@@ -46,7 +46,7 @@ const routes: Routes = [
     ]
   },
   {
-    path: 'prepay',
+    path: 'prepay/:orderid',
     children: [
       {
         path: '',
@@ -54,7 +54,7 @@ const routes: Routes = [
           import('./prepay/prepay.module').then(m => m.PrepayPageModule)
       },
       {
-        path: ':card',
+        path: 'card',
         loadChildren: () =>
           import('./prepay/card-pay/card-pay.module').then(m => m.CardPayPageModule)
       }

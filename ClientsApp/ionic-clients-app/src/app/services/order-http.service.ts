@@ -56,7 +56,7 @@ export class OrderHttpService {
       tableNumber: tNumber,
       userNameWaiter: usrWaiter
     };
-    return this.http.post(this.endpoint + '/' + 'clients', sOrder);
+    return this.http.post<Orders>(this.endpoint + '/' + 'clients', sOrder);
   }
 
   modifyBevState(orderID: number) {

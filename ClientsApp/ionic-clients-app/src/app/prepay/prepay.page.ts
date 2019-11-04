@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MenuController } from '@ionic/angular';
 import { AlertController } from '@ionic/angular';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/auth';
 
 @Component({
@@ -19,6 +19,7 @@ export class PrepayPage implements OnInit {
     private alertController: AlertController,
     public router: Router,
     private afAuth: AngularFireAuth,
+    private ActivatedRoute: ActivatedRoute,
 
   ) {
     this.menu.enable(false);
@@ -26,7 +27,7 @@ export class PrepayPage implements OnInit {
 
   async presentAlert() {
     const alert = await this.alertController.create({
-      header: 'Alert',fzzzzz
+      header: 'Alert',
       subHeader: 'Information',
       message: 'Your order is complete, you can go anytime to pay at the cashier. Thank you',
       buttons: ['OK']
@@ -35,8 +36,19 @@ export class PrepayPage implements OnInit {
     await alert.present().then( () => {
       console.log('CIAO');
       this.router.navigate(['login']);
+    }); 
+  }
+
+  AcRoute() {
+    this.ActivatedRoute.paramMap.subscribe(paramMap => {
+      if (!paramMap.has('orderid')) {
+        // redirect
+        return;
+      }
+      this.orderID = paramMap.get('orderid');
     });
   }
+
   ngOnInit() {
     this.orderID = 0;
     this.afAuth.user.subscribe(data => {
