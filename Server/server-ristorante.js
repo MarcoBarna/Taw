@@ -603,7 +603,9 @@ app.route("/orders/tickets/day/:date/:type").get(auth, (req, res) => {
 });
 
 app.route("/orders/tickets/:id").get(auth, (req, res) => {
-  if (!users.newUser(req.user).HisCashier())
+  if (!users.newUser(req.user).HisCashier() &&
+      !users.newUser(req.user).HisClient()
+  )
     return res.status(401).json({
       confirmation: "fail",
       message: "Unauthorized user"
