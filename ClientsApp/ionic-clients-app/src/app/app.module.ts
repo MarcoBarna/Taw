@@ -19,7 +19,7 @@ import { SocketioService } from './services/socketio.service';
 import { CommonModule } from '@angular/common';
 import { FirebaseUIModule, firebase, firebaseui } from 'firebaseui-angular';
 import { PayPal } from '@ionic-native/paypal/ngx';
-
+import { QRScanner} from '@ionic-native/qr-scanner/ngx';
 
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
@@ -60,6 +60,7 @@ const firebaseUiAuthConfig: firebaseui.auth.Config = {
     StatusBar,
     SplashScreen,
     PayPal,
+    QRScanner,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     { provide: UserHttpService, useClass: UserHttpService },

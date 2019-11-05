@@ -34,9 +34,8 @@ export class PrepayPage implements OnInit {
     });
 
     await alert.present().then( () => {
-      console.log('CIAO');
       this.router.navigate(['login']);
-    }); 
+    });
   }
 
   AcRoute() {
@@ -60,6 +59,5 @@ export class PrepayPage implements OnInit {
         console.log(this.usr);
        }
     });
-    
   }
 }
