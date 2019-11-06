@@ -1,27 +1,24 @@
 import { Component, OnInit } from '@angular/core';
-import { QRScanner, QRScannerStatus } from '@ionic-native/qr-scanner/ngx';
 import { UserHttpService } from '../services/user-http.service';
 import { TableHttpService } from '../services/table-http.service';
-import { MenuController, AlertController } from '@ionic/angular';
+import { MenuController, AlertController, Platform } from '@ionic/angular';
 import { OrderHttpService } from '../services/order-http.service';
 import { ItemHttpService } from '../services/item-http.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Tables } from '../models/Tables';
 import { Items } from '../models/Items';
-
+import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
 
 @Component({
   selector: 'app-qr-code-order',
   templateUrl: './qr-code-order.page.html',
-  styleUrls: ['./qr-code-order.page.scss'],
+  styleUrls: ['./qr-code-order.page.scss']
 })
 export class QrCodeOrderPage implements OnInit {
   private role;
   private nick;
-  QRSCANNED_DATA: string;
-  isOn = false;
-  scannedData: {};
+  scandata = null;
   loadedTable: Tables;
   tableID: number;
   peopleArray: number[];
@@ -34,7 +31,7 @@ export class QrCodeOrderPage implements OnInit {
   usr;
 
   constructor(
-    public qrScanner: QRScanner,
+    private qrscanner: BarcodeScanner,
     private table: TableHttpService,
     public menuCtrl: MenuController,
     private us: UserHttpService,
@@ -45,62 +42,30 @@ export class QrCodeOrderPage implements OnInit {
     private afAuth: AngularFireAuth,
     private alertController: AlertController
   ) {
+    // Now disable scanning when back button is pressed
   }
-  async presentAlertPermDenied() {
+
+
+  async presentAlertTemp(message: string) {
     const alert = await this.alertController.create({
       header: 'Alert',
       subHeader: 'Camera Permission',
-      message: 'To use this feature you need to enable Camera Permission Thank you',
-      buttons: ['OK']
-    });
-    this.router.navigate(['login']);
-    await alert.present().then( () => {
-      this.qrScanner.openSettings();
-    });
-  }
-
-  async presentAlertTempDenied() {
-    const alert = await this.alertController.create({
-      header: 'Alert',
-      subHeader: 'Camera Permission',
-      message: 'To use this feature you need to enable Camera Permission Thank you',
+      message,
       buttons: ['OK']
     });
 
-    await alert.present().then( () => {
+    await alert.present().then(() => {
       this.router.navigate(['login']);
     });
   }
 
-  presentQrScanner() {
-    this.qrScanner.prepare()
-    .then((status: QRScannerStatus) => {
-      if (status.authorized) {
-        // camera permission was granted
-        this.isOn = true;
-
-        // start scanning
-        const scanSub = this.qrScanner.scan().subscribe((text: string) => {
-          console.log('Scanned something', text);
-          this.QRSCANNED_DATA = text;
-          this.isOn = false;
-          this.qrScanner.hide();
-          this.qrScanner.destroy();
-          scanSub.unsubscribe();
-            // stop scanning
-        });
-        this.qrScanner.show().then();
-
-      } else if (status.denied) {
-        this.presentAlertPermDenied();
-      } else {
-        this.presentAlertTempDenied();
-      }
-    })
-    .catch((e: any) => console.log('Error is', e));
+  scanCode() {
+    this.qrscanner.scan().then(qrCodeData => {
+      this.scandata = qrCodeData.text;
+      console.log(this.scandata);
+    });
   }
 
-  ngOnInit() {  
+  ngOnInit() {
   }
-
 }

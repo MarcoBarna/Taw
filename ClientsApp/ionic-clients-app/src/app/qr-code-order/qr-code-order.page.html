@@ -9,7 +9,7 @@
     </ion-toolbar>
   </ion-header>
 
-  <ion-content [class.show-qr-scanner]="isOn">
+  <ion-content>
     <ion-grid style="height: 100%">
       <ion-row
         class="ion-justify-content-center ion-align-items-center"
@@ -24,12 +24,12 @@
             </ion-card-header>
             <ion-card-content>
               TEST CLICK ME
-              <ion-button expand='block' margin (click)="presentQrScanner()">Click to scan a barcode</ion-button>
-              <div *ngIf="scannedData">
+              <ion-button (click)="scanCode()">Click to scan a barcode</ion-button>
+              <div>
                   <p>
-                    Scanned Code Text : <b>{{ scannedData["text"] }}</b>
+                    Scanned Code Text : <b>{{ scandata }}</b>
                   </p>
-                </div>
+              </div>
               <!-- <form>
                 <ng-container
                   *ngIf="NpeopleSeated === undefined; else elseTemplate"
