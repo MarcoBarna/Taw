@@ -9,7 +9,7 @@
     </ion-toolbar>
   </ion-header>
 
-  <ion-content>
+  <ion-content [class.show-qr-scanner]="isOn">
     <ion-grid style="height: 100%">
       <ion-row
         class="ion-justify-content-center ion-align-items-center"
@@ -28,9 +28,6 @@
               <div *ngIf="scannedData">
                   <p>
                     Scanned Code Text : <b>{{ scannedData["text"] }}</b>
-                  </p>
-                  <p>
-                    Scanned Code Format : <b>{{ scannedData["format"] }}</b>
                   </p>
                 </div>
               <!-- <form>

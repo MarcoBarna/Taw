@@ -19,7 +19,6 @@ import { Items } from '../models/Items';
 export class QrCodeOrderPage implements OnInit {
   private role;
   private nick;
-  encodedData = '';
   QRSCANNED_DATA: string;
   isOn = false;
   scannedData: {};
@@ -83,14 +82,14 @@ export class QrCodeOrderPage implements OnInit {
         // start scanning
         const scanSub = this.qrScanner.scan().subscribe((text: string) => {
           console.log('Scanned something', text);
-          this.isOn = false;
           this.QRSCANNED_DATA = text;
-          if (this.QRSCANNED_DATA !== ''){
-            this.closeScanner();
-            scanSub.unsubscribe(); // stop scanning
-          }
+          this.isOn = false;
+          this.qrScanner.hide();
+          this.qrScanner.destroy();
+          scanSub.unsubscribe();
+            // stop scanning
         });
-        this.qrScanner.show();
+        this.qrScanner.show().then();
 
       } else if (status.denied) {
         this.presentAlertPermDenied();
@@ -101,11 +100,7 @@ export class QrCodeOrderPage implements OnInit {
     .catch((e: any) => console.log('Error is', e));
   }
 
-  closeScanner() {
-    this.qrScanner.hide(); // hide camera preview
-    this.qrScanner.destroy(); // destroy camera preview
-  }
-  ngOnInit() {
+  ngOnInit() {  
   }
 
 }
