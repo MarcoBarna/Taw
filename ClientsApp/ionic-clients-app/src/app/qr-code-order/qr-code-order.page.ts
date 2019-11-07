@@ -18,13 +18,15 @@ import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
 export class QrCodeOrderPage implements OnInit {
   private role;
   private nick;
-  scandata = null;
+  scanTableData = null;
+  scanBeverageData = [];
+  scanDishData = [];
+  finishedBevData = false;
   loadedTable: Tables;
   tableID: number;
   peopleArray: number[];
-  loadedDish: Items[];
-  loadedBev: Items[];
-  NpeopleSeated: number;
+  loadedItem: Items[];
+  NpeopleSeated = null;
   NumOrder: number[];
   dishList: string[];
   beverageList: string[];
@@ -38,6 +40,7 @@ export class QrCodeOrderPage implements OnInit {
     private ord: OrderHttpService,
     private itm: ItemHttpService,
     private router: Router,
+    // tslint:disable-next-line: no-shadowed-variable
     private ActivatedRoute: ActivatedRoute,
     private afAuth: AngularFireAuth,
     private alertController: AlertController
@@ -45,11 +48,10 @@ export class QrCodeOrderPage implements OnInit {
     // Now disable scanning when back button is pressed
   }
 
-
-  async presentAlertTemp(message: string) {
+  async presentAlertTemp(message) {
     const alert = await this.alertController.create({
       header: 'Alert',
-      subHeader: 'Camera Permission',
+      subHeader: 'information',
       message,
       buttons: ['OK']
     });
@@ -59,13 +61,62 @@ export class QrCodeOrderPage implements OnInit {
     });
   }
 
-  scanCode() {
+  SendPeopleData(nPeople: number) {
+    this.NpeopleSeated = nPeople;
+    console.log(this.NpeopleSeated);
+  }
+
+  NextScan() {
+    this.finishedBevData = true;
+  }
+
+  finishOrder() {
+    this.presentAlertTemp(`IT WORKS`);
+  }
+
+  scanCodeTable() {
     this.qrscanner.scan().then(qrCodeData => {
-      this.scandata = qrCodeData.text;
-      console.log(this.scandata);
+      this.scanTableData = qrCodeData.text;
+      console.log(this.scanTableData);
+      this.table.getSingleTable(this.scanTableData).subscribe(table => {
+        this.peopleArray = [];
+        for (let i = 0; i < table.seats; i++) {
+          this.peopleArray.push(i + 1);
+        }
+      });
     });
   }
 
+  scanCodeFood(mode: number, type: string) {
+    if (mode === 1) {
+      if (type === 'beverage') {
+        this.scanBeverageData.pop();
+        console.log('Beverage Array ' + this.scanBeverageData);
+      }
+      if (type === 'dish') {
+        this.scanDishData.pop();
+        console.log('Dish Array ' + this.scanDishData);
+      }
+    } else if (mode === 0) {
+      this.qrscanner.scan().then(qrCodeData => {
+        if (type === 'beverage') {
+          this.scanBeverageData.push(parseInt(qrCodeData.text, 10));
+          console.log('Beverage Array ' + this.scanBeverageData);
+          console.log(this.loadedItem);
+        }
+        if (type === 'dish') {
+          this.scanDishData.push(parseInt(qrCodeData.text, 10));
+          console.log('Dish Array ' + this.scanDishData);
+        }
+      });
+    }
+  }
+
   ngOnInit() {
+    this.itm.getItems().subscribe(it => {
+      this.loadedItem = [];
+      this.loadedItem = it;
+      console.log(this.loadedItem);
+    });
   }
 }
