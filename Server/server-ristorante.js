@@ -185,6 +185,27 @@ app
       });
   });
 
+// // !TESTING!
+// app.route("/tables/reset").patch((req, res) => {
+//   tables
+//     .getModel()
+//     .find()
+//     .then(alltables => {
+//       alltables.forEach(element => {
+//         element.occupied = false;
+//         element.orderId = 0;
+//       });
+//       alltables.markModified("element");
+//       alltables.save();
+//     })
+//     .catch(err => {
+//       return res.status(500).json({
+//         confirmation: "fail",
+//         message: err.message
+//       });
+//     });
+// });
+
 //* SINGLE TABLE
 app
   .route("/tables/:id")
@@ -441,7 +462,12 @@ app.route("/orders/clients").post(auth, (req, res) => {
   if (error) return res.status(400).send(error.details[0].message);
   else {
     var neworder = orders.newOrder(req.body);
-    neworder.date = new Date();
+    const date = new Date();
+    const dateStr =
+      date.getDate() +
+      ((date.getMonth() < 10 ? "0" : "") + `${date.getMonth() + 1}`) +
+      date.getFullYear();
+    neworder.date = parseInt(dateStr, 10);
     neworder.dishList.forEach(element => {
       neworder.dishState.push(0);
     });
@@ -603,9 +629,10 @@ app.route("/orders/tickets/day/:date/:type").get(auth, (req, res) => {
 });
 
 app.route("/orders/tickets/:id").get(auth, (req, res) => {
-  if (!users.newUser(req.user).HisCashier() &&
-      !users.newUser(req.user).HisClient()
-    )
+  if (
+    !users.newUser(req.user).HisCashier() &&
+    !users.newUser(req.user).HisClient()
+  )
     return res.status(401).json({
       confirmation: "fail",
       message: "Unauthorized user"
