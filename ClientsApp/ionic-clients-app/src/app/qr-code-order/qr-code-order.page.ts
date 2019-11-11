@@ -16,20 +16,13 @@ import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
   styleUrls: ['./qr-code-order.page.scss']
 })
 export class QrCodeOrderPage implements OnInit {
-  private role;
-  private nick;
   scanTableData = null;
-  scanBeverageData = [];
-  scanDishData = [];
+  scanBeverageData;
+  scanDishData;
   finishedBevData = false;
-  loadedTable: Tables;
-  tableID: number;
   peopleArray: number[];
   loadedItem: Items[];
   NpeopleSeated = null;
-  NumOrder: number[];
-  dishList: string[];
-  beverageList: string[];
   usr;
 
   constructor(
@@ -112,11 +105,52 @@ export class QrCodeOrderPage implements OnInit {
     }
   }
 
+  sendDataOrder(bevList, dList, nPeople, TableID) {
+    const date = new Date();
+    const value =
+      `${this.scanTableData}` +
+      date.getDate() +
+      date.getMonth() +
+      date.getFullYear() +
+      (date.getHours() < 10 ? '0' : '') +
+      date.getHours() +
+      (date.getMinutes() < 10 ? '0' : '') +
+      date.getMinutes() +
+      (date.getSeconds() < 10 ? '0' : '') +
+      date.getSeconds();
+    this.afAuth.user.subscribe(data => {
+        if (data !== null) {
+          this.usr = {
+            username : data.email,
+            uid : data.uid
+          };
+         }
+        console.log(bevList + '|' + dList + '|' + nPeople + '|' + TableID + '|' + this.usr.uid);
+        this.ord.addOrderClient(parseInt(value, 10), bevList, dList, nPeople, TableID, this.usr.uid)
+         .toPromise()
+         .then(or => {
+           console.log(or);
+           this.table.changeTableStatus(this.scanTableData, parseInt(value, 10)).toPromise().then(data => {
+            console.log(data);
+            this.router.navigate(['prepay', or.orderNumber]);
+          })
+          .catch(err => {
+            console.log(err);
+          });
+         })
+         .catch(err => {
+           console.log(err);
+         });
+      });
+  }
+
   ngOnInit() {
     this.itm.getItems().subscribe(it => {
       this.loadedItem = [];
       this.loadedItem = it;
       console.log(this.loadedItem);
     });
+    this.scanBeverageData = [];
+    this.scanDishData = [];
   }
 }

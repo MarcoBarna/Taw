@@ -33,19 +33,6 @@ export class OrderHttpService {
     return this.http.get<Tickets>(this.endpoint + '/' + 'tickets' + '/' + orderID);
   }
 
-  addOrder(orderNumb: number, blist: any, dlist: any, nPeople: number, tNumber: number, usrWaiter: string) {
-    let sOrder: SendOrder;
-    sOrder = {
-      orderNumber: orderNumb,
-      beverageList: blist,
-      dishList: dlist,
-      numberPeople: nPeople,
-      tableNumber: tNumber,
-      userNameWaiter: usrWaiter
-    };
-    return this.http.post(this.endpoint, sOrder);
-  }
-
   addOrderClient(orderNumb: number, blist: any, dlist: any, nPeople: number, tNumber: number, usrWaiter: string) {
     let sOrder: SendOrder;
     sOrder = {
@@ -57,22 +44,6 @@ export class OrderHttpService {
       userNameWaiter: usrWaiter
     };
     return this.http.post<Orders>(this.endpoint + '/' + 'clients', sOrder);
-  }
-
-  modifyBevState(orderID: number) {
-    return this.http.patch(this.endpoint + '/' + 'beverages' + '/' + orderID, {});
-  }
-
-  modifyDisState(orderID: number, index: number) {
-    return this.http.patch(this.endpoint + '/' + 'dishes' + '/' + orderID, {index});
-  }
-
-  modifyOrderState(orderID: number) {
-    return this.http.patch(this.endpoint + '/' + 'status' + '/' + orderID, {});
-  }
-
-  deleteOrder(orderID: number) {
-    return this.http.delete(this.endpoint + '/' + orderID);
   }
 
 

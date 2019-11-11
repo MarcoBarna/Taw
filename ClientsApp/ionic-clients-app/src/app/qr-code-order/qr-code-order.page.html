@@ -23,7 +23,7 @@
         <ng-template #ScannedTableTemplate>
           <!-- THIS SECTION IS USED TO SCAN THE TABLE -->
           <ng-container *ngIf="NpeopleSeated === null; else ScanBevTemplate">
-            <ion-card color="primary">
+            <ion-card>
               <ion-card-header>
                 <ion-label> <h1>INSERT NUMBER OF PEOPLE</h1></ion-label>
               </ion-card-header>
@@ -80,17 +80,20 @@
                   <ion-buttons slot="start">
                     <ion-button
                       fill="solid"
+                      shape="round"
                       color="primary"
                       (click)="scanCodeFood(0, 'beverage')"
                     >
                       Add
                       <ion-icon
                         slot="start"
+                        shape="round"
                         name="add-circle-outline"
                       ></ion-icon>
                     </ion-button>
                     <ion-button
                       fill="solid"
+                      shape="round"
                       color="danger"
                       (click)="scanCodeFood(1, 'beverage')"
                     >
@@ -99,6 +102,7 @@
                     </ion-button>
                     <ion-button
                       fill="solid"
+                      shape="round"
                       color="secondary"
                       (click)="NextScan()"
                     >
@@ -127,6 +131,7 @@
                   <ion-buttons slot="start">
                     <ion-button
                       fill="solid"
+                      shape="round"
                       color="primary"
                       (click)="scanCodeFood(0, 'dish')"
                     >
@@ -138,6 +143,7 @@
                     </ion-button>
                     <ion-button
                       fill="solid"
+                      shape="round"
                       color="danger"
                       (click)="scanCodeFood(1, 'dish')"
                     >
@@ -146,10 +152,11 @@
                     </ion-button>
                     <ion-button
                       fill="solid"
+                      shape="round"
                       color="secondary"
-                      (click)="finishOrder()"
+                      (click)="sendDataOrder(scanBeverageData, scanDishData, NpeopleSeated, scanTableData)"
                     >
-                      Next
+                      Send
                       <ion-icon slot="start" name="send"></ion-icon>
                     </ion-button>
                   </ion-buttons>
