@@ -1,5 +1,5 @@
 # TAW
-Official Repository for the project of Techologies and Web Applications - Unive 2018/2019.
+Official Repository for the project of Techologies and Web Applications - Unive 2019/2020.
 This project aim is to build an hypothetical system for an unknown restaurant that is in dire need of upgrading their game....
 What you'll fine here is a system devided by a "front-end", "back-end" and "client app".
 - The back-end is entirely written in javascirpt Node (it's a server) with various nodes/npm modules that is hosted on the platform heroku (i strongly advices you to use it for your projects if you didn't knew about it) and MongoDB Atlas for DB hosting.
