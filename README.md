@@ -1,6 +1,6 @@
 # TAW
-Official Repository for the project of Techologies and Web Applications - Unive 2019/2020.
-This project aim to build an hypothetical system for an unknown restaurant that is in dire need of upgrading their game....
+Thesis in Computer Science of Ca'Foscari University Venice 2020 - Marco Barnà
+The thesis aim is  to build an hypothetical system for an unknown restaurant that is in dire need of upgrading their game....
 What you'll find here is a system devided by a "front-end", "back-end" and "client app".
 - The back-end is entirely written in javascirpt Node (it's a server) with various nodes/npm modules that is hosted on the platform heroku (i strongly advices you to use it for your projects if you didn't knew about it) and MongoDB Atlas for DB hosting.
 - Front-end, were the UI comes into action. It's written in Angular8/Ionic with various npm modules
