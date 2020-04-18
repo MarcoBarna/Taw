@@ -1,5 +1,5 @@
 # TAW
-Thesis in Computer Science of Ca'Foscari University Venice 2020 - Marco Barnà
+Thesis Project on web technology for the Computer Science of Ca'Foscari University Venice 2020 - Marco Barnà
 
 The thesis aim is  to build an hypothetical system for an unknown restaurant that is in dire need of upgrading their game....
 What you'll find here is a system devided by a "front-end", "back-end" and "client app".
