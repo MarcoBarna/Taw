@@ -23,7 +23,7 @@ if you want to run it locally, see below
 For building the web app, go to folder /ClientsApp/ionic-web-app
 then:
  
- - ionic serve
+ - $ ionic serve
  
 
 ## MOBILE APP
@@ -44,7 +44,7 @@ if you want to test the clients app, you can do the same as the IW but you can't
 the camera for qr-codes recognition. For this reason you must compile it to the current Operative System you are using and the sideload the apk to your android phone.
 
 ## ELECTRON
-- npm run electron
+- $ npm run electron
 
 ## LOCAL RUN
 
