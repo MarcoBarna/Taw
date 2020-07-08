@@ -7,10 +7,6 @@ What you'll find here is a system devided by a "front-end", "back-end" and "clie
 - Front-end, were the UI comes into action. It's written in Angular8/Ionic with various npm modules
 - A client app written entirely on Ionic that uses Google Firebase for Authentication and then connects to the existent "system" mentioned before for various operation.
 
-## WEB SERVER AND DBMS
-For DBMS and Web Server, they are hosted online on heroku and Mongo Atlas so you don't need to start them manually.
-if you want to run it locally, see below
-
 ## FIRST THING TO DO
 
  - $ npm install
