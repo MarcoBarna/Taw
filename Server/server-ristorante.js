@@ -739,7 +739,7 @@ passport.use(
 
 mongoose
   .connect(
-    "mongodb+srv://admin:admin@pleasework-apavp.mongodb.net/ristdb?retryWrites=true&w=majority",
+    "INSERT CONNECTION HERE",
     {
       useNewUrlParser: true,
       useUnifiedTopology: true
